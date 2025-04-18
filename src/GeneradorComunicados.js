@@ -170,6 +170,16 @@ const GeneradorComunicados = () => {
       const fechaFormateada = formatearFecha(fechaInicio);
       
       mensaje = `*GESTIÓN EVENTO*\n🟡 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaFormateada} - ${horaInicio}`;
+      
+      if (acciones && acciones.trim().length > 0) {
+        mensaje += "\n*Acciones:*";
+        const lineasAcciones = acciones.split('\n');
+        for (let i = 0; i < lineasAcciones.length; i++) {
+          if (lineasAcciones[i].trim()) {
+            mensaje += `\n        • ${lineasAcciones[i]}`;
+          }
+        }
+      }
     }
     else if (tipo === 'evento-seguimiento') {
       const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
