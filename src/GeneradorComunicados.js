@@ -169,13 +169,13 @@ const GeneradorComunicados = () => {
       
       const fechaFormateada = formatearFecha(fechaInicio);
       
-      mensaje = `🟡 *GESTIÓN EVENTO*\n*${estadoVal}*\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaFormateada} - ${horaInicio}`;
+      mensaje = `*GESTIÓN EVENTO*\n🟡 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaFormateada} - ${horaInicio}`;
     }
     else if (tipo === 'evento-seguimiento') {
       const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
       const impactoVal = impacto || "Impacto servicio / usuarios";
       
-      mensaje = `🔁 *GESTIÓN EVENTO*\n*Seguimiento*\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Acciones:*`;
+      mensaje = `*GESTIÓN EVENTO*\n🔁 *Seguimiento*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Acciones:*`;
       
       if (acciones) {
         const lineasAcciones = acciones.split('\n');
@@ -196,7 +196,7 @@ const GeneradorComunicados = () => {
       const fechaInicioFormateada = formatearFecha(fechaInicioFin);
       const fechaFinFormateada = formatearFecha(fechaFin);
       
-      mensaje = `🟢 *GESTIÓN EVENTO*\n*${estadoVal}*\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}`;
+      mensaje = `*GESTIÓN EVENTO*\n🟢 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}`;
       
       if (acciones) {
         mensaje += "\n*Acciones:*";
@@ -240,13 +240,13 @@ const GeneradorComunicados = () => {
       
       const fechaFormateada = formatearFecha(fechaInicio);
       
-      mensaje = `🟡 *GESTIÓN INCIDENTE*\n*${estadoVal}*\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaFormateada} - ${horaInicio}`;
+      mensaje = `*GESTIÓN INCIDENTE*\n🟡 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaFormateada} - ${horaInicio}`;
     }
     else if (tipo === 'incidente-avance') {
       const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
       const impactoVal = impacto || "Impacto servicio / usuarios";
       
-      mensaje = `🔁 *GESTIÓN INCIDENTE*\n*Avance*\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}`;
+      mensaje = `*GESTIÓN INCIDENTE*\n🔁 *Avance*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}`;
       
       if (accionesEnCurso) {
         mensaje += "\n*Acciones en curso:*";
@@ -276,7 +276,7 @@ const GeneradorComunicados = () => {
       const fechaInicioFormateada = formatearFecha(fechaInicioFin);
       const fechaFinFormateada = formatearFecha(fechaFin);
       
-      mensaje = `🟢 *GESTIÓN INCIDENTE*\n*${estadoVal}*\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}`;
+      mensaje = `*GESTIÓN INCIDENTE*\n🟢 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}`;
       
       if (accionesEjecutadas) {
         mensaje += "\n*Acciones ejecutadas:*";
