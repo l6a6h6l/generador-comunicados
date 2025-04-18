@@ -203,7 +203,7 @@ const GeneradorComunicados = () => {
         const lineasAcciones = acciones.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           if (lineasAcciones[i].trim()) {
-            mensaje += `\n• ${lineasAcciones[i]}`;
+            mensaje += `\n        • ${lineasAcciones[i]}`;
           }
         }
       }
@@ -253,7 +253,7 @@ const GeneradorComunicados = () => {
         const lineasAcciones = accionesEnCurso.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           if (lineasAcciones[i].trim()) {
-            mensaje += `\n• ${lineasAcciones[i]}`;
+            mensaje += `\n        • ${lineasAcciones[i]}`;
           }
         }
       }
@@ -263,7 +263,7 @@ const GeneradorComunicados = () => {
         const lineasAcciones = accionesEjecutadas.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           if (lineasAcciones[i].trim()) {
-            mensaje += `\n• ${lineasAcciones[i]}`;
+            mensaje += `\n        • ${lineasAcciones[i]}`;
           }
         }
       }
@@ -283,7 +283,7 @@ const GeneradorComunicados = () => {
         const lineasAcciones = accionesEjecutadas.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           if (lineasAcciones[i].trim()) {
-            mensaje += `\n• ${lineasAcciones[i]}`;
+            mensaje += `\n        • ${lineasAcciones[i]}`;
           }
         }
       }
@@ -446,7 +446,7 @@ const GeneradorComunicados = () => {
               <input 
                 className="w-full p-3 mb-5 bg-gray-800 border border-white border-opacity-20 rounded-md text-white"
                 type="text" 
-                placeholder="Ej: INTERMITENCIAS CON LA URL DE PEOPLE HATS"
+                placeholder="DESCRIPCION DEL INCIDENTE"
                 value={descripcion}
                 onChange={(e) => setDescripcion(e.target.value)}
               />
@@ -455,7 +455,7 @@ const GeneradorComunicados = () => {
               <input 
                 className="w-full p-3 mb-5 bg-gray-800 border border-white border-opacity-20 rounded-md text-white"
                 type="text" 
-                placeholder="Ej: Impacto servicio / usuarios"
+                placeholder="Impacto servicio / usuarios"
                 value={impacto}
                 onChange={(e) => setImpacto(e.target.value)}
               />
@@ -469,7 +469,7 @@ const GeneradorComunicados = () => {
               <input 
                 className="w-full p-3 mb-5 bg-gray-800 border border-white border-opacity-20 rounded-md text-white"
                 type="text" 
-                placeholder="Ej: Descripción del Mantenimiento"
+                placeholder="Descripción del Mantenimiento"
                 value={motivo}
                 onChange={(e) => setMotivo(e.target.value)}
               />
@@ -478,7 +478,7 @@ const GeneradorComunicados = () => {
               <input 
                 className="w-full p-3 mb-5 bg-gray-800 border border-white border-opacity-20 rounded-md text-white"
                 type="text" 
-                placeholder="Ej: Impacto servicio / usuarios / clientes"
+                placeholder="Impacto servicio / usuarios / clientes"
                 value={impactoMant}
                 onChange={(e) => setImpactoMant(e.target.value)}
               />
@@ -487,7 +487,7 @@ const GeneradorComunicados = () => {
               <input 
                 className="w-full p-3 mb-5 bg-gray-800 border border-white border-opacity-20 rounded-md text-white"
                 type="text" 
-                placeholder="Ej: Nombre del proveedor o área interna que ejecuta el mantenimiento"
+                placeholder="Nombre del proveedor o área interna que ejecuta el mantenimiento"
                 value={ejecutor}
                 onChange={(e) => setEjecutor(e.target.value)}
               />
@@ -530,8 +530,7 @@ const GeneradorComunicados = () => {
               <label className="block mb-2 font-semibold text-gray-300">Acciones (una por línea):</label>
               <textarea 
                 className="w-full p-3 mb-5 bg-gray-800 border border-white border-opacity-20 rounded-md text-white h-32 resize-y"
-                placeholder="Ejemplo:
-Acción 1. Proveedor / Área interna
+                placeholder="Acción 1. Proveedor / Área interna
 Acción 2. Proveedor / Área interna"
                 value={acciones}
                 onChange={(e) => setAcciones(e.target.value)}
@@ -545,8 +544,7 @@ Acción 2. Proveedor / Área interna"
               <label className="block mb-2 font-semibold text-gray-300">Acciones en curso (una por línea):</label>
               <textarea 
                 className="w-full p-3 mb-5 bg-gray-800 border border-white border-opacity-20 rounded-md text-white h-32 resize-y"
-                placeholder="Ejemplo:
-Acción 1. Proveedor / Área interna
+                placeholder="Acción 1. Proveedor / Área interna
 Acción 2. Proveedor / Área interna"
                 value={accionesEnCurso}
                 onChange={(e) => setAccionesEnCurso(e.target.value)}
@@ -555,8 +553,7 @@ Acción 2. Proveedor / Área interna"
               <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas (una por línea):</label>
               <textarea 
                 className="w-full p-3 mb-5 bg-gray-800 border border-white border-opacity-20 rounded-md text-white h-32 resize-y"
-                placeholder="Ejemplo:
-Acción 1. Proveedor / Área interna
+                placeholder="Acción 1. Proveedor / Área interna
 Acción 2. Proveedor / Área interna"
                 value={accionesEjecutadas}
                 onChange={(e) => setAccionesEjecutadas(e.target.value)}
