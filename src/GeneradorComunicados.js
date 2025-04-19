@@ -176,14 +176,6 @@ const GeneradorComunicados = () => {
         const lineasAcciones = acciones.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           if (lineasAcciones[i].trim()) {
-            mensaje += `\n    • ${lineasAcciones[i]}`;
-          }
-        }
-      }
-    }*Acciones:*";
-        const lineasAcciones = acciones.split('\n');
-        for (let i = 0; i < lineasAcciones.length; i++) {
-          if (lineasAcciones[i].trim()) {
             mensaje += `\n• ${lineasAcciones[i]}`;
           }
         }
@@ -568,7 +560,8 @@ Acción 2. Proveedor / Área interna"
                 onChange={(e) => setAccionesEnCurso(e.target.value)}
               ></textarea>
               
-              <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas (una por línea):</label>
+              <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas (una por
+                                                                                             línea):</label>
               <textarea 
                 className="w-full p-3 mb-5 bg-gray-800 border border-white border-opacity-20 rounded-md text-white h-32 resize-y"
                 placeholder="Acción 1. Proveedor / Área interna
@@ -708,3 +701,4 @@ Acción 2. Proveedor / Área interna"
 };
 
 export default GeneradorComunicados;
+                                                                                    
