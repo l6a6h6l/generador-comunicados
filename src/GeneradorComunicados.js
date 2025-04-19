@@ -176,7 +176,7 @@ const GeneradorComunicados = () => {
         const lineasAcciones = acciones.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           if (lineasAcciones[i].trim()) {
-            mensaje += `\n        • ${lineasAcciones[i]}`;
+            mensaje += `\n • ${lineasAcciones[i]}`;
           }
         }
       }
@@ -213,7 +213,7 @@ const GeneradorComunicados = () => {
         const lineasAcciones = acciones.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           if (lineasAcciones[i].trim()) {
-            mensaje += `\n        • ${lineasAcciones[i]}`;
+            mensaje += `\n • ${lineasAcciones[i]}`;
           }
         }
       }
@@ -263,7 +263,7 @@ const GeneradorComunicados = () => {
         const lineasAcciones = accionesEnCurso.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           if (lineasAcciones[i].trim()) {
-            mensaje += `\n        • ${lineasAcciones[i]}`;
+            mensaje += `\n • ${lineasAcciones[i]}`;
           }
         }
       }
@@ -273,7 +273,7 @@ const GeneradorComunicados = () => {
         const lineasAcciones = accionesEjecutadas.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           if (lineasAcciones[i].trim()) {
-            mensaje += `\n        • ${lineasAcciones[i]}`;
+            mensaje += `\n • ${lineasAcciones[i]}`;
           }
         }
       }
@@ -293,7 +293,7 @@ const GeneradorComunicados = () => {
         const lineasAcciones = accionesEjecutadas.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           if (lineasAcciones[i].trim()) {
-            mensaje += `\n        • ${lineasAcciones[i]}`;
+            mensaje += `\n • ${lineasAcciones[i]}`;
           }
         }
       }
