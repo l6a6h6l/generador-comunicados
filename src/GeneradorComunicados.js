@@ -1,1075 +1,552 @@
-{/* Campos para Evento o Incidente */}
-          {(tipo.startsWith('evento-') || tipo.startsWith('incidente-')) && (
-            <div className="space-y-6">
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Descripción:</label>
-                <input 
-                  className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                  type="text" 
-                  placeholder="DESCRIPCION DEL INCIDENTE"
-                  value={descripcion}
-                  onChange={(e) => setDescripcion(e.target.value)}
-                />
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Impacto:</label>
-                <input 
-                  className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                  type="text" 
-                  placeholder="Impacto servicio / usuarios"
-                  value={impacto}
-                  onChange={(e) => setImpacto(e.target.value)}
-                />
-              </div>
-            </div>
-          )}
-          
-          {/* Campos para Mantenimiento */}
-          {tipo.startsWith('mantenimiento-') && (
-            <div className="space-y-6">
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Motivo:</label>
-                <input 
-                  className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                  type="text" 
-                  placeholder="Descripción del Mantenimiento"
-                  value={motivo}
-                  onChange={(e) => setMotivo(e.target.value)}
-                />
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Impacto:</label>
-                <input 
-                  className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                  type="text" 
-                  placeholder="Impacto servicio / usuarios / clientes"
-                  value={impactoMant}
-                  onChange={(e) => setImpactoMant(e.target.value)}
-                />
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Ejecutor:</label>
-                <input 
-                  className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                  type="text" 
-                  placeholder="Nombre del proveedor o área interna que ejecuta el mantenimiento"
-                  value={ejecutor}
-                  onChange={(e) => setEjecutor(e.target.value)}
-                />
-              </div>
-            </div>
-          )}
-          
-          {/* Campos comunes para Inicio */}
-          {(tipo.endsWith('-inicio')) && (
-            <div className="space-y-6 mt-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block mb-2 font-semibold text-gray-300">Fecha:</label>
-                  <input 
-                    className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                    type="date" 
-                    value={fechaInicio}
-                    onChange={(e) => setFechaInicio(e.target.value)}
-                  />
-                </div>
-                
-                <div>
-                  <label className="block mb-2 font-semibold text-gray-300">Hora:</label>
-                  <input 
-                    className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                    type="time" 
-                    step="1"
-                    value={horaInicio}
-                    onChange={(e) => setHoraInicio(e.target.value)}
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Estado:</label>
-                <input 
-                  className="w-full p-4 bg-[#002B5B]/50 border border-blue-700/50 rounded-xl text-gray-400 cursor-not-allowed"
-                  type="text" 
-                  value={estadoInicio}
-                  readOnly
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Campos para Seguimiento (solo Eventos) */}
-          {tipo === 'evento-seguimiento' && (
-            <div className="mt-6">
-              <label className="block mb-2 font-semibold text-gray-300">Acciones (una por línea):</label>
-              <textarea 
-                className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                placeholder="Formato: Acción %% Responsable (opcional)
-Ejemplo:
-Monitoreo continuo del servicio %% Equipo NOC
-Validación de métricas %% Soporte N2
-Revisión de logs de aplicación"
-                value={acciones}
-                onChange={(e) => setAcciones(e.target.value)}
-              ></textarea>
-              <p className="text-sm text-gray-400 mt-2 flex items-center">
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
-              </p>
-            </div>
-          )}
-          
-          {/* Campos para Avance (solo Incidentes) */}
-          {tipo === 'incidente-avance' && (
-            <div className="space-y-6 mt-6">
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Acciones en curso (una por línea):</label>
-                <textarea 
-                  className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                  placeholder="Formato: Acción %% Responsable (opcional)
-Ejemplo:
-Análisis de logs %% Equipo de Monitoreo
-Revisión de configuración %% DBA Team
-Escalamiento a proveedor"
-                  value={accionesEnCurso}
-                  onChange={(e) => setAccionesEnCurso(e.target.value)}
-                ></textarea>
-                <p className="text-sm text-gray-400 mt-2 flex items-center">
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
-                </p>
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas (una por línea):</label>
-                <textarea 
-                  className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                  placeholder="Formato: Acción %% Responsable (opcional)
-Ejemplo:
-Reinicio de servicios %% Equipo de Infraestructura
-Limpieza de caché %% Soporte N1
-Verificación inicial"
-                  value={accionesEjecutadas}
-                  onChange={(e) => setAccionesEjecutadas(e.target.value)}
-                ></textarea>
-                <p className="text-sm text-gray-400 mt-2 flex items-center">
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
-                </p>
-              </div>
-            </div>
-          )}
-          
-          {/* Campos para Fin */}
-          {tipo.endsWith('-fin') && (
-            <div className="space-y-6 mt-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block mb-2 font-semibold text-gray-300">Fecha inicio:</label>
-                  <input 
-                    className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                    type="date" 
-                    value={fechaInicioFin}
-                    onChange={(e) => setFechaInicioFin(e.target.value)}
-                  />
-                </div>
-                
-                <div>
-                  <label classNameimport React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { AlertCircle, Copy, RefreshCw, Calendar, Clock, AlertTriangle, CheckCircle, MessageSquare, Wrench, Settings, Trash2, Activity } from 'lucide-react';
 
 const GeneradorComunicados = () => {
-  // Estados
-  const [tipo, setTipo] = useState('evento-inicio');
-  const [descripcion, setDescripcion] = useState('');
-  const [impacto, setImpacto] = useState('');
-  const [motivo, setMotivo] = useState('');
-  const [impactoMant, setImpactoMant] = useState('');
-  const [ejecutor, setEjecutor] = useState('');
-  const [fechaInicio, setFechaInicio] = useState('');
-  const [horaInicio, setHoraInicio] = useState('');
-  const [estadoInicio, setEstadoInicio] = useState('');
-  const [acciones, setAcciones] = useState('');
-  const [accionesEjecutadas, setAccionesEjecutadas] = useState('');
-  const [accionesEnCurso, setAccionesEnCurso] = useState('');
-  const [fechaInicioFin, setFechaInicioFin] = useState('');
-  const [horaInicioFin, setHoraInicioFin] = useState('');
-  const [fechaFin, setFechaFin] = useState('');
-  const [horaFin, setHoraFin] = useState('');
-  const [duracionCalculada, setDuracionCalculada] = useState('00:00:00');
-  const [estadoFin, setEstadoFin] = useState('');
-  const [nota, setNota] = useState('');
-  const [resultado, setResultado] = useState('');
-  const [mostrarAlerta, setMostrarAlerta] = useState(false);
-  const [alertaMensaje, setAlertaMensaje] = useState('¡Comunicado copiado al portapapeles!');
+  // Estados consolidados
+  const [formData, setFormData] = useState({
+    tipo: 'evento-inicio',
+    descripcion: '',
+    impacto: '',
+    motivo: '',
+    impactoMant: '',
+    ejecutor: '',
+    fechaInicio: '',
+    horaInicio: '',
+    estadoInicio: 'En revisión',
+    acciones: '',
+    accionesEjecutadas: '',
+    accionesEnCurso: '',
+    fechaInicioFin: '',
+    horaInicioFin: '',
+    fechaFin: '',
+    horaFin: '',
+    estadoFin: 'Recuperado',
+    nota: ''
+  });
 
-  // Establecer fechas y horas actuales al cargar
-  useEffect(() => {
-    establecerFechaHoraActual();
+  const [resultado, setResultado] = useState('');
+  const [duracionCalculada, setDuracionCalculada] = useState('00:00:00');
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'success' });
+
+  // Configuración de tipos
+  const TIPOS_CONFIG = useMemo(() => ({
+    eventos: [
+      { id: 'evento-inicio', icon: '🟡', nombre: 'Inicio', estado: 'En revisión' },
+      { id: 'evento-seguimiento', icon: '🔁', nombre: 'Seguimiento', estado: null },
+      { id: 'evento-fin', icon: '🟢', nombre: 'Fin', estado: 'Recuperado' }
+    ],
+    mantenimientos: [
+      { id: 'mantenimiento-inicio', icon: '⚠️', nombre: 'Inicio', estado: 'En curso' },
+      { id: 'mantenimiento-fin', icon: '✅', nombre: 'Fin', estado: 'Finalizado' }
+    ],
+    incidentes: [
+      { id: 'incidente-inicio', icon: '🟡', nombre: 'Inicio', estado: 'En revisión' },
+      { id: 'incidente-avance', icon: '🔁', nombre: 'Avance', estado: null },
+      { id: 'incidente-fin', icon: '🟢', nombre: 'Fin', estado: 'Recuperado' }
+    ]
+  }), []);
+
+  // Funciones auxiliares
+  const showAlert = useCallback((message, type = 'success') => {
+    setAlert({ show: true, message, type });
+    setTimeout(() => setAlert({ show: false, message: '', type: 'success' }), 3000);
   }, []);
 
-  // Calcular duración cuando cambien las fechas u horas relevantes
+  const formatearFecha = useCallback((fechaISO) => {
+    if (!fechaISO) return "";
+    const [year, month, day] = fechaISO.split('-');
+    return `${day}/${month}/${year}`;
+  }, []);
+
+  const establecerFechaHoraActual = useCallback(() => {
+    const now = new Date();
+    const fechaActual = now.toISOString().split('T')[0];
+    const horaActual = now.toTimeString().split(' ')[0];
+    
+    setFormData(prev => ({
+      ...prev,
+      fechaInicio: fechaActual,
+      horaInicio: horaActual,
+      fechaInicioFin: fechaActual,
+      horaInicioFin: horaActual,
+      fechaFin: fechaActual,
+      horaFin: horaActual
+    }));
+  }, []);
+
+  // Efectos
   useEffect(() => {
-    const calcularDuracionInterna = () => {
+    establecerFechaHoraActual();
+  }, [establecerFechaHoraActual]);
+
+  useEffect(() => {
+    const { fechaInicioFin, horaInicioFin, fechaFin, horaFin } = formData;
+    
+    if (fechaInicioFin && horaInicioFin && fechaFin && horaFin) {
       try {
-        if (!fechaInicioFin || !horaInicioFin || !fechaFin || !horaFin) {
-          return;
-        }
-        
         const inicio = new Date(`${fechaInicioFin}T${horaInicioFin}`);
         const fin = new Date(`${fechaFin}T${horaFin}`);
+        const diff = fin - inicio;
         
-        const diferencia = fin - inicio;
+        const horas = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
+        const minutos = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+        const segundos = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
         
-        const horas = Math.floor(diferencia / (1000 * 60 * 60));
-        const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-        const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
-        
-        const duracion = 
-          `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
-        
-        setDuracionCalculada(duracion);
+        setDuracionCalculada(`${horas}:${minutos}:${segundos}`);
       } catch (error) {
-        console.error('Error al calcular duración:', error);
+        console.error('Error calculando duración:', error);
+      }
+    }
+  }, [formData.fechaInicioFin, formData.horaInicioFin, formData.fechaFin, formData.horaFin]);
+
+  // Manejadores
+  const handleInputChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  }, []);
+
+  const seleccionarTipo = useCallback((nuevoTipo) => {
+    setFormData(prev => {
+      const updated = { ...prev, tipo: nuevoTipo };
+      
+      // Actualizar estados según el tipo
+      if (nuevoTipo.endsWith('-inicio')) {
+        if (nuevoTipo.startsWith('evento-') || nuevoTipo.startsWith('incidente-')) {
+          updated.estadoInicio = 'En revisión';
+        } else if (nuevoTipo.startsWith('mantenimiento-')) {
+          updated.estadoInicio = 'En curso';
+        }
+      } else if (nuevoTipo.endsWith('-fin')) {
+        if (nuevoTipo.startsWith('evento-') || nuevoTipo.startsWith('incidente-')) {
+          updated.estadoFin = 'Recuperado';
+        } else if (nuevoTipo.startsWith('mantenimiento-')) {
+          updated.estadoFin = 'Finalizado';
+        }
+      }
+      
+      return updated;
+    });
+  }, []);
+
+  const limpiarCampos = useCallback(() => {
+    const camposLimpios = {
+      descripcion: '',
+      impacto: '',
+      motivo: '',
+      impactoMant: '',
+      ejecutor: '',
+      acciones: '',
+      accionesEjecutadas: '',
+      accionesEnCurso: '',
+      nota: ''
+    };
+    
+    setFormData(prev => ({ ...prev, ...camposLimpios }));
+    establecerFechaHoraActual();
+    showAlert('¡Campos limpiados correctamente!');
+  }, [establecerFechaHoraActual, showAlert]);
+
+  const formatearAcciones = useCallback((acciones) => {
+    if (!acciones) return "\n        • Sin acciones registradas";
+    
+    return acciones.split('\n')
+      .filter(linea => linea.trim())
+      .map(linea => {
+        if (linea.includes('%%')) {
+          const [accion, responsable] = linea.split('%%').map(s => s.trim());
+          return `\n        • ${accion}${responsable ? `\n          Responsable: ${responsable}` : ''}`;
+        }
+        return `\n        • ${linea.trim()}`;
+      })
+      .join('');
+  }, []);
+
+  const generarMensaje = useCallback(() => {
+    const { tipo } = formData;
+    let mensaje = "";
+    
+    const templates = {
+      'evento-inicio': () => {
+        const { descripcion, impacto, estadoInicio, fechaInicio, horaInicio } = formData;
+        return `*GESTIÓN EVENTO*\n🟡 *${estadoInicio}*\n\n*Descripción:* ${descripcion || "DESCRIPCION DEL INCIDENTE"}\n*Impacto:* ${impacto || "Impacto servicio / usuarios"}\n*Inicio:* ${formatearFecha(fechaInicio)} - ${horaInicio}`;
+      },
+      'evento-seguimiento': () => {
+        const { descripcion, impacto, acciones } = formData;
+        return `*GESTIÓN EVENTO*\n🔁 *Seguimiento*\n\n*Descripción:* ${descripcion || "DESCRIPCION DEL INCIDENTE"}\n*Impacto:* ${impacto || "Impacto servicio / usuarios"}\n*Acciones:*${formatearAcciones(acciones)}`;
+      },
+      'evento-fin': () => {
+        const { descripcion, impacto, estadoFin, fechaInicioFin, horaInicioFin, fechaFin, horaFin, acciones } = formData;
+        return `*GESTIÓN EVENTO*\n🟢 *${estadoFin}*\n\n*Descripción:* ${descripcion || "DESCRIPCION DEL INCIDENTE"}\n*Impacto:* ${impacto || "Impacto servicio / usuarios"}\n*Inicio:* ${formatearFecha(fechaInicioFin)} - ${horaInicioFin}\n*Fin:* ${formatearFecha(fechaFin)} - ${horaFin}\n*Duración:* ${duracionCalculada}\n*Acciones:*${formatearAcciones(acciones)}`;
+      },
+      'mantenimiento-inicio': () => {
+        const { motivo, impactoMant, ejecutor, estadoInicio, fechaInicio, horaInicio } = formData;
+        return `⚠️ *MANTENIMIENTO*\n\n*Estado:* ${estadoInicio}\n*Motivo:* ${motivo || "Descripción del Mantenimiento"}\n*Impacto:* ${impactoMant || "Impacto servicio / usuarios / clientes"}\n*Ejecutor:* ${ejecutor || "Nombre del proveedor o área interna que ejecuta el mantenimiento"}\n*Inicio:* ${formatearFecha(fechaInicio)} - ${horaInicio}`;
+      },
+      'mantenimiento-fin': () => {
+        const { motivo, impactoMant, ejecutor, estadoFin, fechaInicioFin, horaInicioFin, fechaFin, horaFin } = formData;
+        return `✅ *MANTENIMIENTO*\n\n*Estado:* ${estadoFin}\n*Motivo:* ${motivo || "Descripción del Mantenimiento"}\n*Impacto:* ${impactoMant || "Impacto servicio / usuarios / clientes"}\n*Ejecutor:* ${ejecutor || "Nombre del proveedor o área interna que ejecuta el mantenimiento"}\n*Inicio:* ${formatearFecha(fechaInicioFin)} - ${horaInicioFin}\n*Fin:* ${formatearFecha(fechaFin)} - ${horaFin}\n*Duración:* ${duracionCalculada}`;
+      },
+      'incidente-inicio': () => {
+        const { descripcion, impacto, estadoInicio, fechaInicio, horaInicio } = formData;
+        return `*GESTIÓN INCIDENTE*\n🟡 *${estadoInicio}*\n\n*Descripción:* ${descripcion || "DESCRIPCION DEL INCIDENTE"}\n*Impacto:* ${impacto || "Impacto servicio / usuarios"}\n*Inicio:* ${formatearFecha(fechaInicio)} - ${horaInicio}`;
+      },
+      'incidente-avance': () => {
+        const { descripcion, impacto, accionesEnCurso, accionesEjecutadas } = formData;
+        let msg = `*GESTIÓN INCIDENTE*\n🔁 *Avance*\n\n*Descripción:* ${descripcion || "DESCRIPCION DEL INCIDENTE"}\n*Impacto:* ${impacto || "Impacto servicio / usuarios"}`;
+        
+        if (accionesEnCurso) {
+          msg += `\n*Acciones en curso:*${formatearAcciones(accionesEnCurso)}`;
+        }
+        if (accionesEjecutadas) {
+          msg += `\n*Acciones ejecutadas:*${formatearAcciones(accionesEjecutadas)}`;
+        }
+        return msg;
+      },
+      'incidente-fin': () => {
+        const { descripcion, impacto, fechaInicioFin, horaInicioFin, fechaFin, horaFin, accionesEjecutadas } = formData;
+        return `*GESTIÓN INCIDENTE*\n🟢 *Recuperado*\n\n*Descripción:* ${descripcion || "DESCRIPCION DEL INCIDENTE"}\n*Impacto:* ${impacto || "Impacto servicio / usuarios"}\n*Inicio:* ${formatearFecha(fechaInicioFin)} - ${horaInicioFin}\n*Fin:* ${formatearFecha(fechaFin)} - ${horaFin}\n*Duración:* ${duracionCalculada}\n*Acciones ejecutadas:*${formatearAcciones(accionesEjecutadas)}`;
       }
     };
     
-    calcularDuracionInterna();
-  }, [fechaInicioFin, horaInicioFin, fechaFin, horaFin]);
-  
-  // Cuando cambie el tipo, actualizar automáticamente el estado correspondiente
-  useEffect(() => {
-    if (tipo === 'evento-inicio' || tipo === 'incidente-inicio') {
-      setEstadoInicio('En revisión');
-    } else if (tipo === 'evento-fin' || tipo === 'incidente-fin') {
-      setEstadoFin('Recuperado');
-    } else if (tipo === 'mantenimiento-inicio') {
-      setEstadoInicio('En curso');
-    } else if (tipo === 'mantenimiento-fin') {
-      setEstadoFin('Finalizado');
-    }
-  }, [tipo]);
-
-  // Funciones
-  const establecerFechaHoraActual = () => {
-    const hoy = new Date();
-    const fechaActual = hoy.toISOString().split('T')[0];
-    const horaActual = hoy.toTimeString().split(' ')[0];
+    mensaje = templates[tipo]?.() || "";
     
-    setFechaInicio(fechaActual);
-    setHoraInicio(horaActual);
-    setFechaInicioFin(fechaActual);
-    setHoraInicioFin(horaActual);
-    setFechaFin(fechaActual);
-    setHoraFin(horaActual);
-  };
-  
-  const limpiarCampos = () => {
-    // Limpiar campos de texto
-    setDescripcion('');
-    setImpacto('');
-    setMotivo('');
-    setImpactoMant('');
-    setEjecutor('');
-    setAcciones('');
-    setAccionesEjecutadas('');
-    setAccionesEnCurso('');
-    setNota('');
-    
-    // Restablecer fechas y horas actuales
-    establecerFechaHoraActual();
-    
-    // Mostrar alerta
-    setAlertaMensaje('¡Campos limpiados correctamente!');
-    setMostrarAlerta(true);
-    setTimeout(() => setMostrarAlerta(false), 3000);
-  };
-
-  const seleccionarTipo = (nuevoTipo) => {
-    const tipoAnterior = tipo;
-    setTipo(nuevoTipo);
-    
-    // Transferir datos entre tipos del mismo grupo
-    
-    // Para eventos
-    if (tipoAnterior.startsWith('evento-') && nuevoTipo.startsWith('evento-')) {
-      if (nuevoTipo === 'evento-fin') {
-        setFechaInicioFin(fechaInicio);
-        setHoraInicioFin(horaInicio);
-        if (tipoAnterior === 'evento-seguimiento' && acciones && !nota) {
-          setNota("Acciones realizadas:\n" + acciones);
-        }
-      }
-      
-      if (nuevoTipo === 'evento-seguimiento' && tipoAnterior === 'evento-inicio' && !acciones) {
-        setAcciones("Acciones en proceso:\n");
-      }
-    }
-    
-    // Para incidentes
-    if (tipoAnterior.startsWith('incidente-') && nuevoTipo.startsWith('incidente-')) {
-      if (nuevoTipo === 'incidente-fin') {
-        setFechaInicioFin(fechaInicio);
-        setHoraInicioFin(horaInicio);
-      }
-      
-      if (nuevoTipo === 'incidente-avance' && tipoAnterior === 'incidente-inicio') {
-        setAccionesEnCurso("Acción 1. Proveedor / Área interna\n");
-      }
-    }
-    
-    // Para mantenimientos
-    if (tipoAnterior.startsWith('mantenimiento-') && nuevoTipo.startsWith('mantenimiento-')) {
-      if (tipoAnterior === 'mantenimiento-inicio' && nuevoTipo === 'mantenimiento-fin') {
-        setFechaInicioFin(fechaInicio);
-        setHoraInicioFin(horaInicio);
-      }
-    }
-  };
-
-  const formatearFecha = (fechaISO) => {
-    if (!fechaISO) return "";
-    
-    const partes = fechaISO.split('-');
-    return `${partes[2]}/${partes[1]}/${partes[0]}`;
-  };
-
-  const generarMensaje = () => {
-    let mensaje = "";
-    
-    if (tipo === 'evento-inicio') {
-      const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
-      const impactoVal = impacto || "Impacto servicio / usuarios";
-      const estadoVal = estadoInicio || "En revisión";
-      
-      const fechaFormateada = formatearFecha(fechaInicio);
-      
-      mensaje = `*GESTIÓN EVENTO*\n🟡 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaFormateada} - ${horaInicio}`;
-    }
-    else if (tipo === 'evento-seguimiento') {
-      const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
-      const impactoVal = impacto || "Impacto servicio / usuarios";
-      
-      mensaje = `*GESTIÓN EVENTO*\n🔁 *Seguimiento*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Acciones:*`;
-      
-      if (acciones) {
-        const lineasAcciones = acciones.split('\n');
-        for (let i = 0; i < lineasAcciones.length; i++) {
-          const linea = lineasAcciones[i].trim();
-          if (linea) {
-            // Verificar si la línea contiene información del responsable con %%
-            if (linea.includes('%%')) {
-              // Formato: Acción %% Responsable
-              const [accion, responsable] = linea.split('%%').map(s => s.trim());
-              mensaje += `\n        • ${accion}`;
-              if (responsable) {
-                mensaje += `\n          Responsable: ${responsable}`;
-              }
-            } else {
-              // Solo la acción
-              mensaje += `\n        • ${linea}`;
-            }
-          }
-        }
-      } else {
-        mensaje += "\n        • Sin acciones registradas";
-      }
-    }
-    else if (tipo === 'evento-fin') {
-      const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
-      const impactoVal = impacto || "Impacto servicio / usuarios";
-      const estadoVal = estadoFin || "Recuperado";
-      
-      const fechaInicioFormateada = formatearFecha(fechaInicioFin);
-      const fechaFinFormateada = formatearFecha(fechaFin);
-      
-      mensaje = `*GESTIÓN EVENTO*\n🟢 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}\n*Acciones:*`;
-      
-      if (acciones) {
-        const lineasAcciones = acciones.split('\n');
-        for (let i = 0; i < lineasAcciones.length; i++) {
-          const linea = lineasAcciones[i].trim();
-          if (linea) {
-            // Verificar si la línea contiene información del responsable con %%
-            if (linea.includes('%%')) {
-              // Formato: Acción %% Responsable
-              const [accion, responsable] = linea.split('%%').map(s => s.trim());
-              mensaje += `\n        • ${accion}`;
-              if (responsable) {
-                mensaje += `\n          Responsable: ${responsable}`;
-              }
-            } else {
-              // Solo la acción
-              mensaje += `\n        • ${linea}`;
-            }
-          }
-        }
-      } else {
-        mensaje += "\n        • Sin acciones registradas";
-      }
-    }
-    else if (tipo === 'mantenimiento-inicio') {
-      const motivoVal = motivo || "Descripción del Mantenimiento";
-      const impactoVal = impactoMant || "Impacto servicio / usuarios / clientes";
-      const ejecutorVal = ejecutor || "Nombre del proveedor o área interna que ejecuta el mantenimiento";
-      const estadoVal = estadoInicio || "En curso";
-      
-      const fechaFormateada = formatearFecha(fechaInicio);
-      
-      mensaje = `⚠️ *MANTENIMIENTO*\n\n*Estado:* ${estadoVal}\n*Motivo:* ${motivoVal}\n*Impacto:* ${impactoVal}\n*Ejecutor:* ${ejecutorVal}\n*Inicio:* ${fechaFormateada} - ${horaInicio}`;
-    }
-    else if (tipo === 'mantenimiento-fin') {
-      const motivoVal = motivo || "Descripción del Mantenimiento";
-      const impactoVal = impactoMant || "Impacto servicio / usuarios / clientes";
-      const ejecutorVal = ejecutor || "Nombre del proveedor o área interna que ejecuta el mantenimiento";
-      const estadoVal = estadoFin || "Finalizado";
-      
-      const fechaInicioFormateada = formatearFecha(fechaInicioFin);
-      const fechaFinFormateada = formatearFecha(fechaFin);
-      
-      mensaje = `✅ *MANTENIMIENTO*\n\n*Estado:* ${estadoVal}\n*Motivo:* ${motivoVal}\n*Impacto:* ${impactoVal}\n*Ejecutor:* ${ejecutorVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}`;
-    }
-    else if (tipo === 'incidente-inicio') {
-      const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
-      const impactoVal = impacto || "Impacto servicio / usuarios";
-      const estadoVal = estadoInicio || "En revisión";
-      
-      const fechaFormateada = formatearFecha(fechaInicio);
-      
-      mensaje = `*GESTIÓN INCIDENTE*\n🟡 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaFormateada} - ${horaInicio}`;
-    }
-    else if (tipo === 'incidente-avance') {
-      const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
-      const impactoVal = impacto || "Impacto servicio / usuarios";
-      
-      mensaje = `*GESTIÓN INCIDENTE*\n🔁 *Avance*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}`;
-      
-      if (accionesEnCurso) {
-        mensaje += "\n*Acciones en curso:*";
-        const lineasAcciones = accionesEnCurso.split('\n');
-        for (let i = 0; i < lineasAcciones.length; i++) {
-          const linea = lineasAcciones[i].trim();
-          if (linea) {
-            // Verificar si la línea contiene información del responsable con %%
-            if (linea.includes('%%')) {
-              // Formato: Acción %% Responsable
-              const [accion, responsable] = linea.split('%%').map(s => s.trim());
-              mensaje += `\n        • ${accion}`;
-              if (responsable) {
-                mensaje += `\n          Responsable: ${responsable}`;
-              }
-            } else {
-              // Solo la acción
-              mensaje += `\n        • ${linea}`;
-            }
-          }
-        }
-      }
-      
-      if (accionesEjecutadas) {
-        mensaje += "\n*Acciones ejecutadas:*";
-        const lineasAcciones = accionesEjecutadas.split('\n');
-        for (let i = 0; i < lineasAcciones.length; i++) {
-          const linea = lineasAcciones[i].trim();
-          if (linea) {
-            // Verificar si la línea contiene información del responsable con %%
-            if (linea.includes('%%')) {
-              // Formato: Acción %% Responsable
-              const [accion, responsable] = linea.split('%%').map(s => s.trim());
-              mensaje += `\n        • ${accion}`;
-              if (responsable) {
-                mensaje += `\n          Responsable: ${responsable}`;
-              }
-            } else {
-              // Solo la acción
-              mensaje += `\n        • ${linea}`;
-            }
-          }
-        }
-      }
-    }
-    else if (tipo === 'incidente-fin') {
-      const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
-      const impactoVal = impacto || "Impacto servicio / usuarios";
-      const estadoFin = 'Recuperado';
-      
-      const fechaInicioFormateada = formatearFecha(fechaInicioFin);
-      const fechaFinFormateada = formatearFecha(fechaFin);
-      
-      mensaje = `*GESTIÓN INCIDENTE*\n🟢 *${estadoFin}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}\n*Acciones ejecutadas:*`;
-      
-      if (accionesEjecutadas) {
-        const lineasAcciones = accionesEjecutadas.split('\n');
-        for (let i = 0; i < lineasAcciones.length; i++) {
-          const linea = lineasAcciones[i].trim();
-          if (linea) {
-            // Verificar si la línea contiene información del responsable con %%
-            if (linea.includes('%%')) {
-              // Formato: Acción %% Responsable
-              const [accion, responsable] = linea.split('%%').map(s => s.trim());
-              mensaje += `\n        • ${accion}`;
-              if (responsable) {
-                mensaje += `\n          Responsable: ${responsable}`;
-              }
-            } else {
-              // Solo la acción
-              mensaje += `\n        • ${linea}`;
-            }
-          }
-        }
-      } else {
-        mensaje += "\n        • Sin acciones ejecutadas";
-      }
-    }
-    
-    // Agregar nota si existe
-    if (nota) {
-      // Para mantenimientos, formatear la nota de manera diferente
-      if (tipo.startsWith('mantenimiento-')) {
-        mensaje += `\n\n*📣 NOTA:*\n        Observaciones con detalle que permitan brindar más información en el caso que amerite.`;
-        // Si el usuario agregó texto, lo incluimos
-        if (nota.trim() !== "") {
-          mensaje = mensaje.replace("Observaciones con detalle que permitan brindar más información en el caso que amerite.", nota);
-        }
-      } else {
-        // Para otros tipos de comunicados, usar el formato estándar
-        mensaje += `\n\n*📣 NOTA:*\n        ${nota}`;
-      }
+    if (formData.nota) {
+      mensaje += `\n\n*📣 NOTA:*\n        ${formData.nota}`;
     }
     
     setResultado(mensaje);
-    setMostrarAlerta(false);
-  };
+    showAlert('¡Comunicado generado exitosamente!');
+  }, [formData, duracionCalculada, formatearFecha, formatearAcciones, showAlert]);
 
-  const copiar = () => {
+  const copiarAlPortapapeles = useCallback(async () => {
     if (!resultado) {
-      alert("No hay ningún comunicado generado para copiar.");
+      showAlert('No hay comunicado para copiar', 'error');
       return;
     }
-    
-    // Método 1: Usar la API moderna del portapapeles
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(resultado)
-        .then(() => {
-          setAlertaMensaje('¡Comunicado copiado al portapapeles!');
-          setMostrarAlerta(true);
-          setTimeout(() => setMostrarAlerta(false), 3000);
-        })
-        .catch(err => {
-          console.error('Error al copiar con API moderna:', err);
-          // Si falla, intentar el método alternativo
-          copiarMetodoAlternativo();
-        });
-    } else {
-      // Si no está disponible la API moderna, usar el método alternativo
-      copiarMetodoAlternativo();
-    }
-  };
 
-  const copiarMetodoAlternativo = () => {
-    // Método 2: Crear un textarea temporal
-    const textArea = document.createElement("textarea");
-    textArea.value = resultado;
-    
-    // Evitar el scroll al agregar el elemento
-    textArea.style.position = "fixed";
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.width = "2em";
-    textArea.style.height = "2em";
-    textArea.style.padding = "0";
-    textArea.style.border = "none";
-    textArea.style.outline = "none";
-    textArea.style.boxShadow = "none";
-    textArea.style.background = "transparent";
-    
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    
     try {
-      const successful = document.execCommand('copy');
-      
-      if (successful) {
-        setAlertaMensaje('¡Comunicado copiado al portapapeles!');
-        setMostrarAlerta(true);
-        setTimeout(() => setMostrarAlerta(false), 3000);
-      } else {
-        // Método 3: Si todo falla, mostrar el texto para copiar manualmente
-        alert("No se pudo copiar automáticamente. Por favor, selecciona y copia el texto manualmente:\n\n" + resultado);
-      }
+      await navigator.clipboard.writeText(resultado);
+      showAlert('¡Comunicado copiado al portapapeles!');
     } catch (err) {
-      console.error('Error al copiar con método alternativo:', err);
-      alert("Error al copiar. Por favor, selecciona y copia el texto manualmente.");
-    } finally {
-      document.body.removeChild(textArea);
+      showAlert('Error al copiar. Intenta seleccionar y copiar manualmente.', 'error');
     }
-  };
+  }, [resultado, showAlert]);
+
+  // Componentes de UI
+  const TipoButton = ({ id, icon, nombre, isActive, onClick }) => (
+    <button
+      onClick={() => onClick(id)}
+      className={`
+        flex flex-col items-center p-4 rounded-xl transition-all duration-300 transform
+        ${isActive 
+          ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg scale-105' 
+          : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/70 hover:scale-102'
+        }
+      `}
+    >
+      <span className="text-2xl mb-2">{icon}</span>
+      <span className="font-medium">{nombre}</span>
+    </button>
+  );
+
+  const FormField = ({ label, name, type = "text", placeholder, value, onChange, readOnly = false, rows }) => (
+    <div>
+      <label className="block mb-2 font-medium text-gray-300">{label}</label>
+      {type === 'textarea' ? (
+        <textarea
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          rows={rows || 4}
+          className="w-full p-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+        />
+      ) : (
+        <input
+          type={type}
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          readOnly={readOnly}
+          className={`w-full p-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all ${
+            readOnly ? 'opacity-75 cursor-not-allowed' : ''
+          }`}
+        />
+      )}
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#002B5B] via-[#003875] to-[#002B5B] text-gray-100">
-      <div className="max-w-5xl mx-auto p-6">
-        <header className="bg-[#004488]/40 backdrop-blur-lg p-8 text-center rounded-2xl mb-10 border border-blue-400/20 shadow-2xl transform hover:scale-[1.02] transition-all duration-300">
-          <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-6xl text-white font-bold shadow-lg transform hover:rotate-12 transition-transform duration-300">
-            📝
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
+      <div className="max-w-6xl mx-auto p-4 md:p-6">
+        {/* Header */}
+        <header className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-lg p-6 md:p-8 text-center rounded-2xl mb-8 border border-blue-500/20 shadow-xl">
+          <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center animate-pulse">
+            <MessageSquare size={40} className="text-white" />
           </div>
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-300 to-blue-100 bg-clip-text text-transparent tracking-wider mb-3">
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-2">
             Generador de Comunicados
           </h1>
-          <p className="text-xl text-gray-300">
-            Sistema de creación de comunicados para el Grupo de Monitoreo
-          </p>
+          <p className="text-lg text-gray-300">Sistema para el Grupo de Monitoreo</p>
         </header>
-        
-        <div className="bg-[#002B5B]/80 backdrop-blur-lg rounded-2xl p-8 mb-10 shadow-2xl border border-blue-700/30 hover:border-blue-600/50 transition-all duration-300">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-300 to-blue-500 bg-clip-text text-transparent mt-0 border-b border-blue-500/30 pb-4 mb-6">
+
+        {/* Main Content */}
+        <div className="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-6 md:p-8 mb-8 shadow-xl border border-gray-700/50">
+          <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+            <Settings className="mr-3 text-blue-400" size={24} />
             Tipo de Comunicado
           </h2>
           
-          {/* Tipos de Evento */}
-          <div className="mb-8">
-            <h3 className="text-2xl font-semibold text-white mt-6 mb-4 flex items-center">
-              <span className="w-2 h-8 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full mr-3"></span>
-              Eventos
-            </h3>
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <div 
-                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-                  tipo === 'evento-inicio' 
-                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
-                    : 'bg-[#003875]/50 text-gray-300 hover:bg-[#003875]/70'
-                }`}
-                onClick={() => seleccionarTipo('evento-inicio')}
-              >
-                <span className="text-3xl mb-2">🟡</span>
-                <span className="font-semibold">Inicio</span>
+          {/* Selector de Tipos */}
+          <div className="space-y-6">
+            {Object.entries(TIPOS_CONFIG).map(([categoria, tipos]) => (
+              <div key={categoria}>
+                <h3 className="text-xl font-semibold text-white mb-3 flex items-center capitalize">
+                  <Activity className="mr-2 text-blue-400" size={20} />
+                  {categoria}
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {tipos.map((tipo) => (
+                    <TipoButton
+                      key={tipo.id}
+                      {...tipo}
+                      isActive={formData.tipo === tipo.id}
+                      onClick={seleccionarTipo}
+                    />
+                  ))}
+                </div>
               </div>
-              <div 
-                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-                  tipo === 'evento-seguimiento' 
-                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
-                    : 'bg-[#003875]/50 text-gray-300 hover:bg-[#003875]/70'
-                }`}
-                onClick={() => seleccionarTipo('evento-seguimiento')}
-              >
-                <span className="text-3xl mb-2">🔁</span>
-                <span className="font-semibold">Seguimiento</span>
-              </div>
-              <div 
-                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-                  tipo === 'evento-fin' 
-                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
-                    : 'bg-[#003875]/50 text-gray-300 hover:bg-[#003875]/70'
-                }`}
-                onClick={() => seleccionarTipo('evento-fin')}
-              >
-                <span className="text-3xl mb-2">🟢</span>
-                <span className="font-semibold">Fin</span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Tipos de Mantenimiento */}
-          <div className="mb-8">
-            <h3 className="text-2xl font-semibold text-white mt-6 mb-4 flex items-center">
-              <span className="w-2 h-8 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full mr-3"></span>
-              Mantenimientos
-            </h3>
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div 
-                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-                  tipo === 'mantenimiento-inicio' 
-                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
-                    : 'bg-[#003875]/50 text-gray-300 hover:bg-[#003875]/70'
-                }`}
-                onClick={() => seleccionarTipo('mantenimiento-inicio')}
-              >
-                <span className="text-3xl mb-2">⚠️</span>
-                <span className="font-semibold">Inicio</span>
-              </div>
-              <div 
-                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-                  tipo === 'mantenimiento-fin' 
-                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
-                    : 'bg-[#003875]/50 text-gray-300 hover:bg-[#003875]/70'
-                }`}
-                onClick={() => seleccionarTipo('mantenimiento-fin')}
-              >
-                <span className="text-3xl mb-2">✅</span>
-                <span className="font-semibold">Fin</span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Tipos de Incidente */}
-          <div className="mb-8">
-            <h3 className="text-2xl font-semibold text-white mt-6 mb-4 flex items-center">
-              <span className="w-2 h-8 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full mr-3"></span>
-              Incidentes
-            </h3>
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <div 
-                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-                  tipo === 'incidente-inicio' 
-                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
-                    : 'bg-[#003875]/50 text-gray-300 hover:bg-[#003875]/70'
-                }`}
-                onClick={() => seleccionarTipo('incidente-inicio')}
-              >
-                <span className="text-3xl mb-2">🟡</span>
-                <span className="font-semibold">Inicio</span>
-              </div>
-              <div 
-                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-                  tipo === 'incidente-avance' 
-                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
-                    : 'bg-[#003875]/50 text-gray-300 hover:bg-[#003875]/70'
-                }`}
-                onClick={() => seleccionarTipo('incidente-avance')}
-              >
-                <span className="text-3xl mb-2">🔁</span>
-                <span className="font-semibold">Avance</span>
-              </div>
-              <div 
-                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-                  tipo === 'incidente-fin' 
-                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
-                    : 'bg-[#003875]/50 text-gray-300 hover:bg-[#003875]/70'
-                }`}
-                onClick={() => seleccionarTipo('incidente-fin')}
-              >
-                <span className="text-3xl mb-2">🟢</span>
-                <span className="font-semibold">Fin</span>
-              </div>
-            </div>
+            ))}
           </div>
 
-          {/* Campos para Evento o Incidente */}
-          {(tipo.startsWith('evento-') || tipo.startsWith('incidente-')) && (
-            <div className="space-y-6">
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Descripción:</label>
-                <input 
-                  className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
-                  type="text" 
-                  placeholder="DESCRIPCION DEL INCIDENTE"
-                  value={descripcion}
-                  onChange={(e) => setDescripcion(e.target.value)}
+          {/* Formulario Dinámico */}
+          <div className="mt-8 space-y-6">
+            {/* Campos para Eventos e Incidentes */}
+            {(formData.tipo.startsWith('evento-') || formData.tipo.startsWith('incidente-')) && (
+              <>
+                <FormField
+                  label="Descripción"
+                  name="descripcion"
+                  value={formData.descripcion}
+                  onChange={handleInputChange}
+                  placeholder="Descripción del incidente"
                 />
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Impacto:</label>
-                <input 
-                  className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
-                  type="text" 
-                  placeholder="Impacto servicio / usuarios"
-                  value={impacto}
-                  onChange={(e) => setImpacto(e.target.value)}
+                <FormField
+                  label="Impacto"
+                  name="impacto"
+                  value={formData.impacto}
+                  onChange={handleInputChange}
+                  placeholder="Impacto en servicio/usuarios"
                 />
-              </div>
-            </div>
-          )}
-          
-          {/* Campos para Mantenimiento */}
-          {tipo.startsWith('mantenimiento-') && (
-            <div className="space-y-6">
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Motivo:</label>
-                <input 
-                  className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
-                  type="text" 
-                  placeholder="Descripción del Mantenimiento"
-                  value={motivo}
-                  onChange={(e) => setMotivo(e.target.value)}
-                />
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Impacto:</label>
-                <input 
-                  className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
-                  type="text" 
-                  placeholder="Impacto servicio / usuarios / clientes"
-                  value={impactoMant}
-                  onChange={(e) => setImpactoMant(e.target.value)}
-                />
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Ejecutor:</label>
-                <input 
-                  className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
-                  type="text" 
-                  placeholder="Nombre del proveedor o área interna que ejecuta el mantenimiento"
-                  value={ejecutor}
-                  onChange={(e) => setEjecutor(e.target.value)}
-                />
-              </div>
-            </div>
-          )}
-          
-          {/* Campos comunes para Inicio */}
-          {(tipo.endsWith('-inicio')) && (
-            <div className="space-y-6 mt-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block mb-2 font-semibold text-gray-300">Fecha:</label>
-                  <input 
-                    className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
-                    type="date" 
-                    value={fechaInicio}
-                    onChange={(e) => setFechaInicio(e.target.value)}
-                  />
-                </div>
-                
-                <div>
-                  <label className="block mb-2 font-semibold text-gray-300">Hora:</label>
-                  <input 
-                    className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
-                    type="time" 
-                    step="1"
-                    value={horaInicio}
-                    onChange={(e) => setHoraInicio(e.target.value)}
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Estado:</label>
-                <input 
-                  className="w-full p-4 bg-gray-700/30 border border-gray-600/50 rounded-xl text-gray-400 cursor-not-allowed"
-                  type="text" 
-                  value={estadoInicio}
-                  readOnly
-                />
-              </div>
-            </div>
-          )}
+              </>
+            )}
 
-          {/* Campos para Seguimiento (solo Eventos) */}
-          {tipo === 'evento-seguimiento' && (
-            <div className="mt-6">
-              <label className="block mb-2 font-semibold text-gray-300">Acciones (una por línea):</label>
-              <textarea 
-                className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
-                placeholder="Formato: Acción %% Responsable (opcional)
-Ejemplo:
-Monitoreo continuo del servicio %% Equipo NOC
-Validación de métricas %% Soporte N2
-Revisión de logs de aplicación"
-                value={acciones}
-                onChange={(e) => setAcciones(e.target.value)}
-              ></textarea>
-              <p className="text-sm text-gray-400 mt-2 flex items-center">
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
-              </p>
-            </div>
-          )}
-          
-          {/* Campos para Avance (solo Incidentes) */}
-          {tipo === 'incidente-avance' && (
-            <div className="space-y-6 mt-6">
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Acciones en curso (una por línea):</label>
-                <textarea 
-                  className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
-                  placeholder="Formato: Acción %% Responsable (opcional)
-Ejemplo:
-Análisis de logs %% Equipo de Monitoreo
-Revisión de configuración %% DBA Team
-Escalamiento a proveedor"
-                  value={accionesEnCurso}
-                  onChange={(e) => setAccionesEnCurso(e.target.value)}
-                ></textarea>
-                <p className="text-sm text-gray-400 mt-2 flex items-center">
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
-                </p>
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas (una por línea):</label>
-                <textarea 
-                  className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
-                  placeholder="Formato: Acción %% Responsable (opcional)
-Ejemplo:
-Reinicio de servicios %% Equipo de Infraestructura
-Limpieza de caché %% Soporte N1
-Verificación inicial"
-                  value={accionesEjecutadas}
-                  onChange={(e) => setAccionesEjecutadas(e.target.value)}
-                ></textarea>
-                <p className="text-sm text-gray-400 mt-2 flex items-center">
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
-                </p>
-              </div>
-            </div>
-          )}
-          
-          {/* Campos para Fin */}
-          {tipo.endsWith('-fin') && (
-            <div className="space-y-6 mt-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block mb-2 font-semibold text-gray-300">Fecha inicio:</label>
-                  <input 
-                    className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                    type="date" 
-                    value={fechaInicioFin}
-                    onChange={(e) => setFechaInicioFin(e.target.value)}
-                  />
-                </div>
-                
-                <div>
-                  <label className="block mb-2 font-semibold text-gray-300">Hora inicio:</label>
-                  <input 
-                    className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                    type="time" 
-                    step="1"
-                    value={horaInicioFin}
-                    onChange={(e) => setHoraInicioFin(e.target.value)}
-                  />
-                </div>
-                
-                <div>
-                  <label className="block mb-2 font-semibold text-gray-300">Fecha fin:</label>
-                  <input 
-                    className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                    type="date" 
-                    value={fechaFin}
-                    onChange={(e) => setFechaFin(e.target.value)}
-                  />
-                </div>
-                
-                <div>
-                  <label className="block mb-2 font-semibold text-gray-300">Hora fin:</label>
-                  <input 
-                    className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                    type="time" 
-                    step="1"
-                    value={horaFin}
-                    onChange={(e) => setHoraFin(e.target.value)}
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Duración calculada:</label>
-                <div className="p-6 bg-blue-600/10 border border-blue-500/30 rounded-xl text-center">
-                  <span className="text-3xl font-bold text-blue-400">{duracionCalculada}</span>
-                </div>
-              </div>
-              
-              <div>
-                <label className="block mb-2 font-semibold text-gray-300">Estado:</label>
-                <input 
-                  className="w-full p-4 bg-[#002B5B]/50 border border-blue-700/50 rounded-xl text-gray-400 cursor-not-allowed"
-                  type="text" 
-                  value={estadoFin}
-                  readOnly
+            {/* Campos para Mantenimiento */}
+            {formData.tipo.startsWith('mantenimiento-') && (
+              <>
+                <FormField
+                  label="Motivo"
+                  name="motivo"
+                  value={formData.motivo}
+                  onChange={handleInputChange}
+                  placeholder="Descripción del mantenimiento"
+                />
+                <FormField
+                  label="Impacto"
+                  name="impactoMant"
+                  value={formData.impactoMant}
+                  onChange={handleInputChange}
+                  placeholder="Impacto en servicio/usuarios/clientes"
+                />
+                <FormField
+                  label="Ejecutor"
+                  name="ejecutor"
+                  value={formData.ejecutor}
+                  onChange={handleInputChange}
+                  placeholder="Proveedor o área interna"
+                />
+              </>
+            )}
+
+            {/* Campos de Fecha/Hora para Inicio */}
+            {formData.tipo.endsWith('-inicio') && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  label="Fecha"
+                  name="fechaInicio"
+                  type="date"
+                  value={formData.fechaInicio}
+                  onChange={handleInputChange}
+                />
+                <FormField
+                  label="Hora"
+                  name="horaInicio"
+                  type="time"
+                  value={formData.horaInicio}
+                  onChange={handleInputChange}
                 />
               </div>
-              
-              {(tipo === 'evento-fin' || tipo === 'incidente-fin') && (
-                <div>
-                  <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas:</label>
-                  <textarea 
-                    className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-                    placeholder="Formato: Acción %% Responsable (opcional)
-Ejemplo:
-Reinicio del servidor %% Equipo de Infraestructura
-Actualización de base de datos %% DBA Team
-Verificación de logs"
-                    value={tipo === 'evento-fin' ? acciones : accionesEjecutadas}
-                    onChange={(e) => tipo === 'evento-fin' ? setAcciones(e.target.value) : setAccionesEjecutadas(e.target.value)}
-                  ></textarea>
-                  <p className="text-sm text-gray-400 mt-2 flex items-center">
-                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
-                  </p>
+            )}
+
+            {/* Campos para Acciones */}
+            {formData.tipo === 'evento-seguimiento' && (
+              <FormField
+                label="Acciones (una por línea)"
+                name="acciones"
+                type="textarea"
+                value={formData.acciones}
+                onChange={handleInputChange}
+                placeholder="Acción %% Responsable (opcional)"
+                rows={5}
+              />
+            )}
+
+            {formData.tipo === 'incidente-avance' && (
+              <>
+                <FormField
+                  label="Acciones en curso"
+                  name="accionesEnCurso"
+                  type="textarea"
+                  value={formData.accionesEnCurso}
+                  onChange={handleInputChange}
+                  placeholder="Acción %% Responsable (opcional)"
+                  rows={5}
+                />
+                <FormField
+                  label="Acciones ejecutadas"
+                  name="accionesEjecutadas"
+                  type="textarea"
+                  value={formData.accionesEjecutadas}
+                  onChange={handleInputChange}
+                  placeholder="Acción %% Responsable (opcional)"
+                  rows={5}
+                />
+              </>
+            )}
+
+            {/* Campos para Fin */}
+            {formData.tipo.endsWith('-fin') && (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    label="Fecha inicio"
+                    name="fechaInicioFin"
+                    type="date"
+                    value={formData.fechaInicioFin}
+                    onChange={handleInputChange}
+                  />
+                  <FormField
+                    label="Hora inicio"
+                    name="horaInicioFin"
+                    type="time"
+                    value={formData.horaInicioFin}
+                    onChange={handleInputChange}
+                  />
+                  <FormField
+                    label="Fecha fin"
+                    name="fechaFin"
+                    type="date"
+                    value={formData.fechaFin}
+                    onChange={handleInputChange}
+                  />
+                  <FormField
+                    label="Hora fin"
+                    name="horaFin"
+                    type="time"
+                    value={formData.horaFin}
+                    onChange={handleInputChange}
+                  />
                 </div>
-              )}
-            </div>
-          )}
-          
-          <div className="mt-8">
-            <label className="block mb-2 font-semibold text-gray-300">Nota adicional (opcional):</label>
-            <textarea 
-              className="w-full p-4 bg-[#003875]/50 border border-blue-600/50 rounded-xl text-white placeholder-gray-400 h-32 resize-y focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200"
-              placeholder="Observaciones con detalle que permitan brindar más información en el caso que amerite"
-              value={nota}
-              onChange={(e) => setNota(e.target.value)}
-            ></textarea>
-          </div>
-          
-          <div className="flex gap-4 mt-8">
-            <button 
-              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-blue-500/25 transform hover:-translate-y-0.5"
+                
+                <div className="p-4 bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-500/20 rounded-lg">
+                  <div className="text-center">
+                    <p className="text-sm text-gray-400 mb-1">Duración calculada</p>
+                    <p className="text-2xl font-bold text-blue-400">{duracionCalculada}</p>
+                  </div>
+                </div>
+
+                {(formData.tipo === 'evento-fin' || formData.tipo === 'incidente-fin') && (
+                  <FormField
+                    label="Acciones ejecutadas"
+                    name={formData.tipo === 'evento-fin' ? 'acciones' : 'accionesEjecutadas'}
+                    type="textarea"
+                    value={formData.tipo === 'evento-fin' ? formData.acciones : formData.accionesEjecutadas}
+                    onChange={handleInputChange}
+                    placeholder="Acción %% Responsable (opcional)"
+                    rows={5}
+                  />
+                )}
+              </>
+            )}
+
+            {/* Nota adicional */}
+            <FormField
+              label="Nota adicional (opcional)"
+              name="nota"
+              type="textarea"
+              value={formData.nota}
+              onChange={handleInputChange}
+              placeholder="Observaciones adicionales"
+              rows={3}
+            />
+
+            {/* Botón Generar */}
+            <button
               onClick={generarMensaje}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center"
             >
+              <RefreshCw className="mr-2" size={20} />
               Generar Comunicado
             </button>
           </div>
         </div>
-        
-        <div className="bg-[#002B5B]/80 backdrop-blur-lg rounded-2xl p-8 mb-10 shadow-2xl border border-blue-700/30 hover:border-blue-600/50 transition-all duration-300">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-300 to-blue-500 bg-clip-text text-transparent mt-0 border-b border-blue-500/30 pb-4 mb-6">
+
+        {/* Resultado */}
+        <div className="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-6 md:p-8 mb-8 shadow-xl border border-gray-700/50">
+          <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
+            <MessageSquare className="mr-3 text-blue-400" size={24} />
             Comunicado Generado
           </h2>
-          <div className="bg-[#001F3F] p-6 rounded-xl font-mono border-l-4 border-blue-500 mt-4 min-h-40 overflow-x-auto leading-relaxed">
-            <pre className="whitespace-pre-wrap text-gray-100">{resultado}</pre>
-          </div>
           
-          {mostrarAlerta && (
-            <div className="my-6 p-4 rounded-xl bg-green-500/20 border-l-4 border-green-500">
-              <p className="text-green-400 flex items-center">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {alertaMensaje}
-              </p>
+          <div className="bg-gray-900 p-4 rounded-lg font-mono border-l-4 border-blue-500 min-h-[150px] overflow-x-auto">
+            <pre className="whitespace-pre-wrap text-gray-100">{resultado || 'El comunicado aparecerá aquí...'}</pre>
+          </div>
+
+          {/* Alert */}
+          {alert.show && (
+            <div className={`mt-4 p-4 rounded-lg flex items-center ${
+              alert.type === 'success' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+            }`}>
+              {alert.type === 'success' ? <CheckCircle size={20} className="mr-2" /> : <AlertCircle size={20} className="mr-2" />}
+              {alert.message}
             </div>
           )}
-          
-          <div className="flex gap-4 mt-8">
-            <button 
-              className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
-              onClick={copiar}
+
+          {/* Botones de acción */}
+          <div className="flex flex-col md:flex-row gap-4 mt-6">
+            <button
+              onClick={copiarAlPortapapeles}
+              className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center"
             >
+              <Copy className="mr-2" size={20} />
               Copiar al Portapapeles
             </button>
-            <button 
-              className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-red-500/25 transform hover:-translate-y-0.5"
+            <button
               onClick={limpiarCampos}
+              className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center"
             >
+              <Trash2 className="mr-2" size={20} />
               Limpiar Campos
             </button>
           </div>
         </div>
-        
-        <footer className="text-center py-8 mt-12 text-gray-400 text-sm border-t border-blue-700/50">
-          <p className="mb-2">Desarrollado por Luis Alberto Herrera Lara</p>
-          <p>Generador de Comunicados para el Grupo de Monitoreo - Versión 1.1</p>
-          <p className="text-xs mt-1">Actualizado el 4 de marzo</p>
+
+        {/* Footer */}
+        <footer className="text-center py-6 text-gray-400 text-sm border-t border-gray-700/50">
+          <p className="mb-1">Desarrollado por Luis Alberto Herrera Lara</p>
+          <p>Generador de Comunicados - Versión 2.0 Optimizada</p>
+          <p className="text-xs">Actualizado el {new Date().toLocaleDateString()}</p>
         </footer>
       </div>
     </div>
