@@ -1,13 +1,8 @@
-import React from 'react';
-import './App.css';
-import GeneradorComunicados from './GeneradorComunicados';
+import React, { useState, useEffect } from 'react';
+import { Calendar, Clock, AlertCircle, CheckCircle, RefreshCw, Copy, Trash2, Wrench, ChevronRight, Zap, MessageSquare, AlertTriangle, Bell, Settings } from 'lucide-react';
 
-function App() {
-  return (
-    <div className="App">
-      <GeneradorComunicados />
-    </div>
-  );
-}
+const GeneradorComunicados = () => {
+  // Tu código del componente aquí
+};
 
-export default App;
+export default GeneradorComunicados;
