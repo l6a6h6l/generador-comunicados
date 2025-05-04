@@ -24,7 +24,6 @@ const GeneradorComunicados = () => {
   const [resultado, setResultado] = useState('');
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [alertaMensaje, setAlertaMensaje] = useState('¡Comunicado copiado al portapapeles!');
-  const [causaRaiz, setCausaRaiz] = useState('');
 
   // Establecer fechas y horas actuales al cargar
   useEffect(() => {
@@ -33,7 +32,6 @@ const GeneradorComunicados = () => {
 
   // Calcular duración cuando cambien las fechas u horas relevantes
   useEffect(() => {
-    // Definir calcularDuracion dentro del efecto para evitar dependencia cíclica
     const calcularDuracionInterna = () => {
       try {
         if (!fechaInicioFin || !horaInicioFin || !fechaFin || !horaFin) {
@@ -99,7 +97,6 @@ const GeneradorComunicados = () => {
     setAccionesEjecutadas('');
     setAccionesEnCurso('');
     setNota('');
-    setCausaRaiz('');
     
     // Restablecer fechas y horas actuales
     establecerFechaHoraActual();
@@ -170,16 +167,6 @@ const GeneradorComunicados = () => {
       const fechaFormateada = formatearFecha(fechaInicio);
       
       mensaje = `*GESTIÓN EVENTO*\n🟡 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaFormateada} - ${horaInicio}`;
-      
-      if (acciones && acciones.trim().length > 0) {
-        mensaje += "\n*Acciones:*";
-        const lineasAcciones = acciones.split('\n');
-        for (let i = 0; i < lineasAcciones.length; i++) {
-          if (lineasAcciones[i].trim()) {
-            mensaje += `\n        • ${lineasAcciones[i]}`;
-          }
-        }
-      }
     }
     else if (tipo === 'evento-seguimiento') {
       const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
@@ -191,11 +178,11 @@ const GeneradorComunicados = () => {
         const lineasAcciones = acciones.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           if (lineasAcciones[i].trim()) {
-            mensaje += `\n• ${lineasAcciones[i]}`;
+            mensaje += `\n        • ${lineasAcciones[i]}`;
           }
         }
       } else {
-        mensaje += "\n• Sin acciones registradas";
+        mensaje += "\n        • Sin acciones registradas";
       }
     }
     else if (tipo === 'evento-fin') {
@@ -206,20 +193,29 @@ const GeneradorComunicados = () => {
       const fechaInicioFormateada = formatearFecha(fechaInicioFin);
       const fechaFinFormateada = formatearFecha(fechaFin);
       
-      mensaje = `*GESTIÓN EVENTO*\n🟢 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}`;
+      mensaje = `*GESTIÓN EVENTO*\n🟢 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}\n*Acciones:*`;
       
       if (acciones) {
-        mensaje += "\n*Acciones:*";
         const lineasAcciones = acciones.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
-          if (lineasAcciones[i].trim()) {
-            mensaje += `\n • ${lineasAcciones[i]}`;
+          const linea = lineasAcciones[i].trim();
+          if (linea) {
+            // Verificar si la línea contiene información del responsable con %%
+            if (linea.includes('%%')) {
+              // Formato: Acción %% Responsable
+              const [accion, responsable] = linea.split('%%').map(s => s.trim());
+              mensaje += `\n        • ${accion}`;
+              if (responsable) {
+                mensaje += `\n          Responsable: ${responsable}`;
+              }
+            } else {
+              // Solo la acción
+              mensaje += `\n        • ${linea}`;
+            }
           }
         }
-      }
-
-      if (causaRaiz) {
-        mensaje += `\n*Causa raíz:* ${causaRaiz}`;
+      } else {
+        mensaje += "\n        • Sin acciones registradas";
       }
     }
     else if (tipo === 'mantenimiento-inicio') {
@@ -230,7 +226,7 @@ const GeneradorComunicados = () => {
       
       const fechaFormateada = formatearFecha(fechaInicio);
       
-      mensaje = `⚠️ *MANTENIMIENTO*\n*Estado:* ${estadoVal}\n*Motivo:* ${motivoVal}\n*Impacto:* ${impactoVal}\n*Ejecutor:* ${ejecutorVal}\n*Inicio:* ${fechaFormateada} - ${horaInicio}`;
+      mensaje = `⚠️ *MANTENIMIENTO*\n\n*Estado:* ${estadoVal}\n*Motivo:* ${motivoVal}\n*Impacto:* ${impactoVal}\n*Ejecutor:* ${ejecutorVal}\n*Inicio:* ${fechaFormateada} - ${horaInicio}`;
     }
     else if (tipo === 'mantenimiento-fin') {
       const motivoVal = motivo || "Descripción del Mantenimiento";
@@ -241,7 +237,7 @@ const GeneradorComunicados = () => {
       const fechaInicioFormateada = formatearFecha(fechaInicioFin);
       const fechaFinFormateada = formatearFecha(fechaFin);
       
-      mensaje = `✅ *MANTENIMIENTO*\n*Estado:* ${estadoVal}\n*Motivo:* ${motivoVal}\n*Impacto:* ${impactoVal}\n*Ejecutor:* ${ejecutorVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}`;
+      mensaje = `✅ *MANTENIMIENTO*\n\n*Estado:* ${estadoVal}\n*Motivo:* ${motivoVal}\n*Impacto:* ${impactoVal}\n*Ejecutor:* ${ejecutorVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}`;
     }
     else if (tipo === 'incidente-inicio') {
       const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
@@ -262,8 +258,20 @@ const GeneradorComunicados = () => {
         mensaje += "\n*Acciones en curso:*";
         const lineasAcciones = accionesEnCurso.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
-          if (lineasAcciones[i].trim()) {
-            mensaje += `\n        • ${lineasAcciones[i]}`;
+          const linea = lineasAcciones[i].trim();
+          if (linea) {
+            // Verificar si la línea contiene información del responsable con %%
+            if (linea.includes('%%')) {
+              // Formato: Acción %% Responsable
+              const [accion, responsable] = linea.split('%%').map(s => s.trim());
+              mensaje += `\n        • ${accion}`;
+              if (responsable) {
+                mensaje += `\n          Responsable: ${responsable}`;
+              }
+            } else {
+              // Solo la acción
+              mensaje += `\n        • ${linea}`;
+            }
           }
         }
       }
@@ -272,8 +280,20 @@ const GeneradorComunicados = () => {
         mensaje += "\n*Acciones ejecutadas:*";
         const lineasAcciones = accionesEjecutadas.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
-          if (lineasAcciones[i].trim()) {
-            mensaje += `\n        • ${lineasAcciones[i]}`;
+          const linea = lineasAcciones[i].trim();
+          if (linea) {
+            // Verificar si la línea contiene información del responsable con %%
+            if (linea.includes('%%')) {
+              // Formato: Acción %% Responsable
+              const [accion, responsable] = linea.split('%%').map(s => s.trim());
+              mensaje += `\n        • ${accion}`;
+              if (responsable) {
+                mensaje += `\n          Responsable: ${responsable}`;
+              }
+            } else {
+              // Solo la acción
+              mensaje += `\n        • ${linea}`;
+            }
           }
         }
       }
@@ -281,27 +301,50 @@ const GeneradorComunicados = () => {
     else if (tipo === 'incidente-fin') {
       const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
       const impactoVal = impacto || "Impacto servicio / usuarios";
-      const estadoVal = estadoFin || "Recuperado";
+      const estadoFin = 'Recuperado';
       
       const fechaInicioFormateada = formatearFecha(fechaInicioFin);
       const fechaFinFormateada = formatearFecha(fechaFin);
       
-      mensaje = `*GESTIÓN INCIDENTE*\n🟢 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}`;
+      mensaje = `*GESTIÓN INCIDENTE*\n🟢 *${estadoFin}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}\n*Acciones ejecutadas:*`;
       
       if (accionesEjecutadas) {
-        mensaje += "\n*Acciones ejecutadas:*";
         const lineasAcciones = accionesEjecutadas.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
-          if (lineasAcciones[i].trim()) {
-            mensaje += `\n        • ${lineasAcciones[i]}`;
+          const linea = lineasAcciones[i].trim();
+          if (linea) {
+            // Verificar si la línea contiene información del responsable con %%
+            if (linea.includes('%%')) {
+              // Formato: Acción %% Responsable
+              const [accion, responsable] = linea.split('%%').map(s => s.trim());
+              mensaje += `\n        • ${accion}`;
+              if (responsable) {
+                mensaje += `\n          Responsable: ${responsable}`;
+              }
+            } else {
+              // Solo la acción
+              mensaje += `\n        • ${linea}`;
+            }
           }
         }
+      } else {
+        mensaje += "\n        • Sin acciones ejecutadas";
       }
     }
     
     // Agregar nota si existe
     if (nota) {
-      mensaje += `\n\n*📣 NOTA*:\n${nota}`;
+      // Para mantenimientos, formatear la nota de manera diferente
+      if (tipo.startsWith('mantenimiento-')) {
+        mensaje += `\n\n*📣 NOTA:*\n        Observaciones con detalle que permitan brindar más información en el caso que amerite.`;
+        // Si el usuario agregó texto, lo incluimos
+        if (nota.trim() !== "") {
+          mensaje = mensaje.replace("Observaciones con detalle que permitan brindar más información en el caso que amerite.", nota);
+        }
+      } else {
+        // Para otros tipos de comunicados, usar el formato estándar
+        mensaje += `\n\n*📣 NOTA:*\n        ${nota}`;
+      }
     }
     
     setResultado(mensaje);
@@ -314,7 +357,7 @@ const GeneradorComunicados = () => {
       return;
     }
     
-    // Intentar copiar al portapapeles
+    // Método 1: Usar la API moderna del portapapeles
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(resultado)
         .then(() => {
@@ -323,37 +366,58 @@ const GeneradorComunicados = () => {
           setTimeout(() => setMostrarAlerta(false), 3000);
         })
         .catch(err => {
-          alert("Error al copiar: " + err);
+          console.error('Error al copiar con API moderna:', err);
+          // Si falla, intentar el método alternativo
+          copiarMetodoAlternativo();
         });
     } else {
-      // Fallback para navegadores que no soporten clipboard API
-      const textArea = document.createElement("textarea");
-      textArea.value = resultado;
-      textArea.style.position = "fixed";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
+      // Si no está disponible la API moderna, usar el método alternativo
+      copiarMetodoAlternativo();
+    }
+  };
+
+  const copiarMetodoAlternativo = () => {
+    // Método 2: Crear un textarea temporal
+    const textArea = document.createElement("textarea");
+    textArea.value = resultado;
+    
+    // Evitar el scroll al agregar el elemento
+    textArea.style.position = "fixed";
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.width = "2em";
+    textArea.style.height = "2em";
+    textArea.style.padding = "0";
+    textArea.style.border = "none";
+    textArea.style.outline = "none";
+    textArea.style.boxShadow = "none";
+    textArea.style.background = "transparent";
+    
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+      const successful = document.execCommand('copy');
       
-      try {
-        const successful = document.execCommand('copy');
-        
-        if (successful) {
-          setAlertaMensaje('¡Comunicado copiado al portapapeles!');
-          setMostrarAlerta(true);
-          setTimeout(() => setMostrarAlerta(false), 3000);
-        } else {
-          alert("No se pudo copiar el texto. Por favor, intenta manualmente.");
-        }
-      } catch (err) {
-        alert("Error al copiar: " + err);
+      if (successful) {
+        setAlertaMensaje('¡Comunicado copiado al portapapeles!');
+        setMostrarAlerta(true);
+        setTimeout(() => setMostrarAlerta(false), 3000);
+      } else {
+        // Método 3: Si todo falla, mostrar el texto para copiar manualmente
+        alert("No se pudo copiar automáticamente. Por favor, selecciona y copia el texto manualmente:\n\n" + resultado);
       }
-      
+    } catch (err) {
+      console.error('Error al copiar con método alternativo:', err);
+      alert("Error al copiar. Por favor, selecciona y copia el texto manualmente.");
+    } finally {
       document.body.removeChild(textArea);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 font-sans">
+    <div className="min-h-screen bg-gray-900 text-gray-100">
       <div className="max-w-4xl mx-auto p-4">
         <header className="bg-black bg-opacity-40 p-5 text-center rounded-lg mb-8 border border-white border-opacity-10 shadow-lg">
           <div className="w-20 h-20 mx-auto mb-4 bg-yellow-400 rounded-full flex items-center justify-center text-5xl text-gray-900 font-bold">
@@ -554,20 +618,32 @@ Acción 2. Proveedor / Área interna"
               <label className="block mb-2 font-semibold text-gray-300">Acciones en curso (una por línea):</label>
               <textarea 
                 className="w-full p-3 mb-5 bg-gray-800 border border-white border-opacity-20 rounded-md text-white h-32 resize-y"
-                placeholder="Acción 1. Proveedor / Área interna
-Acción 2. Proveedor / Área interna"
+                placeholder="Formato: Acción %% Responsable (opcional)
+Ejemplo:
+Análisis de logs %% Equipo de Monitoreo
+Revisión de configuración %% DBA Team
+Escalamiento a proveedor"
                 value={accionesEnCurso}
                 onChange={(e) => setAccionesEnCurso(e.target.value)}
               ></textarea>
+              <p className="text-sm text-gray-400 mt-1">
+                Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
+              </p>
               
               <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas (una por línea):</label>
               <textarea 
                 className="w-full p-3 mb-5 bg-gray-800 border border-white border-opacity-20 rounded-md text-white h-32 resize-y"
-                placeholder="Acción 1. Proveedor / Área interna
-Acción 2. Proveedor / Área interna"
+                placeholder="Formato: Acción %% Responsable (opcional)
+Ejemplo:
+Reinicio de servicios %% Equipo de Infraestructura
+Limpieza de caché %% Soporte N1
+Verificación inicial"
                 value={accionesEjecutadas}
                 onChange={(e) => setAccionesEjecutadas(e.target.value)}
               ></textarea>
+              <p className="text-sm text-gray-400 mt-1">
+                Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
+              </p>
             </div>
           )}
           
@@ -621,22 +697,20 @@ Acción 2. Proveedor / Área interna"
               
               {(tipo === 'evento-fin' || tipo === 'incidente-fin') && (
                 <div>
-                  <label className="block mb-2 font-semibold text-gray-300">Acciones:</label>
+                  <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas:</label>
                   <textarea 
                     className="w-full p-3 mb-5 bg-gray-800 border border-white border-opacity-20 rounded-md text-white h-32 resize-y"
-                    placeholder="Acciones que permitieron la recuperación del servicio"
+                    placeholder="Formato: Acción %% Responsable (opcional)
+Ejemplo:
+Reinicio del servidor %% Equipo de Infraestructura
+Actualización de base de datos %% DBA Team
+Verificación de logs"
                     value={tipo === 'evento-fin' ? acciones : accionesEjecutadas}
                     onChange={(e) => tipo === 'evento-fin' ? setAcciones(e.target.value) : setAccionesEjecutadas(e.target.value)}
                   ></textarea>
-                  
-                  <label className="block mb-2 font-semibold text-gray-300">Causa raíz:</label>
-                  <input 
-                    className="w-full p-3 mb-5 bg-gray-800 border border-white border-opacity-20 rounded-md text-white"
-                    type="text" 
-                    placeholder="Descripción de la causa"
-                    value={causaRaiz}
-                    onChange={(e) => setCausaRaiz(e.target.value)}
-                  />
+                  <p className="text-sm text-gray-400 mt-1">
+                    Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
+                  </p>
                 </div>
               )}
             </div>
@@ -692,7 +766,7 @@ Acción 2. Proveedor / Área interna"
         
         <footer className="text-center py-5 mt-8 text-gray-400 text-sm border-t border-white border-opacity-10">
           <p>Desarrollado por Luis Herrera | Grupo Fractalia</p>
-          <p>Generador de Comunicados para el Grupo de Monitoreo - Versión 1.1</p>
+          <p>Generador de Comunicados para el Grupo de Monitoreo - Versión 1.2</p>
         </footer>
       </div>
     </div>
