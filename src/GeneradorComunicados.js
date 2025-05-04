@@ -1,29 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, AlertCircle, CheckCircle, RefreshCw, Copy, Trash2, Wrench, ChevronRight, Zap, MessageSquare, AlertTriangle, Bell, Settings } from 'lucide-react';
 
 const GeneradorComunicados = () => {
   // Estados
   const [tipo, setTipo] = useState('evento-inicio');
-  const [formData, setFormData] = useState({
-    descripcion: '',
-    impacto: '',
-    motivo: '',
-    impactoMant: '',
-    ejecutor: '',
-    fechaInicio: '',
-    horaInicio: '',
-    estadoInicio: 'En revisión',
-    acciones: '',
-    accionesEjecutadas: '',
-    accionesEnCurso: '',
-    fechaInicioFin: '',
-    horaInicioFin: '',
-    fechaFin: '',
-    horaFin: '',
-    duracionCalculada: '00:00:00',
-    estadoFin: 'Recuperado',
-    nota: ''
-  });
+  const [descripcion, setDescripcion] = useState('');
+  const [impacto, setImpacto] = useState('');
+  const [motivo, setMotivo] = useState('');
+  const [impactoMant, setImpactoMant] = useState('');
+  const [ejecutor, setEjecutor] = useState('');
+  const [fechaInicio, setFechaInicio] = useState('');
+  const [horaInicio, setHoraInicio] = useState('');
+  const [estadoInicio, setEstadoInicio] = useState('');
+  const [acciones, setAcciones] = useState('');
+  const [accionesEjecutadas, setAccionesEjecutadas] = useState('');
+  const [accionesEnCurso, setAccionesEnCurso] = useState('');
+  const [fechaInicioFin, setFechaInicioFin] = useState('');
+  const [horaInicioFin, setHoraInicioFin] = useState('');
+  const [fechaFin, setFechaFin] = useState('');
+  const [horaFin, setHoraFin] = useState('');
+  const [duracionCalculada, setDuracionCalculada] = useState('00:00:00');
+  const [estadoFin, setEstadoFin] = useState('');
+  const [nota, setNota] = useState('');
   const [resultado, setResultado] = useState('');
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [alertaMensaje, setAlertaMensaje] = useState('¡Comunicado copiado al portapapeles!');
@@ -37,12 +34,12 @@ const GeneradorComunicados = () => {
   useEffect(() => {
     const calcularDuracionInterna = () => {
       try {
-        if (!formData.fechaInicioFin || !formData.horaInicioFin || !formData.fechaFin || !formData.horaFin) {
+        if (!fechaInicioFin || !horaInicioFin || !fechaFin || !horaFin) {
           return;
         }
         
-        const inicio = new Date(`${formData.fechaInicioFin}T${formData.horaInicioFin}`);
-        const fin = new Date(`${formData.fechaFin}T${formData.horaFin}`);
+        const inicio = new Date(`${fechaInicioFin}T${horaInicioFin}`);
+        const fin = new Date(`${fechaFin}T${horaFin}`);
         
         const diferencia = fin - inicio;
         
@@ -53,33 +50,26 @@ const GeneradorComunicados = () => {
         const duracion = 
           `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
         
-        setFormData(prev => ({ ...prev, duracionCalculada: duracion }));
+        setDuracionCalculada(duracion);
       } catch (error) {
         console.error('Error al calcular duración:', error);
       }
     };
     
     calcularDuracionInterna();
-  }, [formData.fechaInicioFin, formData.horaInicioFin, formData.fechaFin, formData.horaFin]);
+  }, [fechaInicioFin, horaInicioFin, fechaFin, horaFin]);
   
-  // Actualizar estados por defecto cuando cambia el tipo
+  // Cuando cambie el tipo, actualizar automáticamente el estado correspondiente
   useEffect(() => {
-    setFormData(prev => {
-      let estadoInicio = prev.estadoInicio;
-      let estadoFin = prev.estadoFin;
-      
-      if (tipo === 'evento-inicio' || tipo === 'incidente-inicio') {
-        estadoInicio = 'En revisión';
-      } else if (tipo === 'evento-fin' || tipo === 'incidente-fin') {
-        estadoFin = 'Recuperado';
-      } else if (tipo === 'mantenimiento-inicio') {
-        estadoInicio = 'En curso';
-      } else if (tipo === 'mantenimiento-fin') {
-        estadoFin = 'Finalizado';
-      }
-      
-      return { ...prev, estadoInicio, estadoFin };
-    });
+    if (tipo === 'evento-inicio' || tipo === 'incidente-inicio') {
+      setEstadoInicio('En revisión');
+    } else if (tipo === 'evento-fin' || tipo === 'incidente-fin') {
+      setEstadoFin('Recuperado');
+    } else if (tipo === 'mantenimiento-inicio') {
+      setEstadoInicio('En curso');
+    } else if (tipo === 'mantenimiento-fin') {
+      setEstadoFin('Finalizado');
+    }
   }, [tipo]);
 
   // Funciones
@@ -88,49 +78,33 @@ const GeneradorComunicados = () => {
     const fechaActual = hoy.toISOString().split('T')[0];
     const horaActual = hoy.toTimeString().split(' ')[0];
     
-    setFormData(prev => ({
-      ...prev,
-      fechaInicio: fechaActual,
-      horaInicio: horaActual,
-      fechaInicioFin: fechaActual,
-      horaInicioFin: horaActual,
-      fechaFin: fechaActual,
-      horaFin: horaActual
-    }));
+    setFechaInicio(fechaActual);
+    setHoraInicio(horaActual);
+    setFechaInicioFin(fechaActual);
+    setHoraInicioFin(horaActual);
+    setFechaFin(fechaActual);
+    setHoraFin(horaActual);
   };
   
   const limpiarCampos = () => {
-    const hoy = new Date();
-    const fechaActual = hoy.toISOString().split('T')[0];
-    const horaActual = hoy.toTimeString().split(' ')[0];
+    // Limpiar campos de texto
+    setDescripcion('');
+    setImpacto('');
+    setMotivo('');
+    setImpactoMant('');
+    setEjecutor('');
+    setAcciones('');
+    setAccionesEjecutadas('');
+    setAccionesEnCurso('');
+    setNota('');
     
-    setFormData(prev => ({
-      ...prev,
-      descripcion: '',
-      impacto: '',
-      motivo: '',
-      impactoMant: '',
-      ejecutor: '',
-      acciones: '',
-      accionesEjecutadas: '',
-      accionesEnCurso: '',
-      nota: '',
-      fechaInicio: fechaActual,
-      horaInicio: horaActual,
-      fechaInicioFin: fechaActual,
-      horaInicioFin: horaActual,
-      fechaFin: fechaActual,
-      horaFin: horaActual
-    }));
+    // Restablecer fechas y horas actuales
+    establecerFechaHoraActual();
     
+    // Mostrar alerta
     setAlertaMensaje('¡Campos limpiados correctamente!');
     setMostrarAlerta(true);
     setTimeout(() => setMostrarAlerta(false), 3000);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const seleccionarTipo = (nuevoTipo) => {
@@ -142,43 +116,35 @@ const GeneradorComunicados = () => {
     // Para eventos
     if (tipoAnterior.startsWith('evento-') && nuevoTipo.startsWith('evento-')) {
       if (nuevoTipo === 'evento-fin') {
-        setFormData(prev => ({
-          ...prev,
-          fechaInicioFin: prev.fechaInicio,
-          horaInicioFin: prev.horaInicio,
-          nota: tipoAnterior === 'evento-seguimiento' && prev.acciones && !prev.nota ? 
-                "Acciones realizadas:\n" + prev.acciones : prev.nota
-        }));
+        setFechaInicioFin(fechaInicio);
+        setHoraInicioFin(horaInicio);
+        if (tipoAnterior === 'evento-seguimiento' && acciones && !nota) {
+          setNota("Acciones realizadas:\n" + acciones);
+        }
       }
       
-      if (nuevoTipo === 'evento-seguimiento' && tipoAnterior === 'evento-inicio' && !formData.acciones) {
-        setFormData(prev => ({ ...prev, acciones: "Acciones en proceso:\n" }));
+      if (nuevoTipo === 'evento-seguimiento' && tipoAnterior === 'evento-inicio' && !acciones) {
+        setAcciones("Acciones en proceso:\n");
       }
     }
     
     // Para incidentes
     if (tipoAnterior.startsWith('incidente-') && nuevoTipo.startsWith('incidente-')) {
       if (nuevoTipo === 'incidente-fin') {
-        setFormData(prev => ({
-          ...prev,
-          fechaInicioFin: prev.fechaInicio,
-          horaInicioFin: prev.horaInicio
-        }));
+        setFechaInicioFin(fechaInicio);
+        setHoraInicioFin(horaInicio);
       }
       
       if (nuevoTipo === 'incidente-avance' && tipoAnterior === 'incidente-inicio') {
-        setFormData(prev => ({ ...prev, accionesEnCurso: "Acción 1. Proveedor / Área interna\n" }));
+        setAccionesEnCurso("Acción 1. Proveedor / Área interna\n");
       }
     }
     
     // Para mantenimientos
     if (tipoAnterior.startsWith('mantenimiento-') && nuevoTipo.startsWith('mantenimiento-')) {
       if (tipoAnterior === 'mantenimiento-inicio' && nuevoTipo === 'mantenimiento-fin') {
-        setFormData(prev => ({
-          ...prev,
-          fechaInicioFin: prev.fechaInicio,
-          horaInicioFin: prev.horaInicio
-        }));
+        setFechaInicioFin(fechaInicio);
+        setHoraInicioFin(horaInicio);
       }
     }
   };
@@ -194,32 +160,35 @@ const GeneradorComunicados = () => {
     let mensaje = "";
     
     if (tipo === 'evento-inicio') {
-      const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
-      const impactoVal = formData.impacto || "Impacto servicio / usuarios";
-      const estadoVal = formData.estadoInicio || "En revisión";
+      const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
+      const impactoVal = impacto || "Impacto servicio / usuarios";
+      const estadoVal = estadoInicio || "En revisión";
       
-      const fechaFormateada = formatearFecha(formData.fechaInicio);
+      const fechaFormateada = formatearFecha(fechaInicio);
       
-      mensaje = `*GESTIÓN EVENTO*\n🟡 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaFormateada} - ${formData.horaInicio}`;
+      mensaje = `*GESTIÓN EVENTO*\n🟡 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaFormateada} - ${horaInicio}`;
     }
     else if (tipo === 'evento-seguimiento') {
-      const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
-      const impactoVal = formData.impacto || "Impacto servicio / usuarios";
+      const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
+      const impactoVal = impacto || "Impacto servicio / usuarios";
       
       mensaje = `*GESTIÓN EVENTO*\n🔁 *Seguimiento*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Acciones:*`;
       
-      if (formData.acciones) {
-        const lineasAcciones = formData.acciones.split('\n');
+      if (acciones) {
+        const lineasAcciones = acciones.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           const linea = lineasAcciones[i].trim();
           if (linea) {
+            // Verificar si la línea contiene información del responsable con %%
             if (linea.includes('%%')) {
+              // Formato: Acción %% Responsable
               const [accion, responsable] = linea.split('%%').map(s => s.trim());
               mensaje += `\n        • ${accion}`;
               if (responsable) {
                 mensaje += `\n          Responsable: ${responsable}`;
               }
             } else {
+              // Solo la acción
               mensaje += `\n        • ${linea}`;
             }
           }
@@ -229,27 +198,30 @@ const GeneradorComunicados = () => {
       }
     }
     else if (tipo === 'evento-fin') {
-      const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
-      const impactoVal = formData.impacto || "Impacto servicio / usuarios";
-      const estadoVal = formData.estadoFin || "Recuperado";
+      const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
+      const impactoVal = impacto || "Impacto servicio / usuarios";
+      const estadoVal = estadoFin || "Recuperado";
       
-      const fechaInicioFormateada = formatearFecha(formData.fechaInicioFin);
-      const fechaFinFormateada = formatearFecha(formData.fechaFin);
+      const fechaInicioFormateada = formatearFecha(fechaInicioFin);
+      const fechaFinFormateada = formatearFecha(fechaFin);
       
-      mensaje = `*GESTIÓN EVENTO*\n🟢 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaInicioFormateada} - ${formData.horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${formData.horaFin}\n*Duración:* ${formData.duracionCalculada}\n*Acciones:*`;
+      mensaje = `*GESTIÓN EVENTO*\n🟢 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}\n*Acciones:*`;
       
-      if (formData.acciones) {
-        const lineasAcciones = formData.acciones.split('\n');
+      if (acciones) {
+        const lineasAcciones = acciones.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           const linea = lineasAcciones[i].trim();
           if (linea) {
+            // Verificar si la línea contiene información del responsable con %%
             if (linea.includes('%%')) {
+              // Formato: Acción %% Responsable
               const [accion, responsable] = linea.split('%%').map(s => s.trim());
               mensaje += `\n        • ${accion}`;
               if (responsable) {
                 mensaje += `\n          Responsable: ${responsable}`;
               }
             } else {
+              // Solo la acción
               mensaje += `\n        • ${linea}`;
             }
           }
@@ -259,73 +231,79 @@ const GeneradorComunicados = () => {
       }
     }
     else if (tipo === 'mantenimiento-inicio') {
-      const motivoVal = formData.motivo || "Descripción del Mantenimiento";
-      const impactoVal = formData.impactoMant || "Impacto servicio / usuarios / clientes";
-      const ejecutorVal = formData.ejecutor || "Nombre del proveedor o área interna que ejecuta el mantenimiento";
-      const estadoVal = formData.estadoInicio || "En curso";
+      const motivoVal = motivo || "Descripción del Mantenimiento";
+      const impactoVal = impactoMant || "Impacto servicio / usuarios / clientes";
+      const ejecutorVal = ejecutor || "Nombre del proveedor o área interna que ejecuta el mantenimiento";
+      const estadoVal = estadoInicio || "En curso";
       
-      const fechaFormateada = formatearFecha(formData.fechaInicio);
+      const fechaFormateada = formatearFecha(fechaInicio);
       
-      mensaje = `⚠️ *MANTENIMIENTO*\n\n*Estado:* ${estadoVal}\n*Motivo:* ${motivoVal}\n*Impacto:* ${impactoVal}\n*Ejecutor:* ${ejecutorVal}\n*Inicio:* ${fechaFormateada} - ${formData.horaInicio}`;
+      mensaje = `⚠️ *MANTENIMIENTO*\n\n*Estado:* ${estadoVal}\n*Motivo:* ${motivoVal}\n*Impacto:* ${impactoVal}\n*Ejecutor:* ${ejecutorVal}\n*Inicio:* ${fechaFormateada} - ${horaInicio}`;
     }
     else if (tipo === 'mantenimiento-fin') {
-      const motivoVal = formData.motivo || "Descripción del Mantenimiento";
-      const impactoVal = formData.impactoMant || "Impacto servicio / usuarios / clientes";
-      const ejecutorVal = formData.ejecutor || "Nombre del proveedor o área interna que ejecuta el mantenimiento";
-      const estadoVal = formData.estadoFin || "Finalizado";
+      const motivoVal = motivo || "Descripción del Mantenimiento";
+      const impactoVal = impactoMant || "Impacto servicio / usuarios / clientes";
+      const ejecutorVal = ejecutor || "Nombre del proveedor o área interna que ejecuta el mantenimiento";
+      const estadoVal = estadoFin || "Finalizado";
       
-      const fechaInicioFormateada = formatearFecha(formData.fechaInicioFin);
-      const fechaFinFormateada = formatearFecha(formData.fechaFin);
+      const fechaInicioFormateada = formatearFecha(fechaInicioFin);
+      const fechaFinFormateada = formatearFecha(fechaFin);
       
-      mensaje = `✅ *MANTENIMIENTO*\n\n*Estado:* ${estadoVal}\n*Motivo:* ${motivoVal}\n*Impacto:* ${impactoVal}\n*Ejecutor:* ${ejecutorVal}\n*Inicio:* ${fechaInicioFormateada} - ${formData.horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${formData.horaFin}\n*Duración:* ${formData.duracionCalculada}`;
+      mensaje = `✅ *MANTENIMIENTO*\n\n*Estado:* ${estadoVal}\n*Motivo:* ${motivoVal}\n*Impacto:* ${impactoVal}\n*Ejecutor:* ${ejecutorVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}`;
     }
     else if (tipo === 'incidente-inicio') {
-      const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
-      const impactoVal = formData.impacto || "Impacto servicio / usuarios";
-      const estadoVal = formData.estadoInicio || "En revisión";
+      const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
+      const impactoVal = impacto || "Impacto servicio / usuarios";
+      const estadoVal = estadoInicio || "En revisión";
       
-      const fechaFormateada = formatearFecha(formData.fechaInicio);
+      const fechaFormateada = formatearFecha(fechaInicio);
       
-      mensaje = `*GESTIÓN INCIDENTE*\n🟡 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaFormateada} - ${formData.horaInicio}`;
+      mensaje = `*GESTIÓN INCIDENTE*\n🟡 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaFormateada} - ${horaInicio}`;
     }
     else if (tipo === 'incidente-avance') {
-      const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
-      const impactoVal = formData.impacto || "Impacto servicio / usuarios";
+      const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
+      const impactoVal = impacto || "Impacto servicio / usuarios";
       
       mensaje = `*GESTIÓN INCIDENTE*\n🔁 *Avance*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}`;
       
-      if (formData.accionesEnCurso) {
+      if (accionesEnCurso) {
         mensaje += "\n*Acciones en curso:*";
-        const lineasAcciones = formData.accionesEnCurso.split('\n');
+        const lineasAcciones = accionesEnCurso.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           const linea = lineasAcciones[i].trim();
           if (linea) {
+            // Verificar si la línea contiene información del responsable con %%
             if (linea.includes('%%')) {
+              // Formato: Acción %% Responsable
               const [accion, responsable] = linea.split('%%').map(s => s.trim());
               mensaje += `\n        • ${accion}`;
               if (responsable) {
                 mensaje += `\n          Responsable: ${responsable}`;
               }
             } else {
+              // Solo la acción
               mensaje += `\n        • ${linea}`;
             }
           }
         }
       }
       
-      if (formData.accionesEjecutadas) {
+      if (accionesEjecutadas) {
         mensaje += "\n*Acciones ejecutadas:*";
-        const lineasAcciones = formData.accionesEjecutadas.split('\n');
+        const lineasAcciones = accionesEjecutadas.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           const linea = lineasAcciones[i].trim();
           if (linea) {
+            // Verificar si la línea contiene información del responsable con %%
             if (linea.includes('%%')) {
+              // Formato: Acción %% Responsable
               const [accion, responsable] = linea.split('%%').map(s => s.trim());
               mensaje += `\n        • ${accion}`;
               if (responsable) {
                 mensaje += `\n          Responsable: ${responsable}`;
               }
             } else {
+              // Solo la acción
               mensaje += `\n        • ${linea}`;
             }
           }
@@ -333,27 +311,30 @@ const GeneradorComunicados = () => {
       }
     }
     else if (tipo === 'incidente-fin') {
-      const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
-      const impactoVal = formData.impacto || "Impacto servicio / usuarios";
+      const descripcionVal = descripcion || "DESCRIPCION DEL INCIDENTE";
+      const impactoVal = impacto || "Impacto servicio / usuarios";
       const estadoFin = 'Recuperado';
       
-      const fechaInicioFormateada = formatearFecha(formData.fechaInicioFin);
-      const fechaFinFormateada = formatearFecha(formData.fechaFin);
+      const fechaInicioFormateada = formatearFecha(fechaInicioFin);
+      const fechaFinFormateada = formatearFecha(fechaFin);
       
-      mensaje = `*GESTIÓN INCIDENTE*\n🟢 *${estadoFin}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaInicioFormateada} - ${formData.horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${formData.horaFin}\n*Duración:* ${formData.duracionCalculada}\n*Acciones ejecutadas:*`;
+      mensaje = `*GESTIÓN INCIDENTE*\n🟢 *${estadoFin}*\n\n*Descripción:* ${descripcionVal}\n*Impacto:* ${impactoVal}\n*Inicio:* ${fechaInicioFormateada} - ${horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${horaFin}\n*Duración:* ${duracionCalculada}\n*Acciones ejecutadas:*`;
       
-      if (formData.accionesEjecutadas) {
-        const lineasAcciones = formData.accionesEjecutadas.split('\n');
+      if (accionesEjecutadas) {
+        const lineasAcciones = accionesEjecutadas.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           const linea = lineasAcciones[i].trim();
           if (linea) {
+            // Verificar si la línea contiene información del responsable con %%
             if (linea.includes('%%')) {
+              // Formato: Acción %% Responsable
               const [accion, responsable] = linea.split('%%').map(s => s.trim());
               mensaje += `\n        • ${accion}`;
               if (responsable) {
                 mensaje += `\n          Responsable: ${responsable}`;
               }
             } else {
+              // Solo la acción
               mensaje += `\n        • ${linea}`;
             }
           }
@@ -364,14 +345,17 @@ const GeneradorComunicados = () => {
     }
     
     // Agregar nota si existe
-    if (formData.nota) {
+    if (nota) {
+      // Para mantenimientos, formatear la nota de manera diferente
       if (tipo.startsWith('mantenimiento-')) {
         mensaje += `\n\n*📣 NOTA:*\n        Observaciones con detalle que permitan brindar más información en el caso que amerite.`;
-        if (formData.nota.trim() !== "") {
-          mensaje = mensaje.replace("Observaciones con detalle que permitan brindar más información en el caso que amerite.", formData.nota);
+        // Si el usuario agregó texto, lo incluimos
+        if (nota.trim() !== "") {
+          mensaje = mensaje.replace("Observaciones con detalle que permitan brindar más información en el caso que amerite.", nota);
         }
       } else {
-        mensaje += `\n\n*📣 NOTA:*\n        ${formData.nota}`;
+        // Para otros tipos de comunicados, usar el formato estándar
+        mensaje += `\n\n*📣 NOTA:*\n        ${nota}`;
       }
     }
     
@@ -385,6 +369,7 @@ const GeneradorComunicados = () => {
       return;
     }
     
+    // Método 1: Usar la API moderna del portapapeles
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(resultado)
         .then(() => {
@@ -393,18 +378,22 @@ const GeneradorComunicados = () => {
           setTimeout(() => setMostrarAlerta(false), 3000);
         })
         .catch(err => {
-          console.error('Error al copiar:', err);
+          console.error('Error al copiar con API moderna:', err);
+          // Si falla, intentar el método alternativo
           copiarMetodoAlternativo();
         });
     } else {
+      // Si no está disponible la API moderna, usar el método alternativo
       copiarMetodoAlternativo();
     }
   };
 
   const copiarMetodoAlternativo = () => {
+    // Método 2: Crear un textarea temporal
     const textArea = document.createElement("textarea");
     textArea.value = resultado;
     
+    // Evitar el scroll al agregar el elemento
     textArea.style.position = "fixed";
     textArea.style.top = "0";
     textArea.style.left = "0";
@@ -428,529 +417,473 @@ const GeneradorComunicados = () => {
         setMostrarAlerta(true);
         setTimeout(() => setMostrarAlerta(false), 3000);
       } else {
+        // Método 3: Si todo falla, mostrar el texto para copiar manualmente
         alert("No se pudo copiar automáticamente. Por favor, selecciona y copia el texto manualmente:\n\n" + resultado);
       }
     } catch (err) {
-      console.error('Error al copiar:', err);
+      console.error('Error al copiar con método alternativo:', err);
       alert("Error al copiar. Por favor, selecciona y copia el texto manualmente.");
     } finally {
       document.body.removeChild(textArea);
     }
   };
 
-  // Componente de tipo de comunicado
-  const TipoComunicado = ({ icon: Icon, label, value, isActive, color }) => (
-    <div 
-      className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
-        isActive 
-          ? `bg-${color}-600/90 text-white shadow-lg shadow-${color}-600/30 ring-2 ring-${color}-400/50` 
-          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700/70 hover:text-white'
-      }`}
-      onClick={() => seleccionarTipo(value)}
-    >
-      {typeof Icon === 'string' ? (
-        <span className="text-3xl mb-2">{Icon}</span>
-      ) : (
-        <Icon className="w-8 h-8 mb-2" />
-      )}
-      <span className="font-semibold text-sm text-center">{label}</span>
-    </div>
-  );
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <header className="bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-purple-600/20 backdrop-blur-lg p-8 text-center rounded-3xl mb-10 border border-blue-500/20 shadow-2xl">
-          <div className="flex items-center justify-center mb-6">
-            <div className="relative">
-              <div className="w-24 h-24 mx-auto bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
-                <MessageSquare className="w-14 h-14 text-white" />
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center border-4 border-slate-900">
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
+      <div className="max-w-5xl mx-auto p-6">
+        <header className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-lg p-8 text-center rounded-2xl mb-10 border border-yellow-500/20 shadow-2xl transform hover:scale-[1.02] transition-all duration-300">
+          <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-6xl text-gray-900 font-bold shadow-lg transform hover:rotate-12 transition-transform duration-300">
+            📝
           </div>
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent tracking-wider mb-3">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent tracking-wider mb-3">
             Generador de Comunicados
           </h1>
           <p className="text-xl text-gray-300">
-            Sistema Avanzado de Comunicaciones para el Grupo de Monitoreo
+            Sistema de creación de comunicados para el Grupo de Monitoreo
           </p>
-          <div className="flex items-center justify-center gap-4 mt-4 text-sm text-gray-400">
-            <span className="flex items-center gap-1">
-              <Bell className="w-4 h-4" />
-              Notificaciones en tiempo real
-            </span>
-            <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
-            <span className="flex items-center gap-1">
-              <Settings className="w-4 h-4" />
-              Configuración avanzada
-            </span>
-          </div>
         </header>
         
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Panel de tipos de comunicado */}
-          <div className="lg:col-span-1">
-            <div className="bg-gray-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-2xl border border-gray-700/50 sticky top-8">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent flex items-center gap-2 mb-6">
-                <ChevronRight className="w-6 h-6 text-blue-400" />
-                Tipo de Comunicado
-              </h2>
-              
-              {/* Eventos */}
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
-                  <AlertCircle className="w-5 h-5 mr-2 text-yellow-400" />
-                  Eventos
-                </h3>
-                <div className="grid grid-cols-1 gap-3">
-                  <TipoComunicado 
-                    icon="🟡" 
-                    label="Inicio" 
-                    value="evento-inicio" 
-                    isActive={tipo === 'evento-inicio'} 
-                    color="yellow" 
-                  />
-                  <TipoComunicado 
-                    icon={RefreshCw} 
-                    label="Seguimiento" 
-                    value="evento-seguimiento" 
-                    isActive={tipo === 'evento-seguimiento'} 
-                    color="blue" 
-                  />
-                  <TipoComunicado 
-                    icon="🟢" 
-                    label="Fin" 
-                    value="evento-fin" 
-                    isActive={tipo === 'evento-fin'} 
-                    color="green" 
-                  />
-                </div>
+        <div className="bg-gray-800/80 backdrop-blur-lg rounded-2xl p-8 mb-10 shadow-2xl border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent mt-0 border-b border-yellow-500/30 pb-4 mb-6">
+            Tipo de Comunicado
+          </h2>
+          
+          {/* Tipos de Evento */}
+          <div className="mb-8">
+            <h3 className="text-2xl font-semibold text-white mt-6 mb-4 flex items-center">
+              <span className="w-2 h-8 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-full mr-3"></span>
+              Eventos
+            </h3>
+            <div className="grid grid-cols-3 gap-4 mb-6">
+              <div 
+                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                  tipo === 'evento-inicio' 
+                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
+                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700/70'
+                }`}
+                onClick={() => seleccionarTipo('evento-inicio')}
+              >
+                <span className="text-3xl mb-2">🟡</span>
+                <span className="font-semibold">Inicio</span>
               </div>
-              
-              {/* Mantenimientos */}
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
-                  <Wrench className="w-5 h-5 mr-2 text-orange-400" />
-                  Mantenimientos
-                </h3>
-                <div className="grid grid-cols-1 gap-3">
-                  <TipoComunicado 
-                    icon="⚠️" 
-                    label="Inicio" 
-                    value="mantenimiento-inicio" 
-                    isActive={tipo === 'mantenimiento-inicio'} 
-                    color="orange" 
-                  />
-                  <TipoComunicado 
-                    icon="✅" 
-                    label="Fin" 
-                    value="mantenimiento-fin" 
-                    isActive={tipo === 'mantenimiento-fin'} 
-                    color="green" 
-                  />
-                </div>
+              <div 
+                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                  tipo === 'evento-seguimiento' 
+                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
+                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700/70'
+                }`}
+                onClick={() => seleccionarTipo('evento-seguimiento')}
+              >
+                <span className="text-3xl mb-2">🔁</span>
+                <span className="font-semibold">Seguimiento</span>
               </div>
-              
-              {/* Incidentes */}
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
-                  <AlertTriangle className="w-5 h-5 mr-2 text-red-400" />
-                  Incidentes
-                </h3>
-                <div className="grid grid-cols-1 gap-3">
-                  <TipoComunicado 
-                    icon="🟡" 
-                    label="Inicio" 
-                    value="incidente-inicio" 
-                    isActive={tipo === 'incidente-inicio'} 
-                    color="red" 
-                  />
-                  <TipoComunicado 
-                    icon={RefreshCw} 
-                    label="Avance" 
-                    value="incidente-avance" 
-                    isActive={tipo === 'incidente-avance'} 
-                    color="orange" 
-                  />
-                  <TipoComunicado 
-                    icon="🟢" 
-                    label="Fin" 
-                    value="incidente-fin" 
-                    isActive={tipo === 'incidente-fin'} 
-                    color="green" 
-                  />
-                </div>
+              <div 
+                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                  tipo === 'evento-fin' 
+                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
+                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700/70'
+                }`}
+                onClick={() => seleccionarTipo('evento-fin')}
+              >
+                <span className="text-3xl mb-2">🟢</span>
+                <span className="font-semibold">Fin</span>
               </div>
             </div>
           </div>
           
-          {/* Panel de formulario y resultado */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Formulario */}
-            <div className="bg-gray-800/90 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-gray-700/50">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent flex items-center gap-2 mb-6">
-                <Settings className="w-6 h-6 text-blue-400" />
-                Detalles del Comunicado
-              </h2>
+          {/* Tipos de Mantenimiento */}
+          <div className="mb-8">
+            <h3 className="text-2xl font-semibold text-white mt-6 mb-4 flex items-center">
+              <span className="w-2 h-8 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-full mr-3"></span>
+              Mantenimientos
+            </h3>
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div 
+                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                  tipo === 'mantenimiento-inicio' 
+                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
+                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700/70'
+                }`}
+                onClick={() => seleccionarTipo('mantenimiento-inicio')}
+              >
+                <span className="text-3xl mb-2">⚠️</span>
+                <span className="font-semibold">Inicio</span>
+              </div>
+              <div 
+                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                  tipo === 'mantenimiento-fin' 
+                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
+                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700/70'
+                }`}
+                onClick={() => seleccionarTipo('mantenimiento-fin')}
+              >
+                <span className="text-3xl mb-2">✅</span>
+                <span className="font-semibold">Fin</span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Tipos de Incidente */}
+          <div className="mb-8">
+            <h3 className="text-2xl font-semibold text-white mt-6 mb-4 flex items-center">
+              <span className="w-2 h-8 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-full mr-3"></span>
+              Incidentes
+            </h3>
+            <div className="grid grid-cols-3 gap-4 mb-6">
+              <div 
+                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                  tipo === 'incidente-inicio' 
+                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
+                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700/70'
+                }`}
+                onClick={() => seleccionarTipo('incidente-inicio')}
+              >
+                <span className="text-3xl mb-2">🟡</span>
+                <span className="font-semibold">Inicio</span>
+              </div>
+              <div 
+                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                  tipo === 'incidente-avance' 
+                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
+                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700/70'
+                }`}
+                onClick={() => seleccionarTipo('incidente-avance')}
+              >
+                <span className="text-3xl mb-2">🔁</span>
+                <span className="font-semibold">Avance</span>
+              </div>
+              <div 
+                className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                  tipo === 'incidente-fin' 
+                    ? 'bg-gradient-to-br from-green-600 to-green-700 text-white shadow-lg shadow-green-600/30' 
+                    : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700/70'
+                }`}
+                onClick={() => seleccionarTipo('incidente-fin')}
+              >
+                <span className="text-3xl mb-2">🟢</span>
+                <span className="font-semibold">Fin</span>
+              </div>
+            </div>
+          </div>
 
-              {/* Campos para Evento o Incidente */}
-              {(tipo.startsWith('evento-') || tipo.startsWith('incidente-')) && (
-                <div className="space-y-6">
-                  <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Descripción:</label>
-                    <div className="relative">
-                      <input 
-                        className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                        type="text" 
-                        name="descripcion"
-                        placeholder="DESCRIPCION DEL INCIDENTE"
-                        value={formData.descripcion}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Impacto:</label>
-                    <div className="relative">
-                      <input 
-                        className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                        type="text" 
-                        name="impacto"
-                        placeholder="Impacto servicio / usuarios"
-                        value={formData.impacto}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
+          {/* Campos para Evento o Incidente */}
+          {(tipo.startsWith('evento-') || tipo.startsWith('incidente-')) && (
+            <div className="space-y-6">
+              <div>
+                <label className="block mb-2 font-semibold text-gray-300">Descripción:</label>
+                <input 
+                  className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                  type="text" 
+                  placeholder="DESCRIPCION DEL INCIDENTE"
+                  value={descripcion}
+                  onChange={(e) => setDescripcion(e.target.value)}
+                />
+              </div>
               
-              {/* Campos para Mantenimiento */}
-              {tipo.startsWith('mantenimiento-') && (
-                <div className="space-y-6">
-                  <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Motivo:</label>
-                    <div className="relative">
-                      <input 
-                        className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                        type="text" 
-                        name="motivo"
-                        placeholder="Descripción del Mantenimiento"
-                        value={formData.motivo}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Impacto:</label>
-                    <div className="relative">
-                      <input 
-                        className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                        type="text" 
-                        name="impactoMant"
-                        placeholder="Impacto servicio / usuarios / clientes"
-                        value={formData.impactoMant}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Ejecutor:</label>
-                    <div className="relative">
-                      <input 
-                        className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                        type="text" 
-                        name="ejecutor"
-                        placeholder="Nombre del proveedor o área interna que ejecuta el mantenimiento"
-                        value={formData.ejecutor}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
+              <div>
+                <label className="block mb-2 font-semibold text-gray-300">Impacto:</label>
+                <input 
+                  className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                  type="text" 
+                  placeholder="Impacto servicio / usuarios"
+                  value={impacto}
+                  onChange={(e) => setImpacto(e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+          
+          {/* Campos para Mantenimiento */}
+          {tipo.startsWith('mantenimiento-') && (
+            <div className="space-y-6">
+              <div>
+                <label className="block mb-2 font-semibold text-gray-300">Motivo:</label>
+                <input 
+                  className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                  type="text" 
+                  placeholder="Descripción del Mantenimiento"
+                  value={motivo}
+                  onChange={(e) => setMotivo(e.target.value)}
+                />
+              </div>
               
-              {/* Campos comunes para Inicio */}
-              {(tipo.endsWith('-inicio')) && (
-                <div className="space-y-6 mt-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                        <Calendar className="w-4 h-4" />
-                        Fecha:
-                      </label>
-                      <input 
-                        className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                        type="date" 
-                        name="fechaInicio"
-                        value={formData.fechaInicio}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
-                        Hora:
-                      </label>
-                      <input 
-                        className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                        type="time" 
-                        step="1"
-                        name="horaInicio"
-                        value={formData.horaInicio}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Estado:</label>
-                    <input 
-                      className="w-full p-4 bg-gray-900/30 border border-gray-600/50 rounded-xl text-gray-400 cursor-not-allowed"
-                      type="text" 
-                      value={formData.estadoInicio}
-                      readOnly
-                    />
-                  </div>
+              <div>
+                <label className="block mb-2 font-semibold text-gray-300">Impacto:</label>
+                <input 
+                  className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                  type="text" 
+                  placeholder="Impacto servicio / usuarios / clientes"
+                  value={impactoMant}
+                  onChange={(e) => setImpactoMant(e.target.value)}
+                />
+              </div>
+              
+              <div>
+                <label className="block mb-2 font-semibold text-gray-300">Ejecutor:</label>
+                <input 
+                  className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                  type="text" 
+                  placeholder="Nombre del proveedor o área interna que ejecuta el mantenimiento"
+                  value={ejecutor}
+                  onChange={(e) => setEjecutor(e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+          
+          {/* Campos comunes para Inicio */}
+          {(tipo.endsWith('-inicio')) && (
+            <div className="space-y-6 mt-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block mb-2 font-semibold text-gray-300">Fecha:</label>
+                  <input 
+                    className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                    type="date" 
+                    value={fechaInicio}
+                    onChange={(e) => setFechaInicio(e.target.value)}
+                  />
                 </div>
-              )}
+                
+                <div>
+                  <label className="block mb-2 font-semibold text-gray-300">Hora:</label>
+                  <input 
+                    className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                    type="time" 
+                    step="1"
+                    value={horaInicio}
+                    onChange={(e) => setHoraInicio(e.target.value)}
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block mb-2 font-semibold text-gray-300">Estado:</label>
+                <input 
+                  className="w-full p-4 bg-gray-700/30 border border-gray-600/50 rounded-xl text-gray-400 cursor-not-allowed"
+                  type="text" 
+                  value={estadoInicio}
+                  readOnly
+                />
+              </div>
+            </div>
+          )}
 
-              {/* Campos para Seguimiento (solo Eventos) */}
-              {tipo === 'evento-seguimiento' && (
-                <div className="mt-6">
-                  <label className="block mb-2 font-semibold text-gray-300">Acciones (una por línea):</label>
-                  <textarea 
-                    className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                    placeholder="Formato: Acción %% Responsable (opcional)
+          {/* Campos para Seguimiento (solo Eventos) */}
+          {tipo === 'evento-seguimiento' && (
+            <div className="mt-6">
+              <label className="block mb-2 font-semibold text-gray-300">Acciones (una por línea):</label>
+              <textarea 
+                className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                placeholder="Formato: Acción %% Responsable (opcional)
 Ejemplo:
 Monitoreo continuo del servicio %% Equipo NOC
 Validación de métricas %% Soporte N2
 Revisión de logs de aplicación"
-                    name="acciones"
-                    value={formData.acciones}
-                    onChange={handleInputChange}
-                  ></textarea>
-                  <p className="text-sm text-gray-400 mt-2 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
-                  </p>
-                </div>
-              )}
-              
-              {/* Campos para Avance (solo Incidentes) */}
-              {tipo === 'incidente-avance' && (
-                <div className="space-y-6 mt-6">
-                  <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Acciones en curso (una por línea):</label>
-                    <textarea 
-                      className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                      placeholder="Formato: Acción %% Responsable (opcional)
+                value={acciones}
+                onChange={(e) => setAcciones(e.target.value)}
+              ></textarea>
+              <p className="text-sm text-gray-400 mt-2 flex items-center">
+                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
+              </p>
+            </div>
+          )}
+          
+          {/* Campos para Avance (solo Incidentes) */}
+          {tipo === 'incidente-avance' && (
+            <div className="space-y-6 mt-6">
+              <div>
+                <label className="block mb-2 font-semibold text-gray-300">Acciones en curso (una por línea):</label>
+                <textarea 
+                  className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                  placeholder="Formato: Acción %% Responsable (opcional)
 Ejemplo:
 Análisis de logs %% Equipo de Monitoreo
 Revisión de configuración %% DBA Team
 Escalamiento a proveedor"
-                      name="accionesEnCurso"
-                      value={formData.accionesEnCurso}
-                      onChange={handleInputChange}
-                    ></textarea>
-                  </div>
-                  
-                  <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas (una por línea):</label>
-                    <textarea 
-                      className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                      placeholder="Formato: Acción %% Responsable (opcional)
+                  value={accionesEnCurso}
+                  onChange={(e) => setAccionesEnCurso(e.target.value)}
+                ></textarea>
+                <p className="text-sm text-gray-400 mt-2 flex items-center">
+                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
+                </p>
+              </div>
+              
+              <div>
+                <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas (una por línea):</label>
+                <textarea 
+                  className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                  placeholder="Formato: Acción %% Responsable (opcional)
 Ejemplo:
 Reinicio de servicios %% Equipo de Infraestructura
 Limpieza de caché %% Soporte N1
 Verificación inicial"
-                      name="accionesEjecutadas"
-                      value={formData.accionesEjecutadas}
-                      onChange={handleInputChange}
-                    ></textarea>
-                  </div>
-                  <p className="text-sm text-gray-400 mt-2 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
-                  </p>
+                  value={accionesEjecutadas}
+                  onChange={(e) => setAccionesEjecutadas(e.target.value)}
+                ></textarea>
+                <p className="text-sm text-gray-400 mt-2 flex items-center">
+                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
+                </p>
+              </div>
+            </div>
+          )}
+          
+          {/* Campos para Fin */}
+          {tipo.endsWith('-fin') && (
+            <div className="space-y-6 mt-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block mb-2 font-semibold text-gray-300">Fecha inicio:</label>
+                  <input 
+                    className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                    type="date" 
+                    value={fechaInicioFin}
+                    onChange={(e) => setFechaInicioFin(e.target.value)}
+                  />
                 </div>
-              )}
+                
+                <div>
+                  <label className="block mb-2 font-semibold text-gray-300">Hora inicio:</label>
+                  <input 
+                    className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                    type="time" 
+                    step="1"
+                    value={horaInicioFin}
+                    onChange={(e) => setHoraInicioFin(e.target.value)}
+                  />
+                </div>
+                
+                <div>
+                  <label className="block mb-2 font-semibold text-gray-300">Fecha fin:</label>
+                  <input 
+                    className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                    type="date" 
+                    value={fechaFin}
+                    onChange={(e) => setFechaFin(e.target.value)}
+                  />
+                </div>
+                
+                <div>
+                  <label className="block mb-2 font-semibold text-gray-300">Hora fin:</label>
+                  <input 
+                    className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                    type="time" 
+                    step="1"
+                    value={horaFin}
+                    onChange={(e) => setHoraFin(e.target.value)}
+                  />
+                </div>
+              </div>
               
-              {/* Campos para Fin */}
-              {tipo.endsWith('-fin') && (
-                <div className="space-y-6 mt-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                        <Calendar className="w-4 h-4" />
-                        Fecha inicio:
-                      </label>
-                      <input 
-                        className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                        type="date" 
-                        name="fechaInicioFin"
-                        value={formData.fechaInicioFin}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
-                        Hora inicio:
-                      </label>
-                      <input 
-                        className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                        type="time" 
-                        step="1"
-                        name="horaInicioFin"
-                        value={formData.horaInicioFin}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                        <Calendar className="w-4 h-4" />
-                        Fecha fin:
-                      </label>
-                      <input 
-                        className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                        type="date" 
-                        name="fechaFin"
-                        value={formData.fechaFin}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
-                        Hora fin:
-                      </label>
-                      <input 
-                        className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                        type="time" 
-                        step="1"
-                        name="horaFin"
-                        value={formData.horaFin}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Duración calculada:</label>
-                    <div className="p-6 bg-gradient-to-r from-blue-600/10 to-indigo-600/10 border border-blue-500/20 rounded-xl text-center">
-                      <span className="text-3xl font-bold text-blue-400">{formData.duracionCalculada}</span>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Estado:</label>
-                    <input 
-                      className="w-full p-4 bg-gray-900/30 border border-gray-600/50 rounded-xl text-gray-400 cursor-not-allowed"
-                      type="text" 
-                      value={formData.estadoFin}
-                      readOnly
-                    />
-                  </div>
-                  
-                  {(tipo === 'evento-fin' || tipo === 'incidente-fin') && (
-                    <div>
-                      <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas:</label>
-                      <textarea 
-                        className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                        placeholder="Formato: Acción %% Responsable (opcional)
+              <div>
+                <label className="block mb-2 font-semibold text-gray-300">Duración calculada:</label>
+                <div className="p-6 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-xl text-center">
+                  <span className="text-3xl font-bold text-yellow-400">{duracionCalculada}</span>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block mb-2 font-semibold text-gray-300">Estado:</label>
+                <input 
+                  className="w-full p-4 bg-gray-700/30 border border-gray-600/50 rounded-xl text-gray-400 cursor-not-allowed"
+                  type="text" 
+                  value={estadoFin}
+                  readOnly
+                />
+              </div>
+              
+              {(tipo === 'evento-fin' || tipo === 'incidente-fin') && (
+                <div>
+                  <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas:</label>
+                  <textarea 
+                    className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+                    placeholder="Formato: Acción %% Responsable (opcional)
 Ejemplo:
 Reinicio del servidor %% Equipo de Infraestructura
 Actualización de base de datos %% DBA Team
 Verificación de logs"
-                        name={tipo === 'evento-fin' ? 'acciones' : 'accionesEjecutadas'}
-                        value={tipo === 'evento-fin' ? formData.acciones : formData.accionesEjecutadas}
-                        onChange={handleInputChange}
-                      ></textarea>
-                      <p className="text-sm text-gray-400 mt-2 flex items-center">
-                        <AlertCircle className="w-4 h-4 mr-1" />
-                        Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
-              
-              <div className="mt-8">
-                <label className="block mb-2 font-semibold text-gray-300">Nota adicional (opcional):</label>
-                <textarea 
-                  className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-32 resize-y focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-                  placeholder="Observaciones con detalle que permitan brindar más información en el caso que amerite"
-                  name="nota"
-                  value={formData.nota}
-                  onChange={handleInputChange}
-                ></textarea>
-              </div>
-              
-              <div className="flex gap-4 mt-8">
-                <button 
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-blue-500/25 transform hover:-translate-y-1 flex items-center justify-center gap-2"
-                  onClick={generarMensaje}
-                >
-                  <Zap className="w-5 h-5" />
-                  Generar Comunicado
-                </button>
-              </div>
-            </div>
-            
-            {/* Resultado */}
-            <div className="bg-gray-800/90 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-gray-700/50">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent flex items-center gap-2 mb-6">
-                <CheckCircle className="w-6 h-6 text-blue-400" />
-                Comunicado Generado
-              </h2>
-              <div className="bg-gray-900/80 p-6 rounded-xl font-mono border-l-4 border-blue-500 mt-4 min-h-[200px] overflow-x-auto leading-relaxed">
-                <pre className="whitespace-pre-wrap text-gray-100">{resultado || 'El comunicado generado aparecerá aquí...'}</pre>
-              </div>
-              
-              {mostrarAlerta && (
-                <div className="my-6 p-4 rounded-xl bg-green-500/20 border-l-4 border-green-500 backdrop-blur-sm">
-                  <p className="text-green-400 flex items-center">
-                    <CheckCircle className="w-5 h-5 mr-2" />
-                    {alertaMensaje}
+                    value={tipo === 'evento-fin' ? acciones : accionesEjecutadas}
+                    onChange={(e) => tipo === 'evento-fin' ? setAcciones(e.target.value) : setAccionesEjecutadas(e.target.value)}
+                  ></textarea>
+                  <p className="text-sm text-gray-400 mt-2 flex items-center">
+                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
                   </p>
                 </div>
               )}
-              
-              <div className="flex gap-4 mt-8">
-                <button 
-                  className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-1 flex items-center justify-center gap-2"
-                  onClick={copiar}
-                >
-                  <Copy className="w-5 h-5" />
-                  Copiar al Portapapeles
-                </button>
-                <button 
-                  className="flex-1 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-red-500/25 transform hover:-translate-y-1 flex items-center justify-center gap-2"
-                  onClick={limpiarCampos}
-                >
-                  <Trash2 className="w-5 h-5" />
-                  Limpiar Campos
-                </button>
-              </div>
             </div>
+          )}
+          
+          <div className="mt-8">
+            <label className="block mb-2 font-semibold text-gray-300">Nota adicional (opcional):</label>
+            <textarea 
+              className="w-full p-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-32 resize-y focus:border-yellow-500/50 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+              placeholder="Observaciones con detalle que permitan brindar más información en el caso que amerite"
+              value={nota}
+              onChange={(e) => setNota(e.target.value)}
+            ></textarea>
+          </div>
+          
+          <div className="flex gap-4 mt-8">
+            <button 
+              className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-green-500/25 transform hover:-translate-y-0.5"
+              onClick={generarMensaje}
+            >
+              Generar Comunicado
+            </button>
+          </div>
+        </div>
+        
+        <div className="bg-gray-800/80 backdrop-blur-lg rounded-2xl p-8 mb-10 shadow-2xl border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent mt-0 border-b border-yellow-500/30 pb-4 mb-6">
+            Comunicado Generado
+          </h2>
+          <div className="bg-gray-900 p-6 rounded-xl font-mono border-l-4 border-yellow-500 mt-4 min-h-40 overflow-x-auto leading-relaxed">
+            <pre className="whitespace-pre-wrap text-gray-100">{resultado}</pre>
+          </div>
+          
+          {mostrarAlerta && (
+            <div className="my-6 p-4 rounded-xl bg-green-500/20 border-l-4 border-green-500">
+              <p className="text-green-400 flex items-center">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {alertaMensaje}
+              </p>
+            </div>
+          )}
+          
+          <div className="flex gap-4 mt-8">
+            <button 
+              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-blue-500/25 transform hover:-translate-y-0.5"
+              onClick={copiar}
+            >
+              Copiar al Portapapeles
+            </button>
+            <button 
+              className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-red-500/25 transform hover:-translate-y-0.5"
+              onClick={limpiarCampos}
+            >
+              Limpiar Campos
+            </button>
           </div>
         </div>
         
         <footer className="text-center py-8 mt-12 text-gray-400 text-sm border-t border-gray-700/50">
           <p className="mb-2">Desarrollado por Luis Alberto Herrera Lara</p>
-          <p>Generador de Comunicados Pro - Versión 2.0</p>
-          <p className="text-xs mt-1">Sistema Avanzado de Comunicaciones</p>
+          <p>Generador de Comunicados para el Grupo de Monitoreo - Versión 1.1</p>
+          <p className="text-xs mt-1">Actualizado el 4 de marzo</p>
         </footer>
       </div>
     </div>
