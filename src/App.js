@@ -104,12 +104,8 @@ const GeneradorComunicados = () => {
         setPeriodosAlertamiento(nuevosPeriodos);
       }
     }
-  }, [multiplesAlertamientos, JSON.stringify(periodosAlertamiento.map(p => ({
-    fechaInicio: p.fechaInicio,
-    horaInicio: p.horaInicio,
-    fechaFin: p.fechaFin,
-    horaFin: p.horaFin
-  })))]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [multiplesAlertamientos, periodosAlertamiento]);
   useEffect(() => {
     setFormData(prev => {
       let estadoInicio = prev.estadoInicio;
@@ -212,9 +208,37 @@ const GeneradorComunicados = () => {
 
   const actualizarPeriodo = (index, campo, valor) => {
     setPeriodosAlertamiento(prev => 
-      prev.map((periodo, i) => 
-        i === index ? { ...periodo, [campo]: valor } : periodo
-      )
+      prev.map((periodo, i) => {
+        if (i === index) {
+          const nuevoPeriodo = { ...periodo, [campo]: valor };
+          
+          // Calcular duración si tenemos todos los datos necesarios
+          if (nuevoPeriodo.fechaInicio && nuevoPeriodo.horaInicio && nuevoPeriodo.fechaFin && nuevoPeriodo.horaFin) {
+            try {
+              const inicio = new Date(`${nuevoPeriodo.fechaInicio}T${nuevoPeriodo.horaInicio}`);
+              const fin = new Date(`${nuevoPeriodo.fechaFin}T${nuevoPeriodo.horaFin}`);
+              const diferencia = fin - inicio;
+              
+              if (diferencia >= 0) {
+                const horas = Math.floor(diferencia / (1000 * 60 * 60));
+                const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+                const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+                
+                nuevoPeriodo.duracion = `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
+              } else {
+                nuevoPeriodo.duracion = '00:00:00';
+              }
+            } catch (error) {
+              nuevoPeriodo.duracion = '00:00:00';
+            }
+          } else {
+            nuevoPeriodo.duracion = '00:00:00';
+          }
+          
+          return nuevoPeriodo;
+        }
+        return periodo;
+      })
     );
   };
 
