@@ -104,12 +104,8 @@ const GeneradorComunicados = () => {
         setPeriodosAlertamiento(nuevosPeriodos);
       }
     }
-  }, [multiplesAlertamientos, JSON.stringify(periodosAlertamiento.map(p => ({
-    fechaInicio: p.fechaInicio,
-    horaInicio: p.horaInicio,
-    fechaFin: p.fechaFin,
-    horaFin: p.horaFin
-  })))]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [multiplesAlertamientos, periodosAlertamiento]);
   useEffect(() => {
     setFormData(prev => {
       let estadoInicio = prev.estadoInicio;
@@ -212,9 +208,37 @@ const GeneradorComunicados = () => {
 
   const actualizarPeriodo = (index, campo, valor) => {
     setPeriodosAlertamiento(prev => 
-      prev.map((periodo, i) => 
-        i === index ? { ...periodo, [campo]: valor } : periodo
-      )
+      prev.map((periodo, i) => {
+        if (i === index) {
+          const nuevoPeriodo = { ...periodo, [campo]: valor };
+          
+          // Calcular duración si tenemos todos los datos necesarios
+          if (nuevoPeriodo.fechaInicio && nuevoPeriodo.horaInicio && nuevoPeriodo.fechaFin && nuevoPeriodo.horaFin) {
+            try {
+              const inicio = new Date(`${nuevoPeriodo.fechaInicio}T${nuevoPeriodo.horaInicio}`);
+              const fin = new Date(`${nuevoPeriodo.fechaFin}T${nuevoPeriodo.horaFin}`);
+              const diferencia = fin - inicio;
+              
+              if (diferencia >= 0) {
+                const horas = Math.floor(diferencia / (1000 * 60 * 60));
+                const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+                const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+                
+                nuevoPeriodo.duracion = `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
+              } else {
+                nuevoPeriodo.duracion = '00:00:00';
+              }
+            } catch (error) {
+              nuevoPeriodo.duracion = '00:00:00';
+            }
+          } else {
+            nuevoPeriodo.duracion = '00:00:00';
+          }
+          
+          return nuevoPeriodo;
+        }
+        return periodo;
+      })
     );
   };
 
@@ -305,15 +329,15 @@ const GeneradorComunicados = () => {
     if (!multiplesAlertamientos || periodosAlertamiento.length === 0) {
       const fechaInicioFormateada = formatearFecha(formData.fechaInicioFin);
       const fechaFinFormateada = formatearFecha(formData.fechaFin);
-      return `*Inicio:* ${fechaInicioFormateada} - ${formData.horaInicioFin}\n*Fin:* ${fechaFinFormateada} - ${formData.horaFin}\n*Duración:* ${formData.duracionCalculada}`;
+      return `Inicio: ${fechaInicioFormateada} - ${formData.horaInicioFin}\nFin: ${fechaFinFormateada} - ${formData.horaFin}\nDuración: ${formData.duracionCalculada}`;
     }
     
-    let resultado = `*Duración Total:* ${calcularDuracionTotal()}\n*Períodos de Alertamiento:*`;
+    let resultado = `Duración Total: ${calcularDuracionTotal()}\nPeríodos de Alertamiento:`;
     
     periodosAlertamiento.forEach((periodo, index) => {
       const fechaInicioFormateada = formatearFecha(periodo.fechaInicio);
       const fechaFinFormateada = formatearFecha(periodo.fechaFin);
-      resultado += `\n        *Período ${index + 1}:*`;
+      resultado += `\n        Período ${index + 1}:`;
       resultado += `\n        Inicio: ${fechaInicioFormateada} - ${periodo.horaInicio}`;
       resultado += `\n        Fin: ${fechaFinFormateada} - ${periodo.horaFin}`;
       resultado += `\n        Duración: ${periodo.duracion}`;
@@ -331,10 +355,10 @@ const GeneradorComunicados = () => {
     
     if (lineas.length <= 1) {
       // Una sola línea: mostrar en la misma línea
-      return `*Impacto:* ${impactoVal}`;
+      return `Impacto: ${impactoVal}`;
     } else {
       // Múltiples líneas: mostrar debajo
-      let resultado = "*Impacto:*";
+      let resultado = "Impacto:";
       lineas.forEach(linea => {
         const lineaLimpia = linea.trim();
         if (lineaLimpia) {
@@ -359,16 +383,16 @@ const GeneradorComunicados = () => {
       const fechaFormateada = formatearFecha(formData.fechaInicio);
       const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
-      mensaje = `*GESTIÓN EVENTO*\n🟡 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n${impactoFormateado}\n*Inicio:* ${fechaFormateada} - ${formData.horaInicio}`;
+      mensaje = `GESTIÓN EVENTO\n🟡 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}\nInicio: ${fechaFormateada} - ${formData.horaInicio}`;
     }
     else if (tipo === 'evento-seguimiento') {
       const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
       const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
-      mensaje = `*GESTIÓN EVENTO*\n🔁 *Seguimiento*\n\n*Descripción:* ${descripcionVal}\n${impactoFormateado}`;
+      mensaje = `GESTIÓN EVENTO\n🔁 Seguimiento\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
       
       if (formData.acciones && formData.acciones.trim()) {
-        mensaje += "\n*Acciones:*";
+        mensaje += "\nAcciones:";
         const lineasAcciones = formData.acciones.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           const linea = lineasAcciones[i].trim();
@@ -392,10 +416,10 @@ const GeneradorComunicados = () => {
       const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       const periodosFormateados = formatearPeriodosMultiples();
       
-      mensaje = `*GESTIÓN EVENTO*\n🟢 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n${impactoFormateado}\n${periodosFormateados}`;
+      mensaje = `GESTIÓN EVENTO\n🟢 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}\n${periodosFormateados}`;
       
       if (formData.acciones && formData.acciones.trim()) {
-        mensaje += "\n*Acciones:*";
+        mensaje += "\nAcciones:";
         const lineasAcciones = formData.acciones.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           const linea = lineasAcciones[i].trim();
@@ -420,7 +444,7 @@ const GeneradorComunicados = () => {
       const fechaFormateada = formatearFecha(formData.fechaInicio);
       const impactoFormateado = formatearImpacto(formData.impactoMant, "Impacto servicio / usuarios / clientes");
       
-      mensaje = `⚠️ *MANTENIMIENTO*\n\n*Estado:* ${estadoVal}\n*Motivo:* ${motivoVal}\n${impactoFormateado}\n*Ejecutor:* ${ejecutorVal}\n*Inicio:* ${fechaFormateada} - ${formData.horaInicio}`;
+      mensaje = `⚠️ MANTENIMIENTO\n\nEstado: ${estadoVal}\nMotivo: ${motivoVal}\n${impactoFormateado}\nEjecutor: ${ejecutorVal}\nInicio: ${fechaFormateada} - ${formData.horaInicio}`;
     }
     else if (tipo === 'mantenimiento-fin') {
       const motivoVal = formData.motivo || "Descripción del Mantenimiento";
@@ -429,7 +453,7 @@ const GeneradorComunicados = () => {
       const impactoFormateado = formatearImpacto(formData.impactoMant, "Impacto servicio / usuarios / clientes");
       const periodosFormateados = formatearPeriodosMultiples();
       
-      mensaje = `✅ *MANTENIMIENTO*\n\n*Estado:* ${estadoVal}\n*Motivo:* ${motivoVal}\n${impactoFormateado}\n*Ejecutor:* ${ejecutorVal}\n${periodosFormateados}`;
+      mensaje = `✅ MANTENIMIENTO\n\nEstado: ${estadoVal}\nMotivo: ${motivoVal}\n${impactoFormateado}\nEjecutor: ${ejecutorVal}\n${periodosFormateados}`;
     }
     else if (tipo === 'incidente-inicio') {
       const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
@@ -437,16 +461,16 @@ const GeneradorComunicados = () => {
       const fechaFormateada = formatearFecha(formData.fechaInicio);
       const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
-      mensaje = `*GESTIÓN INCIDENTE*\n🟡 *${estadoVal}*\n\n*Descripción:* ${descripcionVal}\n${impactoFormateado}\n*Inicio:* ${fechaFormateada} - ${formData.horaInicio}`;
+      mensaje = `GESTIÓN INCIDENTE\n🟡 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}\nInicio: ${fechaFormateada} - ${formData.horaInicio}`;
     }
     else if (tipo === 'incidente-avance') {
       const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
       const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
-      mensaje = `*GESTIÓN INCIDENTE*\n🔁 *Avance*\n\n*Descripción:* ${descripcionVal}\n${impactoFormateado}`;
+      mensaje = `GESTIÓN INCIDENTE\n🔁 Avance\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
       
       if (formData.accionesEnCurso && formData.accionesEnCurso.trim()) {
-        mensaje += "\n*Acciones en curso:*";
+        mensaje += "\nAcciones en curso:";
         const lineasAcciones = formData.accionesEnCurso.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           const linea = lineasAcciones[i].trim();
@@ -465,7 +489,7 @@ const GeneradorComunicados = () => {
       }
       
       if (formData.accionesEjecutadas && formData.accionesEjecutadas.trim()) {
-        mensaje += "\n*Acciones ejecutadas:*";
+        mensaje += "\nAcciones ejecutadas:";
         const lineasAcciones = formData.accionesEjecutadas.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           const linea = lineasAcciones[i].trim();
@@ -489,10 +513,10 @@ const GeneradorComunicados = () => {
       const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       const periodosFormateados = formatearPeriodosMultiples();
       
-      mensaje = `*GESTIÓN INCIDENTE*\n🟢 *${estadoFin}*\n\n*Descripción:* ${descripcionVal}\n${impactoFormateado}\n${periodosFormateados}`;
+      mensaje = `GESTIÓN INCIDENTE\n🟢 ${estadoFin}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}\n${periodosFormateados}`;
       
       if (formData.accionesEjecutadas && formData.accionesEjecutadas.trim()) {
-        mensaje += "\n*Acciones ejecutadas:*";
+        mensaje += "\nAcciones ejecutadas:";
         const lineasAcciones = formData.accionesEjecutadas.split('\n');
         for (let i = 0; i < lineasAcciones.length; i++) {
           const linea = lineasAcciones[i].trim();
@@ -514,12 +538,12 @@ const GeneradorComunicados = () => {
     // Agregar nota si existe
     if (formData.nota) {
       if (tipo.startsWith('mantenimiento-')) {
-        mensaje += `\n\n*📣 NOTA:*\n        Observaciones con detalle que permitan brindar más información en el caso que amerite.`;
+        mensaje += `\n\n📣 NOTA:\n        Observaciones con detalle que permitan brindar más información en el caso que amerite.`;
         if (formData.nota.trim() !== "") {
           mensaje = mensaje.replace("Observaciones con detalle que permitan brindar más información en el caso que amerite.", formData.nota);
         }
       } else {
-        mensaje += `\n\n*📣 NOTA:*\n        ${formData.nota}`;
+        mensaje += `\n\n📣 NOTA:\n        ${formData.nota}`;
       }
     }
     
@@ -1236,7 +1260,7 @@ Verificación de logs"
           <p className="mb-2">Desarrollado por Luis Alberto Herrera Lara</p>
           <p className="text-blue-200">Generador de Comunicados Pro - Versión 3.0</p>
           <p className="text-xs mt-1">Sistema Avanzado de Comunicaciones</p>
-          <p className="text-xs text-blue-300/70 mt-2">Actualizado el 30 de mayo de 2025</p>
+          <p className="text-xs text-blue-300/70 mt-2">Actualizado el 12 de junio de 2025</p>
         </footer>
       </div>
     </div>
