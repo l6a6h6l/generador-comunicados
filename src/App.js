@@ -1,8 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, AlertCircle, CheckCircle, RefreshCw, Copy, Trash2, Wrench, ChevronRight, Zap, MessageSquare, AlertTriangle, Bell, Settings, Plus, Minus } from 'lucide-react';
+import { Calendar, Clock, AlertCircle, CheckCircle, RefreshCw, Copy, Trash2, Wrench, ChevronRight, Zap, MessageSquare, AlertTriangle, Bell, Settings, Plus, Minus, User, Lock, Eye, EyeOff } from 'lucide-react';
 
 const GeneradorComunicados = () => {
-  // Estados
+  // Estados de autenticación
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loginForm, setLoginForm] = useState({ usuario: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState('');
+
+  // Credenciales
+  const CREDENTIALS = {
+    usuario: 'fractalia',
+    password: 'fractalia4ever'
+  };
+
+  // Estados principales
   const [tipo, setTipo] = useState('evento-inicio');
   const [multiplesAlertamientos, setMultiplesAlertamientos] = useState(false);
   const [periodosAlertamiento, setPeriodosAlertamiento] = useState([
@@ -125,7 +137,29 @@ const GeneradorComunicados = () => {
     });
   }, [tipo]);
 
-  // Funciones
+  // Funciones de autenticación
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (loginForm.usuario === CREDENTIALS.usuario && loginForm.password === CREDENTIALS.password) {
+      setIsAuthenticated(true);
+      setLoginError('');
+    } else {
+      setLoginError('¡Credenciales incorrectas! ¿Eres realmente de Fractalia? 🤔');
+      setTimeout(() => setLoginError(''), 3000);
+    }
+  };
+
+  const handleLoginInputChange = (e) => {
+    const { name, value } = e.target;
+    setLoginForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setLoginForm({ usuario: '', password: '' });
+  };
+
+  // Funciones principales
   const establecerFechaHoraActual = () => {
     const hoy = new Date();
     const fechaActual = hoy.toISOString().split('T')[0];
@@ -611,20 +645,30 @@ const GeneradorComunicados = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-800 via-blue-800 to-indigo-900 text-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <header className="bg-gradient-to-r from-blue-700/30 via-indigo-700/30 to-cyan-700/30 backdrop-blur-lg p-8 text-center rounded-3xl mb-10 border border-blue-400/30 shadow-2xl">
+        <header className="bg-gradient-to-r from-emerald-700/30 via-teal-700/30 to-green-700/30 backdrop-blur-lg p-8 text-center rounded-3xl mb-10 border border-emerald-400/30 shadow-2xl relative">
+          {/* Botón de logout */}
+          <button
+            onClick={handleLogout}
+            className="absolute top-4 right-4 bg-slate-700/60 hover:bg-slate-600/60 text-gray-300 hover:text-white p-2 rounded-lg transition-all duration-200 text-sm flex items-center gap-1"
+            title="Cerrar Sesión"
+          >
+            <User className="w-4 h-4" />
+            <span className="hidden sm:inline">Salir</span>
+          </button>
+
           <div className="flex items-center justify-center mb-6">
             <div className="relative">
-              <div className="w-24 h-24 mx-auto bg-gradient-to-br from-blue-600 to-cyan-600 rounded-full flex items-center justify-center shadow-lg">
+              <div className="w-24 h-24 mx-auto bg-gradient-to-br from-emerald-600 to-teal-600 rounded-full flex items-center justify-center shadow-lg">
                 <MessageSquare className="w-14 h-14 text-white" />
               </div>
-              <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-cyan-500 rounded-full flex items-center justify-center border-4 border-slate-800">
+              <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-teal-500 rounded-full flex items-center justify-center border-4 border-slate-900">
                 <Zap className="w-6 h-6 text-white" />
               </div>
             </div>
           </div>
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-300 via-cyan-300 to-indigo-300 bg-clip-text text-transparent tracking-wider mb-3">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-300 via-teal-300 to-green-300 bg-clip-text text-transparent tracking-wider mb-3">
             Generador de Comunicados
           </h1>
           <p className="text-xl text-gray-200">
@@ -640,31 +684,36 @@ const GeneradorComunicados = () => {
               <Settings className="w-4 h-4" />
               Configuración avanzada
             </span>
+            <span className="w-1 h-1 bg-gray-500 rounded-full"></span>
+            <span className="flex items-center gap-1 text-emerald-300">
+              <User className="w-4 h-4" />
+              Usuario: fractalia
+            </span>
           </div>
         </header>
         
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Panel de tipos de comunicado */}
           <div className="lg:col-span-1">
-            <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-blue-400/40 sticky top-8">
-              <h2 className="text-xl font-bold bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent flex items-center gap-2 mb-4">
-                <ChevronRight className="w-5 h-5 text-blue-400" />
+            <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-emerald-400/40 sticky top-8">
+              <h2 className="text-xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2 mb-4">
+                <ChevronRight className="w-5 h-5 text-emerald-400" />
                 Tipo de Comunicado
               </h2>
               
               <div className="space-y-4">
                 {/* Eventos */}
-                <div className="border border-blue-400/40 rounded-lg p-3">
+                <div className="border border-emerald-400/40 rounded-lg p-3">
                   <h3 className="text-sm font-semibold text-gray-300 mb-2 flex items-center uppercase tracking-wider">
-                    <AlertCircle className="w-4 h-4 mr-1.5 text-blue-400" />
+                    <AlertCircle className="w-4 h-4 mr-1.5 text-emerald-400" />
                     Eventos
                   </h3>
                   <div className="grid grid-cols-3 gap-2">
                     <button
                       className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
                         tipo === 'evento-inicio'
-                          ? 'bg-blue-600/90 text-white shadow-lg shadow-blue-600/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-blue-400/20 border border-transparent'
+                          ? 'bg-emerald-600/90 text-white shadow-lg shadow-emerald-600/40'
+                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-emerald-400/20 border border-transparent'
                       }`}
                       onClick={() => seleccionarTipo('evento-inicio')}
                     >
@@ -674,8 +723,8 @@ const GeneradorComunicados = () => {
                     <button
                       className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
                         tipo === 'evento-seguimiento'
-                          ? 'bg-cyan-600/90 text-white shadow-lg shadow-cyan-600/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-cyan-400/20 border border-transparent'
+                          ? 'bg-teal-600/90 text-white shadow-lg shadow-teal-600/40'
+                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-teal-400/20 border border-transparent'
                       }`}
                       onClick={() => seleccionarTipo('evento-seguimiento')}
                     >
@@ -685,8 +734,8 @@ const GeneradorComunicados = () => {
                     <button
                       className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
                         tipo === 'evento-fin'
-                          ? 'bg-indigo-600/90 text-white shadow-lg shadow-indigo-600/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-indigo-400/20 border border-transparent'
+                          ? 'bg-green-600/90 text-white shadow-lg shadow-green-600/40'
+                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-green-400/20 border border-transparent'
                       }`}
                       onClick={() => seleccionarTipo('evento-fin')}
                     >
@@ -697,17 +746,17 @@ const GeneradorComunicados = () => {
                 </div>
                 
                 {/* Mantenimientos */}
-                <div className="border border-blue-400/40 rounded-lg p-3">
+                <div className="border border-emerald-400/40 rounded-lg p-3">
                   <h3 className="text-sm font-semibold text-gray-300 mb-2 flex items-center uppercase tracking-wider">
-                    <Wrench className="w-4 h-4 mr-1.5 text-cyan-400" />
+                    <Wrench className="w-4 h-4 mr-1.5 text-teal-400" />
                     Mantenimientos
                   </h3>
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
                         tipo === 'mantenimiento-inicio'
-                          ? 'bg-blue-700/90 text-white shadow-lg shadow-blue-700/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-blue-400/20 border border-transparent'
+                          ? 'bg-emerald-700/90 text-white shadow-lg shadow-emerald-700/40'
+                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-emerald-400/20 border border-transparent'
                       }`}
                       onClick={() => seleccionarTipo('mantenimiento-inicio')}
                     >
@@ -717,8 +766,8 @@ const GeneradorComunicados = () => {
                     <button
                       className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
                         tipo === 'mantenimiento-fin'
-                          ? 'bg-indigo-600/90 text-white shadow-lg shadow-indigo-600/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-indigo-400/20 border border-transparent'
+                          ? 'bg-green-600/90 text-white shadow-lg shadow-green-600/40'
+                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-green-400/20 border border-transparent'
                       }`}
                       onClick={() => seleccionarTipo('mantenimiento-fin')}
                     >
@@ -729,17 +778,17 @@ const GeneradorComunicados = () => {
                 </div>
                 
                 {/* Incidentes */}
-                <div className="border border-blue-400/40 rounded-lg p-3">
+                <div className="border border-emerald-400/40 rounded-lg p-3">
                   <h3 className="text-sm font-semibold text-gray-300 mb-2 flex items-center uppercase tracking-wider">
-                    <AlertTriangle className="w-4 h-4 mr-1.5 text-blue-300" />
+                    <AlertTriangle className="w-4 h-4 mr-1.5 text-emerald-300" />
                     Incidentes
                   </h3>
                   <div className="grid grid-cols-3 gap-2">
                     <button
                       className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
                         tipo === 'incidente-inicio'
-                          ? 'bg-blue-600/90 text-white shadow-lg shadow-blue-600/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-blue-400/20 border border-transparent'
+                          ? 'bg-emerald-600/90 text-white shadow-lg shadow-emerald-600/40'
+                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-emerald-400/20 border border-transparent'
                       }`}
                       onClick={() => seleccionarTipo('incidente-inicio')}
                     >
@@ -749,8 +798,8 @@ const GeneradorComunicados = () => {
                     <button
                       className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
                         tipo === 'incidente-avance'
-                          ? 'bg-cyan-600/90 text-white shadow-lg shadow-cyan-600/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-cyan-400/20 border border-transparent'
+                          ? 'bg-teal-600/90 text-white shadow-lg shadow-teal-600/40'
+                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-teal-400/20 border border-transparent'
                       }`}
                       onClick={() => seleccionarTipo('incidente-avance')}
                     >
@@ -760,8 +809,8 @@ const GeneradorComunicados = () => {
                     <button
                       className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
                         tipo === 'incidente-fin'
-                          ? 'bg-indigo-600/90 text-white shadow-lg shadow-indigo-600/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-indigo-400/20 border border-transparent'
+                          ? 'bg-green-600/90 text-white shadow-lg shadow-green-600/40'
+                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-green-400/20 border border-transparent'
                       }`}
                       onClick={() => seleccionarTipo('incidente-fin')}
                     >
@@ -777,9 +826,9 @@ const GeneradorComunicados = () => {
           {/* Panel de formulario y resultado */}
           <div className="lg:col-span-2 space-y-8">
             {/* Formulario */}
-            <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-blue-400/40">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent flex items-center gap-2 mb-6">
-                <Settings className="w-6 h-6 text-blue-400" />
+            <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-emerald-400/40">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2 mb-6">
+                <Settings className="w-6 h-6 text-emerald-400" />
                 Detalles del Comunicado
               </h2>
 
@@ -790,7 +839,7 @@ const GeneradorComunicados = () => {
                     <label className="block mb-2 font-semibold text-gray-300">Descripción:</label>
                     <div className="relative">
                       <input 
-                        className="w-full p-4 bg-slate-900/60 border border-blue-500/40 rounded-xl text-white placeholder-gray-400 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                         type="text" 
                         name="descripcion"
                         placeholder="DESCRIPCION DEL INCIDENTE"
@@ -804,7 +853,7 @@ const GeneradorComunicados = () => {
                     <label className="block mb-2 font-semibold text-gray-300">Impacto:</label>
                     <div className="relative">
                       <textarea 
-                        className="w-full p-4 bg-slate-900/60 border border-blue-500/40 rounded-xl text-white placeholder-gray-400 h-32 resize-y focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 h-32 resize-y focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                         name="impacto"
                         placeholder="Impacto servicio / usuarios
 Ejemplo:
@@ -826,7 +875,7 @@ Ejemplo:
                     <label className="block mb-2 font-semibold text-gray-300">Motivo:</label>
                     <div className="relative">
                       <input 
-                        className="w-full p-4 bg-slate-900/60 border border-blue-500/40 rounded-xl text-white placeholder-gray-400 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                         type="text" 
                         name="motivo"
                         placeholder="Descripción del Mantenimiento"
@@ -840,7 +889,7 @@ Ejemplo:
                     <label className="block mb-2 font-semibold text-gray-300">Impacto:</label>
                     <div className="relative">
                       <textarea 
-                        className="w-full p-4 bg-slate-900/60 border border-blue-500/40 rounded-xl text-white placeholder-gray-400 h-32 resize-y focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 h-32 resize-y focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                         name="impactoMant"
                         placeholder="Impacto servicio / usuarios / clientes
 Ejemplo:
@@ -879,7 +928,7 @@ Ejemplo:
                         Fecha:
                       </label>
                       <input 
-                        className="w-full p-4 bg-slate-900/60 border border-blue-500/40 rounded-xl text-white focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                         type="date" 
                         name="fechaInicio"
                         value={formData.fechaInicio}
@@ -893,7 +942,7 @@ Ejemplo:
                         Hora:
                       </label>
                       <input 
-                        className="w-full p-4 bg-slate-900/60 border border-blue-500/40 rounded-xl text-white focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                         type="time" 
                         step="1"
                         name="horaInicio"
@@ -906,7 +955,7 @@ Ejemplo:
                   <div>
                     <label className="block mb-2 font-semibold text-gray-300">Estado:</label>
                     <input 
-                      className="w-full p-4 bg-slate-900/30 border border-blue-500/30 rounded-xl text-gray-300 cursor-not-allowed"
+                      className="w-full p-4 bg-slate-900/30 border border-emerald-500/30 rounded-xl text-gray-300 cursor-not-allowed"
                       type="text" 
                       value={formData.estadoInicio}
                       readOnly
@@ -920,7 +969,7 @@ Ejemplo:
                 <div className="mt-6">
                   <label className="block mb-2 font-semibold text-gray-300">Acciones (una por línea):</label>
                   <textarea 
-                    className="w-full p-4 bg-slate-900/60 border border-blue-500/40 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                    className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                     placeholder="Formato: Acción %% Responsable (opcional)
 Ejemplo:
 Monitoreo continuo del servicio %% Equipo NOC
@@ -980,17 +1029,17 @@ Verificación inicial"
               {tipo.endsWith('-fin') && (
                 <div className="space-y-6 mt-6">
                   {/* Checkbox para múltiples alertamientos */}
-                  <div className="bg-blue-700/15 border border-blue-400/30 rounded-xl p-4">
+                  <div className="bg-emerald-700/15 border border-emerald-400/30 rounded-xl p-4">
                     <label className="flex items-center space-x-3 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={multiplesAlertamientos}
                         onChange={(e) => setMultiplesAlertamientos(e.target.checked)}
-                        className="w-5 h-5 text-blue-600 border-2 border-blue-400 rounded focus:ring-2 focus:ring-cyan-400 focus:ring-offset-0 bg-slate-800"
+                        className="w-5 h-5 text-emerald-600 border-2 border-emerald-400 rounded focus:ring-2 focus:ring-teal-400 focus:ring-offset-0 bg-slate-800"
                       />
-                      <span className="text-blue-200 font-semibold">Múltiples alertamientos temporales</span>
+                      <span className="text-emerald-200 font-semibold">Múltiples alertamientos temporales</span>
                     </label>
-                    <p className="text-sm text-blue-200/70 mt-2 ml-8">
+                    <p className="text-sm text-emerald-200/70 mt-2 ml-8">
                       Activa esta opción si el incidente tuvo múltiples períodos de activación/recuperación
                     </p>
                   </div>
@@ -1003,7 +1052,7 @@ Verificación inicial"
                         <button
                           type="button"
                           onClick={agregarPeriodo}
-                          className="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
+                          className="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
                         >
                           <Plus className="w-4 h-4" />
                           Agregar Período
@@ -1011,7 +1060,7 @@ Verificación inicial"
                       </div>
                       
                       {periodosAlertamiento.map((periodo, index) => (
-                        <div key={index} className="bg-slate-700/60 rounded-xl p-6 relative border border-blue-400/20">
+                        <div key={index} className="bg-slate-700/60 rounded-xl p-6 relative border border-emerald-400/20">
                           <div className="flex items-center justify-between mb-4">
                             <h4 className="text-md font-semibold text-gray-200">Período {index + 1}</h4>
                             {periodosAlertamiento.length > 1 && (
@@ -1032,7 +1081,7 @@ Verificación inicial"
                                 Fecha inicio:
                               </label>
                               <input 
-                                className="w-full p-3 bg-slate-900/60 border border-blue-500/40 rounded-lg text-white focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                                className="w-full p-3 bg-slate-900/60 border border-emerald-500/40 rounded-lg text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                                 type="date" 
                                 value={periodo.fechaInicio}
                                 onChange={(e) => actualizarPeriodo(index, 'fechaInicio', e.target.value)}
@@ -1045,7 +1094,7 @@ Verificación inicial"
                                 Hora inicio:
                               </label>
                               <input 
-                                className="w-full p-3 bg-slate-900/60 border border-blue-500/40 rounded-lg text-white focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                                className="w-full p-3 bg-slate-900/60 border border-emerald-500/40 rounded-lg text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                                 type="time" 
                                 step="1"
                                 value={periodo.horaInicio}
@@ -1059,7 +1108,7 @@ Verificación inicial"
                                 Fecha fin:
                               </label>
                               <input 
-                                className="w-full p-3 bg-slate-900/60 border border-blue-500/40 rounded-lg text-white focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                                className="w-full p-3 bg-slate-900/60 border border-emerald-500/40 rounded-lg text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                                 type="date" 
                                 value={periodo.fechaFin}
                                 onChange={(e) => actualizarPeriodo(index, 'fechaFin', e.target.value)}
@@ -1072,7 +1121,7 @@ Verificación inicial"
                                 Hora fin:
                               </label>
                               <input 
-                                className="w-full p-3 bg-slate-900/60 border border-blue-500/40 rounded-lg text-white focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                                className="w-full p-3 bg-slate-900/60 border border-emerald-500/40 rounded-lg text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                                 type="time" 
                                 step="1"
                                 value={periodo.horaFin}
@@ -1083,8 +1132,8 @@ Verificación inicial"
                           
                           <div className="mt-4">
                             <label className="block mb-2 font-semibold text-gray-300">Duración:</label>
-                            <div className="p-4 bg-gradient-to-r from-cyan-600/15 to-blue-600/15 border border-cyan-400/25 rounded-lg text-center">
-                              <span className="text-2xl font-bold text-cyan-300">{periodo.duracion}</span>
+                            <div className="p-4 bg-gradient-to-r from-teal-600/15 to-emerald-600/15 border border-teal-400/25 rounded-lg text-center">
+                              <span className="text-2xl font-bold text-teal-300">{periodo.duracion}</span>
                             </div>
                           </div>
                         </div>
@@ -1100,7 +1149,7 @@ Verificación inicial"
                             Fecha inicio:
                           </label>
                           <input 
-                            className="w-full p-4 bg-slate-900/60 border border-blue-500/40 rounded-xl text-white focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                            className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                             type="date" 
                             name="fechaInicioFin"
                             value={formData.fechaInicioFin}
@@ -1114,7 +1163,7 @@ Verificación inicial"
                             Hora inicio:
                           </label>
                           <input 
-                            className="w-full p-4 bg-slate-900/60 border border-blue-500/40 rounded-xl text-white focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                            className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                             type="time" 
                             step="1"
                             name="horaInicioFin"
@@ -1129,7 +1178,7 @@ Verificación inicial"
                             Fecha fin:
                           </label>
                           <input 
-                            className="w-full p-4 bg-slate-900/60 border border-blue-500/40 rounded-xl text-white focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                            className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                             type="date" 
                             name="fechaFin"
                             value={formData.fechaFin}
@@ -1143,7 +1192,7 @@ Verificación inicial"
                             Hora fin:
                           </label>
                           <input 
-                            className="w-full p-4 bg-slate-900/60 border border-blue-500/40 rounded-xl text-white focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                            className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                             type="time" 
                             step="1"
                             name="horaFin"
@@ -1155,8 +1204,8 @@ Verificación inicial"
                       
                       <div>
                         <label className="block mb-2 font-semibold text-gray-300">Duración calculada:</label>
-                        <div className="p-6 bg-gradient-to-r from-cyan-600/15 to-blue-600/15 border border-cyan-400/25 rounded-xl text-center">
-                          <span className="text-3xl font-bold text-cyan-300">{formData.duracionCalculada}</span>
+                        <div className="p-6 bg-gradient-to-r from-teal-600/15 to-emerald-600/15 border border-teal-400/25 rounded-xl text-center">
+                          <span className="text-3xl font-bold text-teal-300">{formData.duracionCalculada}</span>
                         </div>
                       </div>
                     </div>
@@ -1208,7 +1257,7 @@ Verificación de logs"
               
               <div className="flex gap-4 mt-8">
                 <button 
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-cyan-500/25 transform hover:-translate-y-1 flex items-center justify-center gap-2"
+                  className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-teal-500/25 transform hover:-translate-y-1 flex items-center justify-center gap-2"
                   onClick={generarMensaje}
                 >
                   <Zap className="w-5 h-5" />
@@ -1218,18 +1267,18 @@ Verificación de logs"
             </div>
             
             {/* Resultado */}
-            <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-blue-400/40">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent flex items-center gap-2 mb-6">
-                <CheckCircle className="w-6 h-6 text-blue-400" />
+            <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-emerald-400/40">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2 mb-6">
+                <CheckCircle className="w-6 h-6 text-emerald-400" />
                 Comunicado Generado
               </h2>
-              <div className="bg-slate-900/90 p-6 rounded-xl font-mono border-l-4 border-cyan-500 mt-4 min-h-[200px] overflow-x-auto leading-relaxed">
+              <div className="bg-slate-900/90 p-6 rounded-xl font-mono border-l-4 border-teal-500 mt-4 min-h-[200px] overflow-x-auto leading-relaxed">
                 <pre className="whitespace-pre-wrap text-gray-100">{resultado || 'El comunicado generado aparecerá aquí...'}</pre>
               </div>
               
               {mostrarAlerta && (
-                <div className="my-6 p-4 rounded-xl bg-cyan-500/20 border-l-4 border-cyan-500 backdrop-blur-sm">
-                  <p className="text-cyan-300 flex items-center">
+                <div className="my-6 p-4 rounded-xl bg-teal-500/20 border-l-4 border-teal-500 backdrop-blur-sm">
+                  <p className="text-teal-300 flex items-center">
                     <CheckCircle className="w-5 h-5 mr-2" />
                     {alertaMensaje}
                   </p>
@@ -1238,7 +1287,7 @@ Verificación de logs"
               
               <div className="flex gap-4 mt-8">
                 <button 
-                  className="flex-1 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-cyan-500/25 transform hover:-translate-y-1 flex items-center justify-center gap-2"
+                  className="flex-1 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-teal-500/25 transform hover:-translate-y-1 flex items-center justify-center gap-2"
                   onClick={copiar}
                 >
                   <Copy className="w-5 h-5" />
@@ -1256,11 +1305,11 @@ Verificación de logs"
           </div>
         </div>
         
-        <footer className="text-center py-8 mt-12 text-gray-300 text-sm border-t border-blue-400/30">
+        <footer className="text-center py-8 mt-12 text-gray-300 text-sm border-t border-emerald-400/30">
           <p className="mb-2">Desarrollado por Luis Alberto Herrera Lara</p>
-          <p className="text-blue-200">Generador de Comunicados Pro - Versión 4.0</p>
+          <p className="text-emerald-200">Generador de Comunicados Pro - Versión 4.0</p>
           <p className="text-xs mt-1">Sistema Avanzado de Comunicaciones</p>
-          <p className="text-xs text-blue-300/70 mt-2">Actualizado el 13 de junio de 2025</p>
+          <p className="text-xs text-emerald-300/70 mt-2">Actualizado el 13 de junio de 2025</p>
         </footer>
       </div>
     </div>
