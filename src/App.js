@@ -147,11 +147,13 @@ const GeneradorComunicados = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
 
-  // Credenciales
-  const CREDENTIALS = {
-    usuario: 'fractalia',
-    password: 'fractalia4ever'
-  };
+  // Credenciales - Usuarios válidos
+  const USUARIOS_VALIDOS = [
+    { usuario: 'fractalia', password: 'fractalia4ever' },
+    { usuario: 'gabriela', password: 'gabyRocks2025' },
+    { usuario: 'gestores', password: 'todosLosSapitos' },
+    { usuario: 'dorian', password: 'dorianGrayIncidentes' }
+  ];
 
   // Estados principales
   const [tipo, setTipo] = useState('evento-inicio');
@@ -240,11 +242,16 @@ const GeneradorComunicados = () => {
 
   // Funciones de autenticación
   const handleLogin = () => {
-    if (loginForm.usuario === CREDENTIALS.usuario && loginForm.password === CREDENTIALS.password) {
+    // Verificar si las credenciales coinciden con algún usuario válido
+    const usuarioValido = USUARIOS_VALIDOS.find(
+      user => user.usuario === loginForm.usuario && user.password === loginForm.password
+    );
+    
+    if (usuarioValido) {
       setIsAuthenticated(true);
       setLoginError('');
     } else {
-      setLoginError('¡Credenciales incorrectas! ¿Eres realmente de Fractalia? 🤔');
+      setLoginError('¡Credenciales incorrectas! ¿Eres realmente del equipo? 🤔');
       setTimeout(() => setLoginError(''), 3000);
     }
   };
@@ -863,7 +870,10 @@ const GeneradorComunicados = () => {
             {/* Pista chistosa */}
             <div className="mt-6 p-4 bg-emerald-700/15 border border-emerald-400/30 rounded-xl">
               <p className="text-emerald-200/70 text-xs text-center">
-                💡 <strong>Pista:</strong> El usuario es nuestro nombre y la contraseña... ¡es para siempre! 😉
+                💡 <strong>Pistas:</strong> Los usuarios son del equipo... las contraseñas tienen que ver con poder, sapitos, eternidad y retratos! 😉
+              </p>
+              <p className="text-emerald-200/50 text-xs text-center mt-2">
+                Usuarios: fractalia, gabriela, gestores, dorian
               </p>
             </div>
           </div>
@@ -922,7 +932,7 @@ const GeneradorComunicados = () => {
             <span className="w-1 h-1 bg-gray-500 rounded-full"></span>
             <span className="flex items-center gap-1 text-emerald-300">
               <User className="w-4 h-4" />
-              Usuario: fractalia
+              Usuario: {loginForm.usuario || 'invitado'}
             </span>
           </div>
         </header>
