@@ -1258,9 +1258,9 @@ Verificación de logs"
         
         <footer className="text-center py-8 mt-12 text-gray-300 text-sm border-t border-blue-400/30">
           <p className="mb-2">Desarrollado por Luis Alberto Herrera Lara</p>
-          <p className="text-blue-200">Generador de Comunicados Pro - Versión 3.0</p>
+          <p className="text-blue-200">Generador de Comunicados Pro - Versión 4.0</p>
           <p className="text-xs mt-1">Sistema Avanzado de Comunicaciones</p>
-          <p className="text-xs text-blue-300/70 mt-2">Actualizado el 12 de junio de 2025</p>
+          <p className="text-xs text-blue-300/70 mt-2">Actualizado el 13 de junio de 2025</p>
         </footer>
       </div>
     </div>
