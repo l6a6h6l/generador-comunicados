@@ -1,9 +1,146 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, AlertCircle, CheckCircle, RefreshCw, Copy, Trash2, Wrench, ChevronRight, Zap, MessageSquare, AlertTriangle, Bell, Settings, Plus, Minus, User, Lock, Eye, EyeOff } from 'lucide-react';
+import { Calendar, Clock, AlertCircle, CheckCircle, RefreshCw, Copy, Trash2, Wrench, ChevronRight, Zap, MessageSquare, AlertTriangle, Bell, Settings, Plus, Minus, User, Lock, Eye, EyeOff, CreditCard, Building, Globe } from 'lucide-react';
 /* eslint-enable no-unused-vars */
 
 const GeneradorComunicados = () => {
+  // Servicios transaccionales
+  const SERVICIOS_TRANSACCIONALES = [
+    {
+      id: 'datafast-visa-mc',
+      nombre: 'DATAFAST VISA-MC',
+      descripcion: 'Transacciones locales Visa (débito/crédito) y MasterCard (crédito) en red propia',
+      categoria: 'datafast',
+      icono: '💳'
+    },
+    {
+      id: 'datafast-diners-dc',
+      nombre: 'DATAFAST DINERS-DC', 
+      descripcion: 'Transacciones locales Diners (débito/crédito) y Discover (crédito) en red propia',
+      categoria: 'datafast',
+      icono: '💳'
+    },
+    {
+      id: 'banred-pago-tc',
+      nombre: 'BANRED (PAGO A TARJETA DE CRÉDITO)',
+      descripcion: 'Transacciones entre bancos asociados BANRED: tarjetas de crédito, cuentas corrientes y ahorro',
+      categoria: 'banred',
+      icono: '🏦'
+    },
+    {
+      id: 'banred-base24',
+      nombre: 'BANRED BASE 24 (DÉBITOS)',
+      descripcion: 'Transacciones tarjetas de débito Banco Pichincha y bancos asociados BANRED',
+      categoria: 'banred',
+      icono: '🏦'
+    },
+    {
+      id: 'banred-base25',
+      nombre: 'BANRED BASE 25 (ATM - TARJETAS DE CRÉDITO)',
+      descripcion: 'Transacciones ATM tarjetas de crédito Banco Pichincha y bancos asociados BANRED',
+      categoria: 'banred',
+      icono: '🏧'
+    },
+    {
+      id: 'usp-atalla',
+      nombre: 'USP ATALLA',
+      descripcion: 'Validación de tarjetas propias de débito y crédito BANCO PICHINCHA',
+      categoria: 'validacion',
+      icono: '🔐'
+    },
+    {
+      id: 'efectivo-express',
+      nombre: 'EFECTIVO EXPRESS',
+      descripcion: 'Avances de efectivo por ventanilla Banco Pichincha',
+      categoria: 'efectivo',
+      icono: '💵'
+    },
+    {
+      id: 'diners-internacional-1',
+      nombre: 'DINERS CLUB INTERNACIONAL 1',
+      descripcion: 'Transacciones crédito Diners/Discover: tarjetas propias en red ajena y ajenas en red propia',
+      categoria: 'internacional',
+      icono: '🌐'
+    },
+    {
+      id: 'diners-internacional-2',
+      nombre: 'DINERS CLUB INTERNACIONAL 2',
+      descripcion: 'Transacciones crédito Diners/Discover: tarjetas propias en red ajena y ajenas en red propia',
+      categoria: 'internacional',
+      icono: '🌐'
+    },
+    {
+      id: 'pulse-discover',
+      nombre: 'PULSE / DISCOVER FS',
+      descripcion: 'Transacciones tarjetas ajenas Diners y Discover en cajeros autorizados',
+      categoria: 'internacional',
+      icono: '🏧'
+    },
+    {
+      id: 'llaves-dci',
+      nombre: 'LLAVES DCI',
+      descripcion: 'Intercambio de llaves con franquicias DCI/Discover',
+      categoria: 'seguridad',
+      icono: '🔑'
+    },
+    {
+      id: 'visa-int-emision',
+      nombre: 'VISA INTERNACIONAL EMISIÓN',
+      descripcion: 'Transacciones débito/crédito tarjetas propias en red ajena',
+      categoria: 'internacional',
+      icono: '🌍'
+    },
+    {
+      id: 'visa-int-adquirencia',
+      nombre: 'VISA INTERNACIONAL ADQUIRENCIA',
+      descripcion: 'Transacciones crédito tarjetas ajenas en red propia',
+      categoria: 'internacional',
+      icono: '🌍'
+    },
+    {
+      id: 'mastercard-mci',
+      nombre: 'MASTERCARD INTERNACIONAL MCI',
+      descripcion: 'Transacciones crédito tarjetas propias en red ajena',
+      categoria: 'internacional',
+      icono: '🌍'
+    },
+    {
+      id: 'mastercard-mds',
+      nombre: 'MASTERCARD INTERNACIONAL MDS',
+      descripcion: 'Transacciones crédito tarjetas ajenas en red propia',
+      categoria: 'internacional',
+      icono: '🌍'
+    },
+    {
+      id: 'broker',
+      nombre: 'BROKER',
+      descripcion: 'Avances de efectivo en cajeros ATM sin tarjeta de crédito',
+      categoria: 'efectivo',
+      icono: '🏧'
+    },
+    {
+      id: 'jardin-azuayo',
+      nombre: 'JARDÍN AZUAYO',
+      descripcion: 'Transacciones débito Visa de Cooperativa Jardín Azuayo',
+      categoria: 'cooperativas',
+      icono: '🏛️'
+    },
+    {
+      id: 'dock',
+      nombre: 'DOCK (EN PROCESO DE IMPLEMENTACIÓN)',
+      descripcion: 'Transacciones débito Banco Diners Club del Ecuador',
+      categoria: 'implementacion',
+      icono: '⚡'
+    },
+    {
+      id: 'bpc-bp',
+      nombre: 'BPC-BP',
+      descripcion: 'Transacciones tarjeta prepago de transporte Banco Pichincha',
+      categoria: 'prepago',
+      icono: '🚌'
+    }
+  ];
+
   // Estados de autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginForm, setLoginForm] = useState({ usuario: '', password: '' });
@@ -45,6 +182,7 @@ const GeneradorComunicados = () => {
   const [resultado, setResultado] = useState('');
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [alertaMensaje, setAlertaMensaje] = useState('¡Comunicado copiado al portapapeles!');
+  const [mostrarServicios, setMostrarServicios] = useState(false);
 
   // Establecer fechas y horas actuales al cargar
   useEffect(() => {
@@ -101,8 +239,7 @@ const GeneradorComunicados = () => {
   }, [tipo]);
 
   // Funciones de autenticación
-  const handleLogin = (e) => {
-    e.preventDefault();
+  const handleLogin = () => {
     if (loginForm.usuario === CREDENTIALS.usuario && loginForm.password === CREDENTIALS.password) {
       setIsAuthenticated(true);
       setLoginError('');
@@ -120,6 +257,40 @@ const GeneradorComunicados = () => {
   const handleLogout = () => {
     setIsAuthenticated(false);
     setLoginForm({ usuario: '', password: '' });
+  };
+
+  // Funciones de servicios transaccionales
+  const seleccionarServicio = (servicio) => {
+    const campoImpacto = tipo.startsWith('mantenimiento-') ? 'impactoMant' : 'impacto';
+    const impactoActual = formData[campoImpacto];
+    
+    // Usar solo la descripción del servicio afectado
+    const servicioTexto = servicio.descripcion;
+    
+    // Agregar al campo de impacto
+    let nuevoImpacto;
+    if (!impactoActual || impactoActual.trim() === '') {
+      nuevoImpacto = servicioTexto;
+    } else {
+      // Si ya hay contenido, agregar en nueva línea
+      nuevoImpacto = impactoActual + '\n' + servicioTexto;
+    }
+    
+    setFormData(prev => ({ ...prev, [campoImpacto]: nuevoImpacto }));
+    
+    // Mostrar confirmación
+    setAlertaMensaje(`✅ Servicio "${servicio.nombre}" agregado al impacto`);
+    setMostrarAlerta(true);
+    setTimeout(() => setMostrarAlerta(false), 2000);
+  };
+
+  const limpiarImpactos = () => {
+    const campoImpacto = tipo.startsWith('mantenimiento-') ? 'impactoMant' : 'impacto';
+    setFormData(prev => ({ ...prev, [campoImpacto]: '' }));
+    
+    setAlertaMensaje('🧹 Impactos limpiados');
+    setMostrarAlerta(true);
+    setTimeout(() => setMostrarAlerta(false), 2000);
   };
 
   // Funciones principales
@@ -625,7 +796,7 @@ const GeneradorComunicados = () => {
             </div>
 
             {/* Formulario de login */}
-            <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-6">
               <div>
                 <label className="block text-gray-300 text-sm font-semibold mb-2">
                   Usuario
@@ -679,7 +850,7 @@ const GeneradorComunicados = () => {
               )}
 
               <button
-                type="submit"
+                onClick={handleLogin}
                 className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-teal-500/25 transform hover:-translate-y-1"
               >
                 <div className="flex items-center justify-center gap-2">
@@ -687,7 +858,7 @@ const GeneradorComunicados = () => {
                   Acceder al Sistema
                 </div>
               </button>
-            </form>
+            </div>
 
             {/* Pista chistosa */}
             <div className="mt-6 p-4 bg-emerald-700/15 border border-emerald-400/30 rounded-xl">
@@ -756,139 +927,243 @@ const GeneradorComunicados = () => {
           </div>
         </header>
         
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-4 gap-8">
           {/* Panel de tipos de comunicado */}
           <div className="lg:col-span-1">
-            <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-emerald-400/40 sticky top-8">
-              <h2 className="text-xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2 mb-4">
-                <ChevronRight className="w-5 h-5 text-emerald-400" />
-                Tipo de Comunicado
-              </h2>
-              
-              <div className="space-y-4">
-                {/* Eventos */}
-                <div className="border border-emerald-400/40 rounded-lg p-3">
-                  <h3 className="text-sm font-semibold text-gray-300 mb-2 flex items-center uppercase tracking-wider">
-                    <AlertCircle className="w-4 h-4 mr-1.5 text-emerald-400" />
-                    Eventos
-                  </h3>
-                  <div className="grid grid-cols-3 gap-2">
-                    <button
-                      className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                        tipo === 'evento-inicio'
-                          ? 'bg-emerald-600/90 text-white shadow-lg shadow-emerald-600/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-emerald-400/20 border border-transparent'
-                      }`}
-                      onClick={() => seleccionarTipo('evento-inicio')}
-                    >
-                      <span className="text-lg mb-1">🟡</span>
-                      <span className="text-xs font-medium">Inicio</span>
-                    </button>
-                    <button
-                      className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                        tipo === 'evento-seguimiento'
-                          ? 'bg-teal-600/90 text-white shadow-lg shadow-teal-600/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-teal-400/20 border border-transparent'
-                      }`}
-                      onClick={() => seleccionarTipo('evento-seguimiento')}
-                    >
-                      <RefreshCw className="w-4 h-4 mb-1" />
-                      <span className="text-xs font-medium">Seguim.</span>
-                    </button>
-                    <button
-                      className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                        tipo === 'evento-fin'
-                          ? 'bg-green-600/90 text-white shadow-lg shadow-green-600/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-green-400/20 border border-transparent'
-                      }`}
-                      onClick={() => seleccionarTipo('evento-fin')}
-                    >
-                      <span className="text-lg mb-1">🟢</span>
-                      <span className="text-xs font-medium">Fin</span>
-                    </button>
-                  </div>
-                </div>
+            <div className="space-y-6">
+              <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-emerald-400/40 sticky top-8">
+                <h2 className="text-xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2 mb-4">
+                  <ChevronRight className="w-5 h-5 text-emerald-400" />
+                  Tipo de Comunicado
+                </h2>
                 
-                {/* Mantenimientos */}
-                <div className="border border-emerald-400/40 rounded-lg p-3">
-                  <h3 className="text-sm font-semibold text-gray-300 mb-2 flex items-center uppercase tracking-wider">
-                    <Wrench className="w-4 h-4 mr-1.5 text-teal-400" />
-                    Mantenimientos
-                  </h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                        tipo === 'mantenimiento-inicio'
-                          ? 'bg-emerald-700/90 text-white shadow-lg shadow-emerald-700/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-emerald-400/20 border border-transparent'
-                      }`}
-                      onClick={() => seleccionarTipo('mantenimiento-inicio')}
-                    >
-                      <span className="text-lg mb-1">⚠️</span>
-                      <span className="text-xs font-medium">Inicio</span>
-                    </button>
-                    <button
-                      className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                        tipo === 'mantenimiento-fin'
-                          ? 'bg-green-600/90 text-white shadow-lg shadow-green-600/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-green-400/20 border border-transparent'
-                      }`}
-                      onClick={() => seleccionarTipo('mantenimiento-fin')}
-                    >
-                      <span className="text-lg mb-1">✅</span>
-                      <span className="text-xs font-medium">Fin</span>
-                    </button>
+                <div className="space-y-4">
+                  {/* Eventos */}
+                  <div className="border border-emerald-400/40 rounded-lg p-3">
+                    <h3 className="text-sm font-semibold text-gray-300 mb-2 flex items-center uppercase tracking-wider">
+                      <AlertCircle className="w-4 h-4 mr-1.5 text-emerald-400" />
+                      Eventos
+                    </h3>
+                    <div className="grid grid-cols-3 gap-2">
+                      <button
+                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
+                          tipo === 'evento-inicio'
+                            ? 'bg-emerald-600/90 text-white shadow-lg shadow-emerald-600/40'
+                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-emerald-400/20 border border-transparent'
+                        }`}
+                        onClick={() => seleccionarTipo('evento-inicio')}
+                      >
+                        <span className="text-lg mb-1">🟡</span>
+                        <span className="text-xs font-medium">Inicio</span>
+                      </button>
+                      <button
+                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
+                          tipo === 'evento-seguimiento'
+                            ? 'bg-teal-600/90 text-white shadow-lg shadow-teal-600/40'
+                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-teal-400/20 border border-transparent'
+                        }`}
+                        onClick={() => seleccionarTipo('evento-seguimiento')}
+                      >
+                        <RefreshCw className="w-4 h-4 mb-1" />
+                        <span className="text-xs font-medium">Seguim.</span>
+                      </button>
+                      <button
+                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
+                          tipo === 'evento-fin'
+                            ? 'bg-green-600/90 text-white shadow-lg shadow-green-600/40'
+                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-green-400/20 border border-transparent'
+                        }`}
+                        onClick={() => seleccionarTipo('evento-fin')}
+                      >
+                        <span className="text-lg mb-1">🟢</span>
+                        <span className="text-xs font-medium">Fin</span>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Mantenimientos */}
+                  <div className="border border-emerald-400/40 rounded-lg p-3">
+                    <h3 className="text-sm font-semibold text-gray-300 mb-2 flex items-center uppercase tracking-wider">
+                      <Wrench className="w-4 h-4 mr-1.5 text-teal-400" />
+                      Mantenimientos
+                    </h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
+                          tipo === 'mantenimiento-inicio'
+                            ? 'bg-emerald-700/90 text-white shadow-lg shadow-emerald-700/40'
+                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-emerald-400/20 border border-transparent'
+                        }`}
+                        onClick={() => seleccionarTipo('mantenimiento-inicio')}
+                      >
+                        <span className="text-lg mb-1">⚠️</span>
+                        <span className="text-xs font-medium">Inicio</span>
+                      </button>
+                      <button
+                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
+                          tipo === 'mantenimiento-fin'
+                            ? 'bg-green-600/90 text-white shadow-lg shadow-green-600/40'
+                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-green-400/20 border border-transparent'
+                        }`}
+                        onClick={() => seleccionarTipo('mantenimiento-fin')}
+                      >
+                        <span className="text-lg mb-1">✅</span>
+                        <span className="text-xs font-medium">Fin</span>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Incidentes */}
+                  <div className="border border-emerald-400/40 rounded-lg p-3">
+                    <h3 className="text-sm font-semibold text-gray-300 mb-2 flex items-center uppercase tracking-wider">
+                      <AlertTriangle className="w-4 h-4 mr-1.5 text-emerald-300" />
+                      Incidentes
+                    </h3>
+                    <div className="grid grid-cols-3 gap-2">
+                      <button
+                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
+                          tipo === 'incidente-inicio'
+                            ? 'bg-emerald-600/90 text-white shadow-lg shadow-emerald-600/40'
+                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-emerald-400/20 border border-transparent'
+                        }`}
+                        onClick={() => seleccionarTipo('incidente-inicio')}
+                      >
+                        <span className="text-lg mb-1">🟡</span>
+                        <span className="text-xs font-medium">Inicio</span>
+                      </button>
+                      <button
+                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
+                          tipo === 'incidente-avance'
+                            ? 'bg-teal-600/90 text-white shadow-lg shadow-teal-600/40'
+                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-teal-400/20 border border-transparent'
+                        }`}
+                        onClick={() => seleccionarTipo('incidente-avance')}
+                      >
+                        <RefreshCw className="w-4 h-4 mb-1" />
+                        <span className="text-xs font-medium">Avance</span>
+                      </button>
+                      <button
+                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
+                          tipo === 'incidente-fin'
+                            ? 'bg-green-600/90 text-white shadow-lg shadow-green-600/40'
+                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-green-400/20 border border-transparent'
+                        }`}
+                        onClick={() => seleccionarTipo('incidente-fin')}
+                      >
+                        <span className="text-lg mb-1">🟢</span>
+                        <span className="text-xs font-medium">Fin</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
-                
-                {/* Incidentes */}
-                <div className="border border-emerald-400/40 rounded-lg p-3">
-                  <h3 className="text-sm font-semibold text-gray-300 mb-2 flex items-center uppercase tracking-wider">
-                    <AlertTriangle className="w-4 h-4 mr-1.5 text-emerald-300" />
-                    Incidentes
-                  </h3>
-                  <div className="grid grid-cols-3 gap-2">
-                    <button
-                      className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                        tipo === 'incidente-inicio'
-                          ? 'bg-emerald-600/90 text-white shadow-lg shadow-emerald-600/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-emerald-400/20 border border-transparent'
-                      }`}
-                      onClick={() => seleccionarTipo('incidente-inicio')}
-                    >
-                      <span className="text-lg mb-1">🟡</span>
-                      <span className="text-xs font-medium">Inicio</span>
-                    </button>
-                    <button
-                      className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                        tipo === 'incidente-avance'
-                          ? 'bg-teal-600/90 text-white shadow-lg shadow-teal-600/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-teal-400/20 border border-transparent'
-                      }`}
-                      onClick={() => seleccionarTipo('incidente-avance')}
-                    >
-                      <RefreshCw className="w-4 h-4 mb-1" />
-                      <span className="text-xs font-medium">Avance</span>
-                    </button>
-                    <button
-                      className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                        tipo === 'incidente-fin'
-                          ? 'bg-green-600/90 text-white shadow-lg shadow-green-600/40'
-                          : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-green-400/20 border border-transparent'
-                      }`}
-                      onClick={() => seleccionarTipo('incidente-fin')}
-                    >
-                      <span className="text-lg mb-1">🟢</span>
-                      <span className="text-xs font-medium">Fin</span>
-                    </button>
-                  </div>
+              </div>
+
+              {/* Panel de Servicios Transaccionales */}
+              <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-emerald-400/40">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2">
+                    <CreditCard className="w-5 h-5 text-emerald-400" />
+                    Servicios Transaccionales
+                  </h2>
+                  <button
+                    onClick={() => setMostrarServicios(!mostrarServicios)}
+                    className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 p-2 rounded-lg transition-all duration-200"
+                  >
+                    {mostrarServicios ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                  </button>
                 </div>
+
+                {mostrarServicios && (
+                  <div className="space-y-4">
+                    <div className="flex gap-2 mb-4">
+                      <button
+                        onClick={limpiarImpactos}
+                        className="text-xs bg-slate-700/60 hover:bg-slate-600/60 text-gray-300 px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-1"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        Limpiar
+                      </button>
+                    </div>
+
+                    {/* DATAFAST */}
+                    <div className="border border-blue-400/30 rounded-lg p-3">
+                      <h4 className="text-xs font-semibold text-blue-300 mb-2 uppercase tracking-wider">
+                        💳 DATAFAST
+                      </h4>
+                      <div className="grid grid-cols-1 gap-2">
+                        {SERVICIOS_TRANSACCIONALES.filter(s => s.categoria === 'datafast').map(servicio => (
+                          <button
+                            key={servicio.id}
+                            onClick={() => seleccionarServicio(servicio)}
+                            className="text-left bg-slate-700/50 hover:bg-blue-600/30 border border-transparent hover:border-blue-400/40 text-gray-300 hover:text-blue-200 p-2 rounded-lg transition-all duration-200 text-xs"
+                          >
+                            <div className="font-medium">{servicio.nombre}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* BANRED */}
+                    <div className="border border-purple-400/30 rounded-lg p-3">
+                      <h4 className="text-xs font-semibold text-purple-300 mb-2 uppercase tracking-wider">
+                        🏦 BANRED
+                      </h4>
+                      <div className="grid grid-cols-1 gap-2">
+                        {SERVICIOS_TRANSACCIONALES.filter(s => s.categoria === 'banred').map(servicio => (
+                          <button
+                            key={servicio.id}
+                            onClick={() => seleccionarServicio(servicio)}
+                            className="text-left bg-slate-700/50 hover:bg-purple-600/30 border border-transparent hover:border-purple-400/40 text-gray-300 hover:text-purple-200 p-2 rounded-lg transition-all duration-200 text-xs"
+                          >
+                            <div className="font-medium">{servicio.nombre}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* INTERNACIONAL */}
+                    <div className="border border-teal-400/30 rounded-lg p-3">
+                      <h4 className="text-xs font-semibold text-teal-300 mb-2 uppercase tracking-wider">
+                        🌍 INTERNACIONAL
+                      </h4>
+                      <div className="grid grid-cols-1 gap-2">
+                        {SERVICIOS_TRANSACCIONALES.filter(s => s.categoria === 'internacional').map(servicio => (
+                          <button
+                            key={servicio.id}
+                            onClick={() => seleccionarServicio(servicio)}
+                            className="text-left bg-slate-700/50 hover:bg-teal-600/30 border border-transparent hover:border-teal-400/40 text-gray-300 hover:text-teal-200 p-2 rounded-lg transition-all duration-200 text-xs"
+                          >
+                            <div className="font-medium">{servicio.nombre}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* OTROS SERVICIOS */}
+                    <div className="border border-emerald-400/30 rounded-lg p-3">
+                      <h4 className="text-xs font-semibold text-emerald-300 mb-2 uppercase tracking-wider">
+                        ⚡ OTROS SERVICIOS
+                      </h4>
+                      <div className="grid grid-cols-1 gap-2">
+                        {SERVICIOS_TRANSACCIONALES.filter(s => !['datafast', 'banred', 'internacional'].includes(s.categoria)).map(servicio => (
+                          <button
+                            key={servicio.id}
+                            onClick={() => seleccionarServicio(servicio)}
+                            className="text-left bg-slate-700/50 hover:bg-emerald-600/30 border border-transparent hover:border-emerald-400/40 text-gray-300 hover:text-emerald-200 p-2 rounded-lg transition-all duration-200 text-xs"
+                          >
+                            <div className="font-medium">{servicio.icono} {servicio.nombre}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
           
           {/* Panel de formulario y resultado */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-3 space-y-8">
             {/* Formulario */}
             <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-emerald-400/40">
               <h2 className="text-2xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2 mb-6">
