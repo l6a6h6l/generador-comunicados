@@ -867,13 +867,13 @@ const GeneradorComunicados = () => {
               </button>
             </div>
 
-            {/* Pista chistosa */}
+            {/* Banner de monitoreo */}
             <div className="mt-6 p-4 bg-emerald-700/15 border border-emerald-400/30 rounded-xl">
-              <p className="text-emerald-200/70 text-xs text-center">
-                💡 <strong>Pistas:</strong> Los usuarios son del equipo... las contraseñas tienen que ver con poder, sapitos, eternidad y retratos! 😉
+              <p className="text-emerald-200/70 text-center">
+                <span className="text-2xl">📡</span>
               </p>
               <p className="text-emerald-200/50 text-xs text-center mt-2">
-                Usuarios: fractalia, gabriela, gestores, dorian
+                Sistema de Monitoreo y Comunicaciones
               </p>
             </div>
           </div>
@@ -892,60 +892,28 @@ const GeneradorComunicados = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <header className="bg-gradient-to-r from-emerald-700/30 via-teal-700/30 to-green-700/30 backdrop-blur-lg p-8 text-center rounded-3xl mb-10 border border-emerald-400/30 shadow-2xl relative">
-          {/* Botón de logout */}
-          <button
-            onClick={handleLogout}
-            className="absolute top-4 right-4 bg-slate-700/60 hover:bg-slate-600/60 text-gray-300 hover:text-white p-2 rounded-lg transition-all duration-200 text-sm flex items-center gap-1"
-            title="Cerrar Sesión"
-          >
-            <User className="w-4 h-4" />
-            <span className="hidden sm:inline">Salir</span>
-          </button>
-
-          <div className="flex items-center justify-center mb-6">
-            <div className="relative">
-              <div className="w-24 h-24 mx-auto bg-gradient-to-br from-emerald-600 to-teal-600 rounded-full flex items-center justify-center shadow-lg">
-                <MessageSquare className="w-14 h-14 text-white" />
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-teal-500 rounded-full flex items-center justify-center border-4 border-slate-900">
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-            </div>
-          </div>
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-300 via-teal-300 to-green-300 bg-clip-text text-transparent tracking-wider mb-3">
-            Generador de Comunicados
-          </h1>
-          <p className="text-xl text-gray-200">
-            Sistema Avanzado de Comunicaciones para el Grupo de Monitoreo
-          </p>
-          <div className="flex items-center justify-center gap-4 mt-4 text-sm text-gray-300">
-            <span className="flex items-center gap-1">
-              <Bell className="w-4 h-4" />
-              Notificaciones en tiempo real
-            </span>
-            <span className="w-1 h-1 bg-gray-500 rounded-full"></span>
-            <span className="flex items-center gap-1">
-              <Settings className="w-4 h-4" />
-              Configuración avanzada
-            </span>
-            <span className="w-1 h-1 bg-gray-500 rounded-full"></span>
-            <span className="flex items-center gap-1 text-emerald-300">
-              <User className="w-4 h-4" />
-              Usuario: {loginForm.usuario || 'invitado'}
-            </span>
-          </div>
-        </header>
         
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Panel de tipos de comunicado */}
           <div className="lg:col-span-1">
             <div className="space-y-6">
               <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-emerald-400/40 sticky top-8">
-                <h2 className="text-xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2 mb-4">
-                  <ChevronRight className="w-5 h-5 text-emerald-400" />
-                  Tipo de Comunicado
-                </h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2">
+                    <ChevronRight className="w-5 h-5 text-emerald-400" />
+                    Tipo de Comunicado
+                  </h2>
+                  
+                  {/* Botón de logout */}
+                  <button
+                    onClick={handleLogout}
+                    className="bg-slate-700/60 hover:bg-slate-600/60 text-gray-300 hover:text-white p-2 rounded-lg transition-all duration-200 text-sm flex items-center gap-1"
+                    title="Cerrar Sesión"
+                  >
+                    <User className="w-4 h-4" />
+                    <span className="hidden sm:inline">Salir</span>
+                  </button>
+                </div>
                 
                 <div className="space-y-4">
                   {/* Eventos */}
