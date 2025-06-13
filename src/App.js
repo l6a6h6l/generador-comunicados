@@ -1,5 +1,7 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, AlertCircle, CheckCircle, RefreshCw, Copy, Trash2, Wrench, ChevronRight, Zap, MessageSquare, AlertTriangle, Bell, Settings, Plus, Minus, User, Lock, Eye, EyeOff } from 'lucide-react';
+/* eslint-enable no-unused-vars */
 
 const GeneradorComunicados = () => {
   // Estados de autenticación
@@ -77,47 +79,8 @@ const GeneradorComunicados = () => {
     
     calcularDuracionInterna();
   }, [formData.fechaInicioFin, formData.horaInicioFin, formData.fechaFin, formData.horaFin]);
-
-  // Calcular duraciones de múltiples períodos
-  useEffect(() => {
-    if (multiplesAlertamientos) {
-      const nuevosPeriodos = periodosAlertamiento.map(periodo => {
-        if (!periodo.fechaInicio || !periodo.horaInicio || !periodo.fechaFin || !periodo.horaFin) {
-          return { ...periodo, duracion: '00:00:00' };
-        }
-        
-        try {
-          const inicio = new Date(`${periodo.fechaInicio}T${periodo.horaInicio}`);
-          const fin = new Date(`${periodo.fechaFin}T${periodo.horaFin}`);
-          const diferencia = fin - inicio;
-          
-          if (diferencia < 0) {
-            return { ...periodo, duracion: '00:00:00' };
-          }
-          
-          const horas = Math.floor(diferencia / (1000 * 60 * 60));
-          const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-          const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
-          
-          const duracion = `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
-          
-          return { ...periodo, duracion };
-        } catch (error) {
-          return { ...periodo, duracion: '00:00:00' };
-        }
-      });
-      
-      // Solo actualizar si hay cambios reales en las duraciones
-      const hayChangios = nuevosPeriodos.some((periodo, index) => 
-        !periodosAlertamiento[index] || periodo.duracion !== periodosAlertamiento[index].duracion
-      );
-      
-      if (hayChangios) {
-        setPeriodosAlertamiento(nuevosPeriodos);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [multiplesAlertamientos, periodosAlertamiento]);
+  
+  // Actualizar estados por defecto cuando cambia el tipo
   useEffect(() => {
     setFormData(prev => {
       let estadoInicio = prev.estadoInicio;
@@ -644,6 +607,107 @@ const GeneradorComunicados = () => {
     }
   };
 
+  // Renderizado condicional para login
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="bg-slate-800/95 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-emerald-400/40">
+            {/* Logo y título */}
+            <div className="text-center mb-8">
+              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-emerald-600 to-teal-600 rounded-full flex items-center justify-center shadow-lg mb-4">
+                <MessageSquare className="w-12 h-12 text-white" />
+              </div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent mb-2">
+                Generador de Comunicados
+              </h1>
+              <p className="text-gray-400 text-sm">Versión 5.0 - Acceso Restringido</p>
+            </div>
+
+            {/* Formulario de login */}
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div>
+                <label className="block text-gray-300 text-sm font-semibold mb-2">
+                  Usuario
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-emerald-400" />
+                  <input
+                    type="text"
+                    name="usuario"
+                    value={loginForm.usuario}
+                    onChange={handleLoginInputChange}
+                    className="w-full pl-12 pr-4 py-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
+                    placeholder="Ingresa tu usuario"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-gray-300 text-sm font-semibold mb-2">
+                  Contraseña
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-emerald-400" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={loginForm.password}
+                    onChange={handleLoginInputChange}
+                    className="w-full pl-12 pr-12 py-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
+                    placeholder="Ingresa tu contraseña"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-emerald-400 transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
+
+              {loginError && (
+                <div className="p-4 rounded-xl bg-red-500/20 border-l-4 border-red-500">
+                  <p className="text-red-300 text-sm flex items-center">
+                    <AlertCircle className="w-4 h-4 mr-2" />
+                    {loginError}
+                  </p>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-teal-500/25 transform hover:-translate-y-1"
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <Zap className="w-5 h-5" />
+                  Acceder al Sistema
+                </div>
+              </button>
+            </form>
+
+            {/* Pista chistosa */}
+            <div className="mt-6 p-4 bg-emerald-700/15 border border-emerald-400/30 rounded-xl">
+              <p className="text-emerald-200/70 text-xs text-center">
+                💡 <strong>Pista:</strong> El usuario es nuestro nombre y la contraseña... ¡es para siempre! 😉
+              </p>
+            </div>
+          </div>
+
+          <div className="text-center mt-6">
+            <p className="text-gray-400 text-xs">
+              Generador de Comunicados Pro v5.0 - Desarrollado por Luis Alberto Herrera Lara
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Aplicación principal
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -906,7 +970,7 @@ Ejemplo:
                     <label className="block mb-2 font-semibold text-gray-300">Ejecutor:</label>
                     <div className="relative">
                       <input 
-                        className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                         type="text" 
                         name="ejecutor"
                         placeholder="Nombre del proveedor o área interna que ejecuta el mantenimiento"
@@ -992,7 +1056,7 @@ Revisión de logs de aplicación"
                   <div>
                     <label className="block mb-2 font-semibold text-gray-300">Acciones en curso (una por línea):</label>
                     <textarea 
-                      className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                      className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                       placeholder="Formato: Acción %% Responsable (opcional)
 Ejemplo:
 Análisis de logs %% Equipo de Monitoreo
@@ -1007,7 +1071,7 @@ Escalamiento a proveedor"
                   <div>
                     <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas (una por línea):</label>
                     <textarea 
-                      className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                      className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                       placeholder="Formato: Acción %% Responsable (opcional)
 Ejemplo:
 Reinicio de servicios %% Equipo de Infraestructura
@@ -1214,7 +1278,7 @@ Verificación inicial"
                   <div>
                     <label className="block mb-2 font-semibold text-gray-300">Estado:</label>
                     <input 
-                      className="w-full p-4 bg-gray-900/30 border border-gray-600/50 rounded-xl text-gray-400 cursor-not-allowed"
+                      className="w-full p-4 bg-slate-900/30 border border-emerald-500/30 rounded-xl text-gray-300 cursor-not-allowed"
                       type="text" 
                       value={formData.estadoFin}
                       readOnly
@@ -1225,7 +1289,7 @@ Verificación inicial"
                     <div>
                       <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas:</label>
                       <textarea 
-                        className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                         placeholder="Formato: Acción %% Responsable (opcional)
 Ejemplo:
 Reinicio del servidor %% Equipo de Infraestructura
@@ -1247,7 +1311,7 @@ Verificación de logs"
               <div className="mt-8">
                 <label className="block mb-2 font-semibold text-gray-300">Nota adicional (opcional):</label>
                 <textarea 
-                  className="w-full p-4 bg-gray-900/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 h-32 resize-y focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                  className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 h-32 resize-y focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
                   placeholder="Observaciones con detalle que permitan brindar más información en el caso que amerite"
                   name="nota"
                   value={formData.nota}
