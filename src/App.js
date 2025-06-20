@@ -185,11 +185,31 @@ const GeneradorComunicados = () => {
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [alertaMensaje, setAlertaMensaje] = useState('¡Comunicado copiado al portapapeles!');
   const [mostrarServicios, setMostrarServicios] = useState(false);
+  
+  // Estados del semáforo
+  const [tiempoAbierto, setTiempoAbierto] = useState(Date.now());
+  const [mostrarActualizacion, setMostrarActualizacion] = useState(false);
+  const [mostrarConfirmacionDuracion, setMostrarConfirmacionDuracion] = useState(false);
+  const [noPreguntar, setNoPreguntar] = useState(false);
 
   // Establecer fechas y horas actuales al cargar
   useEffect(() => {
     establecerFechaHoraActual();
   }, []);
+
+  // Timer del semáforo - actualizar cada minuto
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const horasAbierto = (Date.now() - tiempoAbierto) / (1000 * 60 * 60);
+      
+      // Auto-refresh cada hora (si no ha dicho "no preguntar")
+      if (!noPreguntar && horasAbierto >= 1 && horasAbierto % 1 < 0.017) { // ~1 minuto de margen
+        setMostrarActualizacion(true);
+      }
+    }, 60000); // Cada minuto
+
+    return () => clearInterval(interval);
+  }, [tiempoAbierto, noPreguntar]);
 
   // Calcular duración cuando cambien las fechas u horas relevantes
   useEffect(() => {
@@ -298,6 +318,47 @@ const GeneradorComunicados = () => {
     setAlertaMensaje('🧹 Impactos limpiados');
     setMostrarAlerta(true);
     setTimeout(() => setMostrarAlerta(false), 2000);
+  };
+
+  // Funciones del semáforo
+  const calcularTiempoAbierto = () => {
+    const diferencia = Date.now() - tiempoAbierto;
+    const horas = Math.floor(diferencia / (1000 * 60 * 60));
+    const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+    return { horas, minutos, total: diferencia / (1000 * 60 * 60) };
+  };
+
+  const getEstadoSemaforo = () => {
+    const { total } = calcularTiempoAbierto();
+    if (total < 1) return { color: '🟢', estado: 'Fechas actualizadas', clase: 'text-green-400' };
+    if (total < 4) return { color: '🟡', estado: 'Revisar fechas', clase: 'text-yellow-400' };
+    return { color: '🔴', estado: '¡Fechas desactualizadas!', clase: 'text-red-400' };
+  };
+
+  const actualizarFechasAhora = () => {
+    establecerFechaHoraActual();
+    setTiempoAbierto(Date.now());
+    setMostrarActualizacion(false);
+    setAlertaMensaje('🔄 Fechas actualizadas a la hora actual');
+    setMostrarAlerta(true);
+    setTimeout(() => setMostrarAlerta(false), 3000);
+  };
+
+  const verificarDuracionSospechosa = () => {
+    if (!formData.fechaInicioFin || !formData.horaInicioFin || !formData.fechaFin || !formData.horaFin) {
+      return false;
+    }
+
+    try {
+      const inicio = new Date(`${formData.fechaInicioFin}T${formData.horaInicioFin}`);
+      const fin = new Date(`${formData.fechaFin}T${formData.horaFin}`);
+      const diferencia = fin - inicio;
+      const horas = diferencia / (1000 * 60 * 60);
+      
+      return horas > 4; // Más de 4 horas es sospechoso
+    } catch {
+      return false;
+    }
   };
 
   // Funciones principales
@@ -550,6 +611,17 @@ const GeneradorComunicados = () => {
   };
 
   const generarMensaje = () => {
+    // Verificar duración sospechosa antes de generar
+    if ((tipo.endsWith('-fin')) && verificarDuracionSospechosa()) {
+      setMostrarConfirmacionDuracion(true);
+      return;
+    }
+
+    // Continúa con la generación normal
+    generarMensajeInterno();
+  };
+
+  const generarMensajeInterno = () => {
     let mensaje = "";
     
     if (tipo === 'evento-inicio') {
@@ -867,13 +939,13 @@ const GeneradorComunicados = () => {
               </button>
             </div>
 
-            {/* Banner de monitoreo */}
+            {/* Banner informativo */}
             <div className="mt-6 p-4 bg-emerald-700/15 border border-emerald-400/30 rounded-xl">
-              <p className="text-emerald-200/70 text-center">
-                <span className="text-2xl">📡</span>
+              <p className="text-emerald-200/70 text-xs text-center">
+                💬 <strong>Generador de Comunicados</strong> - Eventos, Incidentes y Mantenimientos
               </p>
               <p className="text-emerald-200/50 text-xs text-center mt-2">
-                Sistema de Monitoreo y Comunicaciones
+                Sistema especializado para comunicaciones de monitoreo
               </p>
             </div>
           </div>
@@ -892,28 +964,80 @@ const GeneradorComunicados = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <header className="bg-gradient-to-r from-emerald-700/30 via-teal-700/30 to-green-700/30 backdrop-blur-lg p-8 text-center rounded-3xl mb-10 border border-emerald-400/30 shadow-2xl relative">
+          {/* Semáforo de estado */}
+          <div className="absolute top-4 left-4 bg-slate-800/80 backdrop-blur-sm rounded-xl p-3 border border-emerald-400/30">
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-lg">{getEstadoSemaforo().color}</span>
+              <div>
+                <div className={`font-semibold ${getEstadoSemaforo().clase}`}>
+                  {calcularTiempoAbierto().horas}h {calcularTiempoAbierto().minutos}m abierta
+                </div>
+                <div className="text-xs text-gray-400">{getEstadoSemaforo().estado}</div>
+              </div>
+              <button
+                onClick={actualizarFechasAhora}
+                className="ml-2 bg-teal-600/20 hover:bg-teal-600/40 text-teal-300 px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1"
+              >
+                <RefreshCw className="w-3 h-3" />
+                Actualizar
+              </button>
+            </div>
+          </div>
+
+          {/* Botón de logout */}
+          <button
+            onClick={handleLogout}
+            className="absolute top-4 right-4 bg-slate-700/60 hover:bg-slate-600/60 text-gray-300 hover:text-white p-2 rounded-lg transition-all duration-200 text-sm flex items-center gap-1"
+            title="Cerrar Sesión"
+          >
+            <User className="w-4 h-4" />
+            <span className="hidden sm:inline">Salir</span>
+          </button>
+
+          <div className="flex items-center justify-center mb-6">
+            <div className="relative">
+              <div className="w-24 h-24 mx-auto bg-gradient-to-br from-emerald-600 to-teal-600 rounded-full flex items-center justify-center shadow-lg">
+                <MessageSquare className="w-14 h-14 text-white" />
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-teal-500 rounded-full flex items-center justify-center border-4 border-slate-900">
+                <Zap className="w-6 h-6 text-white" />
+              </div>
+            </div>
+          </div>
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-300 via-teal-300 to-green-300 bg-clip-text text-transparent tracking-wider mb-3">
+            Generador de Comunicados
+          </h1>
+          <p className="text-xl text-gray-200">
+            Sistema Avanzado de Comunicaciones para el Grupo de Monitoreo
+          </p>
+          <div className="flex items-center justify-center gap-4 mt-4 text-sm text-gray-300">
+            <span className="flex items-center gap-1">
+              <Bell className="w-4 h-4" />
+              Notificaciones en tiempo real
+            </span>
+            <span className="w-1 h-1 bg-gray-500 rounded-full"></span>
+            <span className="flex items-center gap-1">
+              <Settings className="w-4 h-4" />
+              Configuración avanzada
+            </span>
+            <span className="w-1 h-1 bg-gray-500 rounded-full"></span>
+            <span className="flex items-center gap-1 text-emerald-300">
+              <User className="w-4 h-4" />
+              Usuario: {loginForm.usuario || 'invitado'}
+            </span>
+          </div>
+        </header>
         
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Panel de tipos de comunicado */}
           <div className="lg:col-span-1">
             <div className="space-y-6">
               <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-emerald-400/40 sticky top-8">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2">
-                    <ChevronRight className="w-5 h-5 text-emerald-400" />
-                    Tipo de Comunicado
-                  </h2>
-                  
-                  {/* Botón de logout */}
-                  <button
-                    onClick={handleLogout}
-                    className="bg-slate-700/60 hover:bg-slate-600/60 text-gray-300 hover:text-white p-2 rounded-lg transition-all duration-200 text-sm flex items-center gap-1"
-                    title="Cerrar Sesión"
-                  >
-                    <User className="w-4 h-4" />
-                    <span className="hidden sm:inline">Salir</span>
-                  </button>
-                </div>
+                <h2 className="text-xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2 mb-4">
+                  <ChevronRight className="w-5 h-5 text-emerald-400" />
+                  Tipo de Comunicado
+                </h2>
                 
                 <div className="space-y-4">
                   {/* Eventos */}
@@ -1243,9 +1367,13 @@ Ejemplo:
                       <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
                         Fecha:
+                        <span className="text-sm">{getEstadoSemaforo().color}</span>
                       </label>
                       <input 
-                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
+                        className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 focus:ring-teal-400/20 transition-all duration-200 ${
+                          getEstadoSemaforo().color === '🔴' ? 'border-red-500/60' : 
+                          getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60' : 'border-emerald-500/40'
+                        }`}
                         type="date" 
                         name="fechaInicio"
                         value={formData.fechaInicio}
@@ -1257,9 +1385,13 @@ Ejemplo:
                       <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
                         <Clock className="w-4 h-4" />
                         Hora:
+                        <span className="text-sm">{getEstadoSemaforo().color}</span>
                       </label>
                       <input 
-                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
+                        className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 focus:ring-teal-400/20 transition-all duration-200 ${
+                          getEstadoSemaforo().color === '🔴' ? 'border-red-500/60' : 
+                          getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60' : 'border-emerald-500/40'
+                        }`}
                         type="time" 
                         step="1"
                         name="horaInicio"
@@ -1464,9 +1596,13 @@ Verificación inicial"
                           <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
                             <Calendar className="w-4 h-4" />
                             Fecha inicio:
+                            <span className="text-sm">{getEstadoSemaforo().color}</span>
                           </label>
                           <input 
-                            className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
+                            className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 focus:ring-teal-400/20 transition-all duration-200 ${
+                              getEstadoSemaforo().color === '🔴' ? 'border-red-500/60' : 
+                              getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60' : 'border-emerald-500/40'
+                            }`}
                             type="date" 
                             name="fechaInicioFin"
                             value={formData.fechaInicioFin}
@@ -1478,9 +1614,13 @@ Verificación inicial"
                           <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
                             <Clock className="w-4 h-4" />
                             Hora inicio:
+                            <span className="text-sm">{getEstadoSemaforo().color}</span>
                           </label>
                           <input 
-                            className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
+                            className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 focus:ring-teal-400/20 transition-all duration-200 ${
+                              getEstadoSemaforo().color === '🔴' ? 'border-red-500/60' : 
+                              getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60' : 'border-emerald-500/40'
+                            }`}
                             type="time" 
                             step="1"
                             name="horaInicioFin"
@@ -1493,9 +1633,13 @@ Verificación inicial"
                           <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
                             <Calendar className="w-4 h-4" />
                             Fecha fin:
+                            <span className="text-sm">{getEstadoSemaforo().color}</span>
                           </label>
                           <input 
-                            className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
+                            className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 focus:ring-teal-400/20 transition-all duration-200 ${
+                              getEstadoSemaforo().color === '🔴' ? 'border-red-500/60' : 
+                              getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60' : 'border-emerald-500/40'
+                            }`}
                             type="date" 
                             name="fechaFin"
                             value={formData.fechaFin}
@@ -1507,9 +1651,13 @@ Verificación inicial"
                           <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
                             <Clock className="w-4 h-4" />
                             Hora fin:
+                            <span className="text-sm">{getEstadoSemaforo().color}</span>
                           </label>
                           <input 
-                            className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
+                            className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 focus:ring-teal-400/20 transition-all duration-200 ${
+                              getEstadoSemaforo().color === '🔴' ? 'border-red-500/60' : 
+                              getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60' : 'border-emerald-500/40'
+                            }`}
                             type="time" 
                             step="1"
                             name="horaFin"
@@ -1574,11 +1722,15 @@ Verificación de logs"
               
               <div className="flex gap-4 mt-8">
                 <button 
-                  className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-teal-500/25 transform hover:-translate-y-1 flex items-center justify-center gap-2"
+                  className={`flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-teal-500/25 transform hover:-translate-y-1 flex items-center justify-center gap-2 ${
+                    getEstadoSemaforo().color === '🔴' ? 'ring-2 ring-red-500/50' : 
+                    getEstadoSemaforo().color === '🟡' ? 'ring-1 ring-yellow-500/30' : ''
+                  }`}
                   onClick={generarMensaje}
                 >
                   <Zap className="w-5 h-5" />
                   Generar Comunicado
+                  <span className="ml-2">{getEstadoSemaforo().color}</span>
                 </button>
               </div>
             </div>
@@ -1621,6 +1773,85 @@ Verificación de logs"
             </div>
           </div>
         </div>
+        
+        {/* Modal de actualización automática */}
+        {mostrarActualizacion && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-slate-800 rounded-2xl p-6 border border-emerald-400/40 max-w-md mx-4">
+              <div className="text-center mb-4">
+                <div className="text-4xl mb-2">⏰</div>
+                <h3 className="text-xl font-bold text-emerald-300 mb-2">Actualización de Fechas</h3>
+                <p className="text-gray-300 text-sm">
+                  La página lleva abierta {calcularTiempoAbierto().horas}h {calcularTiempoAbierto().minutos}m
+                </p>
+                <p className="text-gray-400 text-xs mt-2">
+                  ¿Deseas actualizar las fechas a la hora actual?
+                </p>
+              </div>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={actualizarFechasAhora}
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-2 px-4 rounded-lg font-medium transition-all duration-200"
+                >
+                  ✅ Sí, actualizar
+                </button>
+                <button
+                  onClick={() => setMostrarActualizacion(false)}
+                  className="flex-1 bg-slate-600 hover:bg-slate-500 text-white py-2 px-4 rounded-lg font-medium transition-all duration-200"
+                >
+                  ⏰ Después
+                </button>
+              </div>
+              
+              <button
+                onClick={() => {
+                  setNoPreguntar(true);
+                  setMostrarActualizacion(false);
+                }}
+                className="w-full mt-2 text-xs text-gray-400 hover:text-gray-300 py-1"
+              >
+                ❌ No preguntar más (esta sesión)
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de confirmación de duración */}
+        {mostrarConfirmacionDuracion && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-slate-800 rounded-2xl p-6 border border-yellow-400/40 max-w-md mx-4">
+              <div className="text-center mb-4">
+                <div className="text-4xl mb-2">🤔</div>
+                <h3 className="text-xl font-bold text-yellow-300 mb-2">Confirmación de Duración</h3>
+                <p className="text-gray-300 text-sm mb-2">
+                  Duración calculada: <span className="font-bold text-yellow-300">{formData.duracionCalculada}</span>
+                </p>
+                <p className="text-gray-400 text-xs">
+                  ¿El incidente realmente duró tanto tiempo?
+                </p>
+              </div>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setMostrarConfirmacionDuracion(false);
+                    generarMensajeInterno();
+                  }}
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-2 px-4 rounded-lg font-medium transition-all duration-200"
+                >
+                  ✅ Sí, correcto
+                </button>
+                <button
+                  onClick={() => setMostrarConfirmacionDuracion(false)}
+                  className="flex-1 bg-yellow-600 hover:bg-yellow-500 text-white py-2 px-4 rounded-lg font-medium transition-all duration-200"
+                >
+                  🔄 Revisar fechas
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         
         <footer className="text-center py-8 mt-12 text-gray-300 text-sm border-t border-emerald-400/30">
           <p className="mb-2">Desarrollado por Luis Alberto Herrera Lara</p>
