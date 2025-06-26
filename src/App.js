@@ -151,7 +151,7 @@ const GeneradorComunicados = () => {
   const USUARIOS_VALIDOS = [
     { usuario: 'fractalia', password: 'fractalia4ever' },
     { usuario: 'gabriela', password: 'gabyRocks2025' },
-    { usuario: 'gestores', password: 'todosLosSapitos' },
+    { usuario: 'monitoreot', password: 'M0n1t0r30.kyndryl' },
     { usuario: 'dorian', password: 'dorianGrayIncidentes' }
   ];
 
