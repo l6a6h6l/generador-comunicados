@@ -161,6 +161,10 @@ const GeneradorComunicados = () => {
   const [periodosAlertamiento, setPeriodosAlertamiento] = useState([
     { fechaInicio: '', horaInicio: '', fechaFin: '', horaFin: '', duracion: '00:00:00' }
   ]);
+  const [multiplesEncolamientos, setMultiplesEncolamientos] = useState(false);
+  const [serviciosEncolamiento, setServiciosEncolamiento] = useState([
+    { tipo: 'Variable General', fechaInicio: '', horaInicio: '', fechaFin: '', horaFin: '', duracion: '00:00:00', encolados: '' }
+  ]);
   const [formData, setFormData] = useState({
     descripcion: '',
     impacto: '',
@@ -385,6 +389,17 @@ const GeneradorComunicados = () => {
       horaFin: horaActual,
       duracion: '00:00:00'
     }]);
+    
+    // Actualizar también el primer servicio de encolamiento
+    setServiciosEncolamiento([{
+      tipo: 'Variable General',
+      fechaInicio: fechaActual,
+      horaInicio: horaActual,
+      fechaFin: fechaActual,
+      horaFin: horaActual,
+      duracion: '00:00:00',
+      encolados: ''
+    }]);
   };
   
   const limpiarCampos = () => {
@@ -417,6 +432,12 @@ const GeneradorComunicados = () => {
       { fechaInicio: fechaActual, horaInicio: horaActual, fechaFin: fechaActual, horaFin: horaActual, duracion: '00:00:00' }
     ]);
     
+    // Resetear múltiples encolamientos
+    setMultiplesEncolamientos(false);
+    setServiciosEncolamiento([
+      { tipo: 'Variable General', fechaInicio: fechaActual, horaInicio: horaActual, fechaFin: fechaActual, horaFin: horaActual, duracion: '00:00:00', encolados: '' }
+    ]);
+    
     setAlertaMensaje('¡Campos limpiados correctamente!');
     setMostrarAlerta(true);
     setTimeout(() => setMostrarAlerta(false), 3000);
@@ -440,6 +461,65 @@ const GeneradorComunicados = () => {
     if (periodosAlertamiento.length > 1) {
       setPeriodosAlertamiento(prev => prev.filter((_, i) => i !== index));
     }
+  };
+
+  // Funciones para encolamientos
+  const agregarServicioEncolamiento = () => {
+    const hoy = new Date();
+    const fechaActual = hoy.toISOString().split('T')[0];
+    const horaActual = hoy.toTimeString().split(' ')[0];
+    
+    setServiciosEncolamiento(prev => [...prev, {
+      tipo: 'Variable General',
+      fechaInicio: fechaActual,
+      horaInicio: horaActual,
+      fechaFin: fechaActual,
+      horaFin: horaActual,
+      duracion: '00:00:00',
+      encolados: ''
+    }]);
+  };
+
+  const eliminarServicioEncolamiento = (index) => {
+    if (serviciosEncolamiento.length > 1) {
+      setServiciosEncolamiento(prev => prev.filter((_, i) => i !== index));
+    }
+  };
+
+  const actualizarServicioEncolamiento = (index, campo, valor) => {
+    setServiciosEncolamiento(prev => 
+      prev.map((servicio, i) => {
+        if (i === index) {
+          const nuevoServicio = { ...servicio, [campo]: valor };
+          
+          // Calcular duración si tenemos todos los datos necesarios
+          if (nuevoServicio.fechaInicio && nuevoServicio.horaInicio && nuevoServicio.fechaFin && nuevoServicio.horaFin) {
+            try {
+              const inicio = new Date(`${nuevoServicio.fechaInicio}T${nuevoServicio.horaInicio}`);
+              const fin = new Date(`${nuevoServicio.fechaFin}T${nuevoServicio.horaFin}`);
+              const diferencia = fin - inicio;
+              
+              if (diferencia >= 0) {
+                const horas = Math.floor(diferencia / (1000 * 60 * 60));
+                const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+                const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+                
+                nuevoServicio.duracion = `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
+              } else {
+                nuevoServicio.duracion = '00:00:00';
+              }
+            } catch (error) {
+              nuevoServicio.duracion = '00:00:00';
+            }
+          } else {
+            nuevoServicio.duracion = '00:00:00';
+          }
+          
+          return nuevoServicio;
+        }
+        return servicio;
+      })
+    );
   };
 
   const actualizarPeriodo = (index, campo, valor) => {
@@ -610,6 +690,46 @@ const GeneradorComunicados = () => {
     }
   };
 
+  // Funciones para formatear encolamientos
+  const formatearInicioEncolamientos = () => {
+    if (!multiplesEncolamientos || serviciosEncolamiento.length === 0) return '';
+    
+    let resultado = '\nInicio de encolamiento por servicio:';
+    serviciosEncolamiento.forEach(servicio => {
+      const fechaFormateada = formatearFecha(servicio.fechaInicio);
+      resultado += `\n        • ${servicio.tipo}: ${fechaFormateada} - ${servicio.horaInicio}`;
+    });
+    return resultado;
+  };
+
+  const formatearDetalleEncolamientos = () => {
+    if (!multiplesEncolamientos || serviciosEncolamiento.length === 0) return '';
+    
+    let resultado = '\nEncolamiento detalle temporal:';
+    serviciosEncolamiento.forEach(servicio => {
+      const fechaInicioFormateada = formatearFecha(servicio.fechaInicio);
+      const fechaFinFormateada = formatearFecha(servicio.fechaFin);
+      resultado += `\n        ${servicio.tipo}:`;
+      resultado += `\n        Inicio: ${fechaInicioFormateada} - ${servicio.horaInicio}`;
+      resultado += `\n        Fin: ${fechaFinFormateada} - ${servicio.horaFin}`;
+      resultado += `\n        Duración: ${servicio.duracion}`;
+      resultado += '\n';
+    });
+    return resultado;
+  };
+
+  const formatearNotaEncolamientos = () => {
+    if (!multiplesEncolamientos || serviciosEncolamiento.length === 0) return '';
+    
+    let resultado = 'Encolamientos por servicio:';
+    serviciosEncolamiento.forEach(servicio => {
+      if (servicio.encolados && servicio.encolados.trim() !== '') {
+        resultado += `\n        • ${servicio.tipo}: ${servicio.encolados}`;
+      }
+    });
+    return resultado;
+  };
+
   const generarMensaje = () => {
     // Verificar duración sospechosa antes de generar
     if ((tipo.endsWith('-fin')) && verificarDuracionSospechosa()) {
@@ -630,7 +750,14 @@ const GeneradorComunicados = () => {
       const fechaFormateada = formatearFecha(formData.fechaInicio);
       const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
-      mensaje = `GESTIÓN EVENTO\n🟡 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}\nInicio: ${fechaFormateada} - ${formData.horaInicio}`;
+      mensaje = `GESTIÓN EVENTO\n🟡 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
+      
+      // Agregar inicio normal o encolamientos
+      if (multiplesEncolamientos) {
+        mensaje += formatearInicioEncolamientos();
+      } else {
+        mensaje += `\nInicio: ${fechaFormateada} - ${formData.horaInicio}`;
+      }
     }
     else if (tipo === 'evento-seguimiento') {
       const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
@@ -661,9 +788,16 @@ const GeneradorComunicados = () => {
       const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
       const estadoVal = formData.estadoFin || "Recuperado";
       const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
-      const periodosFormateados = formatearPeriodosMultiples();
       
-      mensaje = `GESTIÓN EVENTO\n🟢 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}\n${periodosFormateados}`;
+      mensaje = `GESTIÓN EVENTO\n🟢 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
+      
+      // Agregar períodos o encolamientos
+      if (multiplesEncolamientos) {
+        mensaje += formatearDetalleEncolamientos();
+      } else {
+        const periodosFormateados = formatearPeriodosMultiples();
+        mensaje += `\n${periodosFormateados}`;
+      }
       
       if (formData.acciones && formData.acciones.trim()) {
         mensaje += "\nAcciones:";
@@ -783,14 +917,36 @@ const GeneradorComunicados = () => {
     }
     
     // Agregar nota si existe
-    if (formData.nota) {
+    if (formData.nota || (multiplesEncolamientos && tipo.startsWith('evento-'))) {
       if (tipo.startsWith('mantenimiento-')) {
         mensaje += `\n\n📣 NOTA:\n        Observaciones con detalle que permitan brindar más información en el caso que amerite.`;
         if (formData.nota.trim() !== "") {
           mensaje = mensaje.replace("Observaciones con detalle que permitan brindar más información en el caso que amerite.", formData.nota);
         }
       } else {
-        mensaje += `\n\n📣 NOTA:\n        ${formData.nota}`;
+        mensaje += `\n\n📣 NOTA:`;
+        
+        // Agregar nota personalizada si existe
+        if (formData.nota && formData.nota.trim() !== "") {
+          mensaje += `\n        ${formData.nota}`;
+        }
+        
+        // Agregar encolamientos en eventos
+        if (multiplesEncolamientos && tipo.startsWith('evento-')) {
+          const notaEncolamientos = formatearNotaEncolamientos();
+          if (notaEncolamientos) {
+            if (formData.nota && formData.nota.trim() !== "") {
+              mensaje += `\n        \n        ${notaEncolamientos}`;
+            } else {
+              mensaje += `\n        ${notaEncolamientos}`;
+            }
+          }
+        }
+        
+        // Si no hay nota personalizada ni encolamientos, no agregar la sección
+        if (!formData.nota && !multiplesEncolamientos) {
+          mensaje = mensaje.replace('\n\n📣 NOTA:', '');
+        }
       }
     }
     
@@ -1359,6 +1515,119 @@ Ejemplo:
                 </div>
               )}
               
+              {/* Checkbox para encolamientos en eventos-inicio y seguimiento */}
+              {(tipo === 'evento-inicio' || tipo === 'evento-seguimiento') && (
+                <div className="mt-6">
+                  <div className="bg-teal-700/15 border border-teal-400/30 rounded-xl p-4">
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={multiplesEncolamientos}
+                        onChange={(e) => setMultiplesEncolamientos(e.target.checked)}
+                        className="w-5 h-5 text-teal-600 border-2 border-teal-400 rounded focus:ring-2 focus:ring-emerald-400 focus:ring-offset-0 bg-slate-800"
+                      />
+                      <span className="text-teal-200 font-semibold">Evento con múltiples encolamientos</span>
+                    </label>
+                    <p className="text-sm text-teal-200/70 mt-2 ml-8">
+                      Activa esta opción para eventos con encolamientos en diferentes servicios
+                    </p>
+                  </div>
+                  
+                  {multiplesEncolamientos && (
+                    <div className="mt-4 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold text-gray-300">Servicios con Encolamiento</h3>
+                        <button
+                          type="button"
+                          onClick={agregarServicioEncolamiento}
+                          className="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
+                        >
+                          <Plus className="w-4 h-4" />
+                          Agregar Servicio
+                        </button>
+                      </div>
+                      
+                      {serviciosEncolamiento.map((servicio, index) => (
+                        <div key={index} className="bg-slate-700/60 rounded-xl p-6 relative border border-teal-400/20">
+                          <div className="flex items-center justify-between mb-4">
+                            <h4 className="text-md font-semibold text-gray-200">Servicio {index + 1}</h4>
+                            {serviciosEncolamiento.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => eliminarServicioEncolamiento(index)}
+                                className="bg-slate-600 hover:bg-slate-500 text-white p-2 rounded-lg transition-all duration-200"
+                              >
+                                <Minus className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="md:col-span-2">
+                              <label className="block mb-2 font-semibold text-gray-300">Tipo de Servicio:</label>
+                              <select
+                                value={servicio.tipo}
+                                onChange={(e) => actualizarServicioEncolamiento(index, 'tipo', e.target.value)}
+                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
+                              >
+                                <option value="Variable General">Variable General</option>
+                                <option value="OTP General">OTP General</option>
+                                <option value="SMS Masivo">SMS Masivo</option>
+                                <option value="Notificaciones Push">Notificaciones Push</option>
+                                <option value="Validaciones KYC">Validaciones KYC</option>
+                                <option value="Otro">Otro</option>
+                              </select>
+                            </div>
+                            
+                            {tipo !== 'evento-inicio' && (
+                              <>
+                                <div>
+                                  <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
+                                    <Calendar className="w-4 h-4" />
+                                    Fecha inicio:
+                                  </label>
+                                  <input 
+                                    className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
+                                    type="date" 
+                                    value={servicio.fechaInicio}
+                                    onChange={(e) => actualizarServicioEncolamiento(index, 'fechaInicio', e.target.value)}
+                                  />
+                                </div>
+                                
+                                <div>
+                                  <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
+                                    <Clock className="w-4 h-4" />
+                                    Hora inicio:
+                                  </label>
+                                  <input 
+                                    className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
+                                    type="time" 
+                                    step="1"
+                                    value={servicio.horaInicio}
+                                    onChange={(e) => actualizarServicioEncolamiento(index, 'horaInicio', e.target.value)}
+                                  />
+                                </div>
+                              </>
+                            )}
+                            
+                            <div>
+                              <label className="block mb-2 font-semibold text-gray-300">Cantidad Encolados:</label>
+                              <input 
+                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
+                                type="number" 
+                                placeholder="8000"
+                                value={servicio.encolados}
+                                onChange={(e) => actualizarServicioEncolamiento(index, 'encolados', e.target.value)}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+              
               {/* Campos comunes para Inicio */}
               {(tipo.endsWith('-inicio')) && (
                 <div className="space-y-6 mt-6">
@@ -1493,7 +1762,149 @@ Verificación inicial"
                     </p>
                   </div>
 
-                  {multiplesAlertamientos ? (
+                  {/* Checkbox para múltiples encolamientos */}
+                  {tipo.startsWith('evento-') && (
+                    <div className="bg-teal-700/15 border border-teal-400/30 rounded-xl p-4">
+                      <label className="flex items-center space-x-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={multiplesEncolamientos}
+                          onChange={(e) => setMultiplesEncolamientos(e.target.checked)}
+                          className="w-5 h-5 text-teal-600 border-2 border-teal-400 rounded focus:ring-2 focus:ring-emerald-400 focus:ring-offset-0 bg-slate-800"
+                        />
+                        <span className="text-teal-200 font-semibold">Evento con múltiples encolamientos</span>
+                      </label>
+                      <p className="text-sm text-teal-200/70 mt-2 ml-8">
+                        Activa esta opción para eventos con encolamientos en diferentes servicios
+                      </p>
+                    </div>
+                  )}
+
+                  {multiplesEncolamientos ? (
+                    /* Panel para múltiples encolamientos */
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-semibold text-gray-300">Servicios con Encolamiento</h3>
+                        <button
+                          type="button"
+                          onClick={agregarServicioEncolamiento}
+                          className="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
+                        >
+                          <Plus className="w-4 h-4" />
+                          Agregar Servicio
+                        </button>
+                      </div>
+                      
+                      {serviciosEncolamiento.map((servicio, index) => (
+                        <div key={index} className="bg-slate-700/60 rounded-xl p-6 relative border border-teal-400/20">
+                          <div className="flex items-center justify-between mb-4">
+                            <h4 className="text-md font-semibold text-gray-200">Servicio {index + 1}</h4>
+                            {serviciosEncolamiento.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => eliminarServicioEncolamiento(index)}
+                                className="bg-slate-600 hover:bg-slate-500 text-white p-2 rounded-lg transition-all duration-200"
+                              >
+                                <Minus className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="md:col-span-2">
+                              <label className="block mb-2 font-semibold text-gray-300">Tipo de Servicio:</label>
+                              <select
+                                value={servicio.tipo}
+                                onChange={(e) => actualizarServicioEncolamiento(index, 'tipo', e.target.value)}
+                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
+                              >
+                                <option value="Variable General">Variable General</option>
+                                <option value="OTP General">OTP General</option>
+                                <option value="SMS Masivo">SMS Masivo</option>
+                                <option value="Notificaciones Push">Notificaciones Push</option>
+                                <option value="Validaciones KYC">Validaciones KYC</option>
+                                <option value="Otro">Otro</option>
+                              </select>
+                            </div>
+                            
+                            <div>
+                              <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
+                                <Calendar className="w-4 h-4" />
+                                Fecha inicio:
+                              </label>
+                              <input 
+                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
+                                type="date" 
+                                value={servicio.fechaInicio}
+                                onChange={(e) => actualizarServicioEncolamiento(index, 'fechaInicio', e.target.value)}
+                              />
+                            </div>
+                            
+                            <div>
+                              <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
+                                <Clock className="w-4 h-4" />
+                                Hora inicio:
+                              </label>
+                              <input 
+                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
+                                type="time" 
+                                step="1"
+                                value={servicio.horaInicio}
+                                onChange={(e) => actualizarServicioEncolamiento(index, 'horaInicio', e.target.value)}
+                              />
+                            </div>
+                            
+                            <div>
+                              <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
+                                <Calendar className="w-4 h-4" />
+                                Fecha fin:
+                              </label>
+                              <input 
+                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
+                                type="date" 
+                                value={servicio.fechaFin}
+                                onChange={(e) => actualizarServicioEncolamiento(index, 'fechaFin', e.target.value)}
+                              />
+                            </div>
+                            
+                            <div>
+                              <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
+                                <Clock className="w-4 h-4" />
+                                Hora fin:
+                              </label>
+                              <input 
+                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
+                                type="time" 
+                                step="1"
+                                value={servicio.horaFin}
+                                onChange={(e) => actualizarServicioEncolamiento(index, 'horaFin', e.target.value)}
+                              />
+                            </div>
+                            
+                            <div>
+                              <label className="block mb-2 font-semibold text-gray-300">Cantidad Encolados:</label>
+                              <input 
+                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
+                                type="number" 
+                                placeholder="8000"
+                                value={servicio.encolados}
+                                onChange={(e) => actualizarServicioEncolamiento(index, 'encolados', e.target.value)}
+                              />
+                            </div>
+                          </div>
+                          
+                          <div className="mt-4">
+                            <label className="block mb-2 font-semibold text-gray-300">Duración:</label>
+                            <div className="p-4 bg-gradient-to-r from-teal-600/15 to-emerald-600/15 border border-teal-400/25 rounded-lg text-center">
+                              <span className="text-2xl font-bold text-teal-300">{servicio.duracion}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {(multiplesAlertamientos && !multiplesEncolamientos) ? (
                     /* Campos para múltiples períodos */
                     <div className="space-y-4">
                       <div className="flex items-center justify-between mb-4">
