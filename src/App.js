@@ -2268,7 +2268,7 @@ Verificación de logs"
           <p className="mb-2">Desarrollado por Luis Alberto Herrera Lara</p>
           <p className="text-emerald-200">Generador de Comunicados Pro - Versión 5.0</p>
           <p className="text-xs mt-1">Sistema Avanzado de Comunicaciones</p>
-          <p className="text-xs text-emerald-300/70 mt-2">Actualizado el 13 de junio de 2025</p>
+          <p className="text-xs text-emerald-300/70 mt-2">Actualizado el 27 de junio de 2025</p>
         </footer>
       </div>
     </div>
