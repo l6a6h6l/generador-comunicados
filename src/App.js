@@ -198,8 +198,6 @@ const GeneradorComunicados = () => {
   const [errorFechaFin, setErrorFechaFin] = useState('');
   const [mostrarErrorFecha, setMostrarErrorFecha] = useState(false);
   const [sugerenciasFecha, setSugerenciasFecha] = useState([]);
-  const [autoCompletado, setAutoCompletado] = useState(false);
-  const [validandoFecha, setValidandoFecha] = useState(false);
 
   // Establecer fechas y horas actuales al cargar
   useEffect(() => {
@@ -231,7 +229,19 @@ const GeneradorComunicados = () => {
         const inicio = new Date(`${formData.fechaInicioFin}T${formData.horaInicioFin}`);
         const fin = new Date(`${formData.fechaFin}T${formData.horaFin}`);
         
-        const diferencia = fin - inicio;
+        // Verificar que las fechas sean válidas
+        if (isNaN(inicio.getTime()) || isNaN(fin.getTime())) {
+          setFormData(prev => ({ ...prev, duracionCalculada: '00:00:00' }));
+          return;
+        }
+        
+        const diferencia = fin.getTime() - inicio.getTime();
+        
+        // Si la diferencia es negativa, no calcular
+        if (diferencia < 0) {
+          setFormData(prev => ({ ...prev, duracionCalculada: '⚠️ Error' }));
+          return;
+        }
         
         const horas = Math.floor(diferencia / (1000 * 60 * 60));
         const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
@@ -243,6 +253,7 @@ const GeneradorComunicados = () => {
         setFormData(prev => ({ ...prev, duracionCalculada: duracion }));
       } catch (error) {
         console.error('Error al calcular duración:', error);
+        setFormData(prev => ({ ...prev, duracionCalculada: '00:00:00' }));
       }
     };
     
@@ -384,34 +395,53 @@ const GeneradorComunicados = () => {
     }
 
     try {
+      // Crear objetos Date con fecha y hora completas
       const inicio = new Date(`${fechaInicioFin}T${horaInicioFin}`);
       const fin = new Date(`${fechaFin}T${horaFin}`);
       
-      if (fin < inicio) {
+      // Verificar si las fechas son válidas
+      if (isNaN(inicio.getTime()) || isNaN(fin.getTime())) {
+        setErrorFechaFin('⚠️ Error en formato de fecha/hora');
+        return false;
+      }
+      
+      // Comparar los timestamps completos (fecha + hora)
+      if (fin.getTime() < inicio.getTime()) {
         const fechaInicioFormateada = formatearFecha(fechaInicioFin);
         const fechaFinFormateada = formatearFecha(fechaFin);
         
-        setErrorFechaFin(`🚨 ERROR: Fecha de fin no puede ser anterior al inicio\nInicio: ${fechaInicioFormateada} ${horaInicioFin}\nFin: ${fechaFinFormateada} ${horaFin}`);
+        setErrorFechaFin(`🚨 ERROR: La fecha/hora de fin no puede ser anterior al inicio\nInicio: ${fechaInicioFormateada} ${horaInicioFin}\nFin: ${fechaFinFormateada} ${horaFin}`);
         
         // Generar sugerencias inteligentes
         const hoy = new Date();
         const fechaActual = hoy.toISOString().split('T')[0];
         const horaActual = hoy.toTimeString().split(' ')[0];
         
-        setSugerenciasFecha([
+        // Si las fechas son iguales pero la hora es menor, sugerir el día siguiente
+        const sugerencias = [
           { 
             texto: `✅ Usar fecha y hora actual: ${formatearFecha(fechaActual)} ${horaActual}`,
             fecha: fechaActual,
             hora: horaActual,
             icono: '🕐'
-          },
-          {
-            texto: `📋 Copiar fecha de inicio: ${fechaInicioFormateada} ${horaInicioFin}`,
-            fecha: fechaInicioFin,
-            hora: horaInicioFin,
-            icono: '📅'
           }
-        ]);
+        ];
+        
+        // Si es el mismo día, sugerir el día siguiente
+        if (fechaInicioFin === fechaFin) {
+          const diaSiguiente = new Date(fechaFin);
+          diaSiguiente.setDate(diaSiguiente.getDate() + 1);
+          const fechaDiaSiguiente = diaSiguiente.toISOString().split('T')[0];
+          
+          sugerencias.push({
+            texto: `📅 Usar día siguiente: ${formatearFecha(fechaDiaSiguiente)} ${horaFin}`,
+            fecha: fechaDiaSiguiente,
+            hora: horaFin,
+            icono: '📆'
+          });
+        }
+        
+        setSugerenciasFecha(sugerencias);
         
         // Vibración visual al error
         setMostrarErrorFecha(true);
@@ -420,13 +450,15 @@ const GeneradorComunicados = () => {
         
         return false;
       } else {
+        // Todo está bien, limpiar errores
         setErrorFechaFin('');
         setSugerenciasFecha([]);
         setMostrarErrorFecha(false);
         return true;
       }
     } catch (error) {
-      setErrorFechaFin('⚠️ Error en formato de fecha/hora');
+      console.error('Error al validar fechas:', error);
+      setErrorFechaFin('⚠️ Error al procesar las fechas');
       return false;
     }
   };
@@ -444,22 +476,6 @@ const GeneradorComunicados = () => {
     // Mostrar confirmación visual
     const fechaFormateada = formatearFecha(fecha);
     setAlertaMensaje(`✅ Fecha corregida: ${fechaFormateada} ${hora}`);
-    setMostrarAlerta(true);
-    setTimeout(() => setMostrarAlerta(false), 3000);
-  };
-
-  const autoCompletarFechaActual = () => {
-    const hoy = new Date();
-    const fechaActual = hoy.toISOString().split('T')[0];
-    const horaActual = hoy.toTimeString().split(' ')[0];
-    
-    setFormData(prev => ({
-      ...prev,
-      fechaFin: fechaActual,
-      horaFin: horaActual
-    }));
-    
-    setAlertaMensaje('📅 Fecha y hora de fin actualizadas al momento actual');
     setMostrarAlerta(true);
     setTimeout(() => setMostrarAlerta(false), 3000);
   };
