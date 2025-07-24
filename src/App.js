@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, AlertCircle, CheckCircle, RefreshCw, Copy, Trash2, Wrench, ChevronRight, Zap, MessageSquare, AlertTriangle, Bell, Settings, Plus, Minus, User, Lock, Eye, EyeOff, CreditCard, Building, Globe } from 'lucide-react';
-/* eslint-enable no-unused-vars */
+import { Calendar, Clock, AlertCircle, CheckCircle, RefreshCw, Copy, Trash2, Wrench, ChevronRight, Zap, MessageSquare, AlertTriangle, Bell, Settings, Plus, Minus, User, Lock, Eye, EyeOff, CreditCard } from 'lucide-react';
 
 const GeneradorComunicados = () => {
   // Servicios transaccionales
@@ -151,7 +149,7 @@ const GeneradorComunicados = () => {
   const USUARIOS_VALIDOS = [
     { usuario: 'fractalia', password: 'fractalia4ever' },
     { usuario: 'gabriela', password: 'gabyRocks2025' },
-    { usuario: 'monitoreot', password: 'M0n1t0r30.kyndryl' },
+    { usuario: 'gestores', password: 'todosLosSapitos' },
     { usuario: 'dorian', password: 'dorianGrayIncidentes' }
   ];
 
@@ -195,6 +193,13 @@ const GeneradorComunicados = () => {
   const [mostrarActualizacion, setMostrarActualizacion] = useState(false);
   const [mostrarConfirmacionDuracion, setMostrarConfirmacionDuracion] = useState(false);
   const [noPreguntar, setNoPreguntar] = useState(false);
+  
+  // Estados de validación de fechas
+  const [errorFechaFin, setErrorFechaFin] = useState('');
+  const [mostrarErrorFecha, setMostrarErrorFecha] = useState(false);
+  const [sugerenciasFecha, setSugerenciasFecha] = useState([]);
+  const [autoCompletado, setAutoCompletado] = useState(false);
+  const [validandoFecha, setValidandoFecha] = useState(false);
 
   // Establecer fechas y horas actuales al cargar
   useEffect(() => {
@@ -365,6 +370,100 @@ const GeneradorComunicados = () => {
     }
   };
 
+  // Funciones de validación de fechas
+  const validarFechasFin = () => {
+    // Obtener los valores actuales del estado
+    const fechaInicioFin = formData.fechaInicioFin;
+    const horaInicioFin = formData.horaInicioFin;
+    const fechaFin = formData.fechaFin;
+    const horaFin = formData.horaFin;
+    
+    if (!fechaInicioFin || !horaInicioFin || !fechaFin || !horaFin) {
+      setErrorFechaFin('');
+      return true;
+    }
+
+    try {
+      const inicio = new Date(`${fechaInicioFin}T${horaInicioFin}`);
+      const fin = new Date(`${fechaFin}T${horaFin}`);
+      
+      if (fin < inicio) {
+        const fechaInicioFormateada = formatearFecha(fechaInicioFin);
+        const fechaFinFormateada = formatearFecha(fechaFin);
+        
+        setErrorFechaFin(`🚨 ERROR: Fecha de fin no puede ser anterior al inicio\nInicio: ${fechaInicioFormateada} ${horaInicioFin}\nFin: ${fechaFinFormateada} ${horaFin}`);
+        
+        // Generar sugerencias inteligentes
+        const hoy = new Date();
+        const fechaActual = hoy.toISOString().split('T')[0];
+        const horaActual = hoy.toTimeString().split(' ')[0];
+        
+        setSugerenciasFecha([
+          { 
+            texto: `✅ Usar fecha y hora actual: ${formatearFecha(fechaActual)} ${horaActual}`,
+            fecha: fechaActual,
+            hora: horaActual,
+            icono: '🕐'
+          },
+          {
+            texto: `📋 Copiar fecha de inicio: ${fechaInicioFormateada} ${horaInicioFin}`,
+            fecha: fechaInicioFin,
+            hora: horaInicioFin,
+            icono: '📅'
+          }
+        ]);
+        
+        // Vibración visual al error
+        setMostrarErrorFecha(true);
+        setTimeout(() => setMostrarErrorFecha(false), 100);
+        setTimeout(() => setMostrarErrorFecha(true), 200);
+        
+        return false;
+      } else {
+        setErrorFechaFin('');
+        setSugerenciasFecha([]);
+        setMostrarErrorFecha(false);
+        return true;
+      }
+    } catch (error) {
+      setErrorFechaFin('⚠️ Error en formato de fecha/hora');
+      return false;
+    }
+  };
+
+  const aplicarSugerenciaFecha = (fecha, hora) => {
+    setFormData(prev => ({
+      ...prev,
+      fechaFin: fecha,
+      horaFin: hora
+    }));
+    setErrorFechaFin('');
+    setSugerenciasFecha([]);
+    setMostrarErrorFecha(false);
+    
+    // Mostrar confirmación visual
+    const fechaFormateada = formatearFecha(fecha);
+    setAlertaMensaje(`✅ Fecha corregida: ${fechaFormateada} ${hora}`);
+    setMostrarAlerta(true);
+    setTimeout(() => setMostrarAlerta(false), 3000);
+  };
+
+  const autoCompletarFechaActual = () => {
+    const hoy = new Date();
+    const fechaActual = hoy.toISOString().split('T')[0];
+    const horaActual = hoy.toTimeString().split(' ')[0];
+    
+    setFormData(prev => ({
+      ...prev,
+      fechaFin: fechaActual,
+      horaFin: horaActual
+    }));
+    
+    setAlertaMensaje('📅 Fecha y hora de fin actualizadas al momento actual');
+    setMostrarAlerta(true);
+    setTimeout(() => setMostrarAlerta(false), 3000);
+  };
+
   // Funciones principales
   const establecerFechaHoraActual = () => {
     const hoy = new Date();
@@ -438,6 +537,11 @@ const GeneradorComunicados = () => {
       { tipo: 'Variable General', fechaInicio: fechaActual, horaInicio: horaActual, fechaFin: fechaActual, horaFin: horaActual, duracion: '00:00:00', encolados: '' }
     ]);
     
+    // Resetear errores de validación
+    setErrorFechaFin('');
+    setMostrarErrorFecha(false);
+    setSugerenciasFecha([]);
+    
     setAlertaMensaje('¡Campos limpiados correctamente!');
     setMostrarAlerta(true);
     setTimeout(() => setMostrarAlerta(false), 3000);
@@ -506,7 +610,11 @@ const GeneradorComunicados = () => {
                 
                 nuevoServicio.duracion = `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
               } else {
-                nuevoServicio.duracion = '00:00:00';
+                nuevoServicio.duracion = '⚠️ Error';
+                // Mostrar alerta de error
+                setAlertaMensaje('⚠️ La fecha de fin no puede ser anterior al inicio en el servicio ' + (index + 1));
+                setMostrarAlerta(true);
+                setTimeout(() => setMostrarAlerta(false), 3000);
               }
             } catch (error) {
               nuevoServicio.duracion = '00:00:00';
@@ -542,7 +650,11 @@ const GeneradorComunicados = () => {
                 
                 nuevoPeriodo.duracion = `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
               } else {
-                nuevoPeriodo.duracion = '00:00:00';
+                nuevoPeriodo.duracion = '⚠️ Error';
+                // Mostrar alerta de error
+                setAlertaMensaje('⚠️ La fecha de fin no puede ser anterior al inicio en el período ' + (index + 1));
+                setMostrarAlerta(true);
+                setTimeout(() => setMostrarAlerta(false), 3000);
               }
             } catch (error) {
               nuevoPeriodo.duracion = '00:00:00';
@@ -560,14 +672,50 @@ const GeneradorComunicados = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    setFormData(prev => {
+      const newData = { ...prev, [name]: value };
+      
+      // Validar fechas inmediatamente cuando cambian campos de fin
+      if (name === 'fechaFin' || name === 'horaFin' || name === 'fechaInicioFin' || name === 'horaInicioFin') {
+        // Usar setTimeout para validar después de que se actualice el estado
+        setTimeout(() => {
+          validarFechasFin();
+        }, 100);
+      }
+      
+      return newData;
+    });
   };
 
   const seleccionarTipo = (nuevoTipo) => {
     const tipoAnterior = tipo;
     setTipo(nuevoTipo);
     
-    // Transferir datos entre tipos del mismo grupo
+    // Auto-completar fecha actual al cambiar a tipos "fin"
+    if ((tipoAnterior.endsWith('-inicio') || tipoAnterior.endsWith('-avance') || tipoAnterior.endsWith('-seguimiento')) && nuevoTipo.endsWith('-fin')) {
+      const hoy = new Date();
+      const fechaActual = hoy.toISOString().split('T')[0];
+      const horaActual = hoy.toTimeString().split(' ')[0];
+      
+      setFormData(prev => ({
+        ...prev,
+        fechaInicioFin: prev.fechaInicio, // Copiar fecha inicio
+        horaInicioFin: prev.horaInicio,   // Copiar hora inicio  
+        fechaFin: fechaActual,            // Auto-llenar fin con fecha actual
+        horaFin: horaActual               // Auto-llenar fin con hora actual
+      }));
+      
+      setAlertaMensaje('✨ Fechas auto-completadas: inicio copiado, fin establecido al momento actual');
+      setMostrarAlerta(true);
+      setTimeout(() => setMostrarAlerta(false), 4000);
+      
+      // Resetear error de fecha si existe
+      setErrorFechaFin('');
+      setSugerenciasFecha([]);
+    }
+    
+    // Transferir datos entre tipos del mismo grupo (lógica existente)
     
     // Para eventos
     if (tipoAnterior.startsWith('evento-') && nuevoTipo.startsWith('evento-')) {
@@ -579,6 +727,9 @@ const GeneradorComunicados = () => {
           nota: tipoAnterior === 'evento-seguimiento' && prev.acciones && !prev.nota ? 
                 "Acciones realizadas:\n" + prev.acciones : prev.nota
         }));
+        
+        // Validar fechas después de la actualización
+        setTimeout(() => validarFechasFin(), 100);
       }
       
       if (nuevoTipo === 'evento-seguimiento' && tipoAnterior === 'evento-inicio' && !formData.acciones) {
@@ -594,6 +745,9 @@ const GeneradorComunicados = () => {
           fechaInicioFin: prev.fechaInicio,
           horaInicioFin: prev.horaInicio
         }));
+        
+        // Validar fechas después de la actualización
+        setTimeout(() => validarFechasFin(), 100);
       }
       
       if (nuevoTipo === 'incidente-avance' && tipoAnterior === 'incidente-inicio') {
@@ -609,6 +763,9 @@ const GeneradorComunicados = () => {
           fechaInicioFin: prev.fechaInicio,
           horaInicioFin: prev.horaInicio
         }));
+        
+        // Validar fechas después de la actualización
+        setTimeout(() => validarFechasFin(), 100);
       }
     }
   };
@@ -731,6 +888,12 @@ const GeneradorComunicados = () => {
   };
 
   const generarMensaje = () => {
+    // Validar fechas antes de generar
+    if (tipo.endsWith('-fin') && !validarFechasFin()) {
+      setMostrarErrorFecha(true);
+      return;
+    }
+    
     // Verificar duración sospechosa antes de generar
     if ((tipo.endsWith('-fin')) && verificarDuracionSospechosa()) {
       setMostrarConfirmacionDuracion(true);
@@ -1746,6 +1909,19 @@ Verificación inicial"
               {/* Campos para Fin */}
               {tipo.endsWith('-fin') && (
                 <div className="space-y-6 mt-6">
+                  {/* Mensaje informativo de auto-completado */}
+                  <div className="bg-emerald-900/20 border border-emerald-400/30 rounded-lg p-3 flex items-center gap-3">
+                    <span className="text-2xl">✨</span>
+                    <div className="flex-1">
+                      <p className="text-emerald-200 text-sm">
+                        <strong>Auto-completado inteligente:</strong> Las fechas se han llenado automáticamente.
+                      </p>
+                      <p className="text-emerald-200/70 text-xs mt-1">
+                        • Fecha inicio copiada • Fecha fin establecida al momento actual • Puedes ajustar si es necesario
+                      </p>
+                    </div>
+                  </div>
+
                   {/* Checkbox para múltiples alertamientos */}
                   <div className="bg-emerald-700/15 border border-emerald-400/30 rounded-xl p-4">
                     <label className="flex items-center space-x-3 cursor-pointer">
@@ -1999,7 +2175,7 @@ Verificación inicial"
                         </div>
                       ))}
                     </div>
-                  ) : (
+                  ) : (!multiplesEncolamientos && (
                     /* Campos normales de fecha/hora */
                     <div className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -2045,17 +2221,36 @@ Verificación inicial"
                             <Calendar className="w-4 h-4" />
                             Fecha fin:
                             <span className="text-sm">{getEstadoSemaforo().color}</span>
+                            {errorFechaFin && <span className="text-red-400 text-xs animate-pulse">⚠️</span>}
                           </label>
                           <input 
-                            className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 focus:ring-teal-400/20 transition-all duration-200 ${
-                              getEstadoSemaforo().color === '🔴' ? 'border-red-500/60' : 
-                              getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60' : 'border-emerald-500/40'
+                            className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 transition-all duration-200 ${
+                              errorFechaFin ? 'border-red-500 ring-2 ring-red-500/20 animate-pulse' :
+                              getEstadoSemaforo().color === '🔴' ? 'border-red-500/60 focus:ring-teal-400/20' : 
+                              getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60 focus:ring-teal-400/20' : 'border-emerald-500/40 focus:ring-teal-400/20'
                             }`}
                             type="date" 
                             name="fechaFin"
                             value={formData.fechaFin}
                             onChange={handleInputChange}
                           />
+                          {errorFechaFin && (
+                            <div className="mt-2 space-y-2">
+                              <p className="text-red-400 text-xs whitespace-pre-line">{errorFechaFin}</p>
+                              <div className="flex flex-col gap-1">
+                                {sugerenciasFecha.map((sugerencia, index) => (
+                                  <button
+                                    key={index}
+                                    onClick={() => aplicarSugerenciaFecha(sugerencia.fecha, sugerencia.hora)}
+                                    className="text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-2"
+                                  >
+                                    <span>{sugerencia.icono || '💡'}</span>
+                                    {sugerencia.texto}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                         
                         <div>
@@ -2063,11 +2258,13 @@ Verificación inicial"
                             <Clock className="w-4 h-4" />
                             Hora fin:
                             <span className="text-sm">{getEstadoSemaforo().color}</span>
+                            {errorFechaFin && <span className="text-red-400 text-xs animate-pulse">⚠️</span>}
                           </label>
                           <input 
-                            className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 focus:ring-teal-400/20 transition-all duration-200 ${
-                              getEstadoSemaforo().color === '🔴' ? 'border-red-500/60' : 
-                              getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60' : 'border-emerald-500/40'
+                            className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 transition-all duration-200 ${
+                              errorFechaFin ? 'border-red-500 ring-2 ring-red-500/20 animate-pulse' :
+                              getEstadoSemaforo().color === '🔴' ? 'border-red-500/60 focus:ring-teal-400/20' : 
+                              getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60 focus:ring-teal-400/20' : 'border-emerald-500/40 focus:ring-teal-400/20'
                             }`}
                             type="time" 
                             step="1"
@@ -2082,10 +2279,15 @@ Verificación inicial"
                         <label className="block mb-2 font-semibold text-gray-300">Duración calculada:</label>
                         <div className="p-6 bg-gradient-to-r from-teal-600/15 to-emerald-600/15 border border-teal-400/25 rounded-xl text-center">
                           <span className="text-3xl font-bold text-teal-300">{formData.duracionCalculada}</span>
+                          {errorFechaFin && (
+                            <p className="text-red-400 text-xs mt-2 animate-pulse">
+                              ⚠️ Corrige las fechas para calcular la duración correcta
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>
-                  )}
+                  ))}
                   
                   <div>
                     <label className="block mb-2 font-semibold text-gray-300">Estado:</label>
@@ -2136,11 +2338,12 @@ Verificación de logs"
                   className={`flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-teal-500/25 transform hover:-translate-y-1 flex items-center justify-center gap-2 ${
                     getEstadoSemaforo().color === '🔴' ? 'ring-2 ring-red-500/50' : 
                     getEstadoSemaforo().color === '🟡' ? 'ring-1 ring-yellow-500/30' : ''
-                  }`}
+                  } ${errorFechaFin ? 'animate-pulse' : ''}`}
                   onClick={generarMensaje}
+                  disabled={errorFechaFin !== ''}
                 >
                   <Zap className="w-5 h-5" />
-                  Generar Comunicado
+                  {errorFechaFin ? '⚠️ Corrige las fechas primero' : 'Generar Comunicado'}
                   <span className="ml-2">{getEstadoSemaforo().color}</span>
                 </button>
               </div>
@@ -2263,12 +2466,59 @@ Verificación de logs"
             </div>
           </div>
         )}
+
+        {/* Modal de error de fechas */}
+        {mostrarErrorFecha && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-slate-800 rounded-2xl p-6 border border-red-400/40 max-w-lg mx-4 animate-bounce">
+              <div className="text-center mb-4">
+                <div className="text-5xl mb-3 animate-pulse">🚨</div>
+                <h3 className="text-2xl font-bold text-red-300 mb-2">Error en Fechas</h3>
+                <div className="bg-red-900/30 border border-red-500/50 rounded-lg p-3 mb-4">
+                  <p className="text-red-200 text-sm whitespace-pre-line">
+                    {errorFechaFin}
+                  </p>
+                </div>
+                
+                {sugerenciasFecha.length > 0 && (
+                  <div className="text-left bg-slate-700/60 rounded-lg p-4 mb-4">
+                    <h4 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
+                      💡 Sugerencias Inteligentes:
+                    </h4>
+                    <div className="space-y-2">
+                      {sugerenciasFecha.map((sugerencia, index) => (
+                        <button
+                          key={index}
+                          onClick={() => {
+                            aplicarSugerenciaFecha(sugerencia.fecha, sugerencia.hora);
+                            setMostrarErrorFecha(false);
+                          }}
+                          className="w-full text-left bg-slate-600/60 hover:bg-emerald-600/30 text-gray-300 hover:text-emerald-200 p-3 rounded-lg transition-all duration-200 text-sm flex items-center gap-3 group"
+                        >
+                          <span className="text-xl group-hover:animate-bounce">{sugerencia.icono || '💡'}</span>
+                          <span>{sugerencia.texto}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <button
+                onClick={() => setMostrarErrorFecha(false)}
+                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 px-4 rounded-lg font-medium transition-all duration-200 transform hover:scale-105"
+              >
+                ✅ Entendido, corregiré las fechas
+              </button>
+            </div>
+          </div>
+        )}
         
         <footer className="text-center py-8 mt-12 text-gray-300 text-sm border-t border-emerald-400/30">
           <p className="mb-2">Desarrollado por Luis Alberto Herrera Lara</p>
           <p className="text-emerald-200">Generador de Comunicados Pro - Versión 5.0</p>
           <p className="text-xs mt-1">Sistema Avanzado de Comunicaciones</p>
-          <p className="text-xs text-emerald-300/70 mt-2">Actualizado el 27 de junio de 2025</p>
+          <p className="text-xs text-emerald-300/70 mt-2">Actualizado el 13 de junio de 2025</p>
         </footer>
       </div>
     </div>
