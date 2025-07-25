@@ -260,6 +260,7 @@ const GeneradorComunicados = () => {
     calcularDuracionInterna();
   }, [formData.fechaInicioFin, formData.horaInicioFin, formData.fechaFin, formData.horaFin]);
   
+  
   // Actualizar estados por defecto cuando cambia el tipo
   useEffect(() => {
     setFormData(prev => {
@@ -279,6 +280,29 @@ const GeneradorComunicados = () => {
       return { ...prev, estadoInicio, estadoFin };
     });
   }, [tipo]);
+
+  // Efecto para limpiar errores cuando las fechas son válidas
+  useEffect(() => {
+    if (tipo.endsWith('-fin') && formData.fechaInicioFin && formData.horaInicioFin && formData.fechaFin && formData.horaFin) {
+      try {
+        const inicio = new Date(`${formData.fechaInicioFin}T${formData.horaInicioFin}`);
+        const fin = new Date(`${formData.fechaFin}T${formData.horaFin}`);
+        
+        if (!isNaN(inicio.getTime()) && !isNaN(fin.getTime())) {
+          const diferencia = fin.getTime() - inicio.getTime();
+          
+          // Si la diferencia es positiva (fecha fin es posterior), limpiar errores
+          if (diferencia >= 0 && errorFechaFin) {
+            setErrorFechaFin('');
+            setSugerenciasFecha([]);
+            setMostrarErrorFecha(false);
+          }
+        }
+      } catch (error) {
+        console.error('Error en validación automática:', error);
+      }
+    }
+  }, [formData.fechaInicioFin, formData.horaInicioFin, formData.fechaFin, formData.horaFin, tipo, errorFechaFin]);
 
   // Funciones de autenticación
   const handleLogin = () => {
@@ -389,6 +413,11 @@ const GeneradorComunicados = () => {
     const fechaFin = formData.fechaFin;
     const horaFin = formData.horaFin;
     
+    console.log('Validando fechas:', {
+      inicio: `${fechaInicioFin} ${horaInicioFin}`,
+      fin: `${fechaFin} ${horaFin}`
+    });
+    
     if (!fechaInicioFin || !horaInicioFin || !fechaFin || !horaFin) {
       setErrorFechaFin('');
       return true;
@@ -399,16 +428,27 @@ const GeneradorComunicados = () => {
       const inicio = new Date(`${fechaInicioFin}T${horaInicioFin}`);
       const fin = new Date(`${fechaFin}T${horaFin}`);
       
+      console.log('Timestamps:', {
+        inicio: inicio.getTime(),
+        fin: fin.getTime(),
+        diferencia: fin.getTime() - inicio.getTime()
+      });
+      
       // Verificar si las fechas son válidas
       if (isNaN(inicio.getTime()) || isNaN(fin.getTime())) {
         setErrorFechaFin('⚠️ Error en formato de fecha/hora');
         return false;
       }
       
-      // Comparar los timestamps completos (fecha + hora)
-      if (fin.getTime() < inicio.getTime()) {
+      // Calcular la diferencia en milisegundos
+      const diferencia = fin.getTime() - inicio.getTime();
+      
+      // Si la diferencia es negativa, hay un error
+      if (diferencia < 0) {
         const fechaInicioFormateada = formatearFecha(fechaInicioFin);
         const fechaFinFormateada = formatearFecha(fechaFin);
+        
+        console.log('ERROR: Fecha fin anterior a inicio');
         
         setErrorFechaFin(`🚨 ERROR: La fecha/hora de fin no puede ser anterior al inicio\nInicio: ${fechaInicioFormateada} ${horaInicioFin}\nFin: ${fechaFinFormateada} ${horaFin}`);
         
@@ -443,14 +483,13 @@ const GeneradorComunicados = () => {
         
         setSugerenciasFecha(sugerencias);
         
-        // Vibración visual al error
+        // Mostrar error
         setMostrarErrorFecha(true);
-        setTimeout(() => setMostrarErrorFecha(false), 100);
-        setTimeout(() => setMostrarErrorFecha(true), 200);
         
         return false;
       } else {
         // Todo está bien, limpiar errores
+        console.log('Validación OK: fechas correctas');
         setErrorFechaFin('');
         setSugerenciasFecha([]);
         setMostrarErrorFecha(false);
@@ -694,10 +733,39 @@ const GeneradorComunicados = () => {
       
       // Validar fechas inmediatamente cuando cambian campos de fin
       if (name === 'fechaFin' || name === 'horaFin' || name === 'fechaInicioFin' || name === 'horaInicioFin') {
-        // Usar setTimeout para validar después de que se actualice el estado
+        // Crear una validación temporal con los nuevos valores
+        const tempFormData = newData;
+        
+        // Ejecutar validación con los valores actualizados
         setTimeout(() => {
-          validarFechasFin();
-        }, 100);
+          const fechaInicioFin = tempFormData.fechaInicioFin;
+          const horaInicioFin = tempFormData.horaInicioFin;
+          const fechaFin = tempFormData.fechaFin;
+          const horaFin = tempFormData.horaFin;
+          
+          if (fechaInicioFin && horaInicioFin && fechaFin && horaFin) {
+            try {
+              const inicio = new Date(`${fechaInicioFin}T${horaInicioFin}`);
+              const fin = new Date(`${fechaFin}T${horaFin}`);
+              
+              if (!isNaN(inicio.getTime()) && !isNaN(fin.getTime())) {
+                const diferencia = fin.getTime() - inicio.getTime();
+                
+                if (diferencia < 0) {
+                  // Hay error, ejecutar validación completa
+                  validarFechasFin();
+                } else {
+                  // Todo bien, limpiar errores
+                  setErrorFechaFin('');
+                  setSugerenciasFecha([]);
+                  setMostrarErrorFecha(false);
+                }
+              }
+            } catch (error) {
+              console.error('Error en validación temporal:', error);
+            }
+          }
+        }, 0);
       }
       
       return newData;
@@ -904,10 +972,28 @@ const GeneradorComunicados = () => {
   };
 
   const generarMensaje = () => {
-    // Validar fechas antes de generar
-    if (tipo.endsWith('-fin') && !validarFechasFin()) {
-      setMostrarErrorFecha(true);
-      return;
+    // Validar fechas antes de generar - con valores actuales del estado
+    if (tipo.endsWith('-fin')) {
+      const fechaInicioFin = formData.fechaInicioFin;
+      const horaInicioFin = formData.horaInicioFin;
+      const fechaFin = formData.fechaFin;
+      const horaFin = formData.horaFin;
+      
+      if (fechaInicioFin && horaInicioFin && fechaFin && horaFin) {
+        try {
+          const inicio = new Date(`${fechaInicioFin}T${horaInicioFin}`);
+          const fin = new Date(`${fechaFin}T${horaFin}`);
+          
+          // Solo mostrar error si realmente la fecha fin es anterior
+          if (!isNaN(inicio.getTime()) && !isNaN(fin.getTime()) && fin.getTime() < inicio.getTime()) {
+            validarFechasFin(); // Esto mostrará el error y las sugerencias
+            setMostrarErrorFecha(true);
+            return;
+          }
+        } catch (error) {
+          console.error('Error al validar antes de generar:', error);
+        }
+      }
     }
     
     // Verificar duración sospechosa antes de generar
@@ -2295,7 +2381,7 @@ Verificación inicial"
                         <label className="block mb-2 font-semibold text-gray-300">Duración calculada:</label>
                         <div className="p-6 bg-gradient-to-r from-teal-600/15 to-emerald-600/15 border border-teal-400/25 rounded-xl text-center">
                           <span className="text-3xl font-bold text-teal-300">{formData.duracionCalculada}</span>
-                          {errorFechaFin && (
+                          {formData.duracionCalculada === '⚠️ Error' && (
                             <p className="text-red-400 text-xs mt-2 animate-pulse">
                               ⚠️ Corrige las fechas para calcular la duración correcta
                             </p>
@@ -2354,12 +2440,11 @@ Verificación de logs"
                   className={`flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-teal-500/25 transform hover:-translate-y-1 flex items-center justify-center gap-2 ${
                     getEstadoSemaforo().color === '🔴' ? 'ring-2 ring-red-500/50' : 
                     getEstadoSemaforo().color === '🟡' ? 'ring-1 ring-yellow-500/30' : ''
-                  } ${errorFechaFin ? 'animate-pulse' : ''}`}
+                  } ${errorFechaFin && errorFechaFin.includes('ERROR') ? 'opacity-75 cursor-not-allowed' : ''}`}
                   onClick={generarMensaje}
-                  disabled={errorFechaFin !== ''}
                 >
                   <Zap className="w-5 h-5" />
-                  {errorFechaFin ? '⚠️ Corrige las fechas primero' : 'Generar Comunicado'}
+                  {errorFechaFin && errorFechaFin.includes('ERROR') ? '⚠️ Corrige las fechas primero' : 'Generar Comunicado'}
                   <span className="ml-2">{getEstadoSemaforo().color}</span>
                 </button>
               </div>
