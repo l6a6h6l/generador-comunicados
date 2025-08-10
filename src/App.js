@@ -4,7 +4,7 @@ import { Calendar, Clock, AlertCircle, CheckCircle, RefreshCw, Copy, Trash2, Wre
 // Constantes
 const USUARIOS_VALIDOS = [
   { usuario: 'fractalia', password: 'fractalia4ever' },
-  { usuario: 'monitoreot', password: 'M0n1t0r30.kyndryl' },
+  { usuario: 'gabriela', password: 'gabyRocks2025' },
   { usuario: 'gestores', password: 'todosLosSapitos' },
   { usuario: 'dorian', password: 'dorianGrayIncidentes' }
 ];
@@ -1057,7 +1057,7 @@ export default function GeneradorComunicados() {
               <h2 className="text-xl font-bold text-white mb-4">Detalles del Comunicado</h2>
 
               {/* Panel de escalamiento BLU */}
-              {modoBLU && tipo.startsWith('evento-') && escalamientoBLU && (
+              {modoBLU && tipo.startsWith('evento-') && (
                 <div className={`p-3 rounded mb-4 border ${
                   tipoBLU === 'bian' ? 'bg-orange-900/20 border-orange-800' :
                   tipoBLU === 'infraestructura' ? 'bg-purple-900/20 border-purple-800' :
@@ -1066,7 +1066,16 @@ export default function GeneradorComunicados() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs text-gray-400 mb-1">Escalamiento BLU 2.0:</p>
-                      <p className="text-sm font-medium text-white">{escalamientoBLU}</p>
+                      <p className="text-sm font-medium text-white">
+                        {tipoBLU === 'bian' 
+                          ? 'Miguel Angel López Garavito'
+                          : tipoBLU === 'infraestructura'
+                          ? 'Infraestructura Cloud'
+                          : 'Paul Chamorro / David Albuja'}
+                      </p>
+                      {tipoBLU === 'bian' && (
+                        <p className="text-xs text-gray-500 mt-1">📧 malopez@dinersclub.com.ec</p>
+                      )}
                     </div>
                     <div className={`text-2xl ${
                       tipoBLU === 'bian' ? 'text-orange-400' :
@@ -1075,6 +1084,16 @@ export default function GeneradorComunicados() {
                     }`}>
                       {tipoBLU === 'bian' ? '⚠️' : tipoBLU === 'infraestructura' ? '🖥️' : '📱'}
                     </div>
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-gray-700">
+                    <p className="text-xs text-gray-400 mb-1">💡 Recordatorio de escalamiento:</p>
+                    <p className="text-xs text-gray-300">
+                      {tipoBLU === 'bian' 
+                        ? 'Escalar a Miguel Angel López Garavito por Teams o correo'
+                        : tipoBLU === 'infraestructura'
+                        ? 'Escalar al equipo de Infraestructura Cloud por Teams'
+                        : 'Escalar a Paul Chamorro o David Albuja por Teams'}
+                    </p>
                   </div>
                 </div>
               )}
