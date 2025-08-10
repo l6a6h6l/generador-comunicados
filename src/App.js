@@ -1,167 +1,88 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, AlertCircle, CheckCircle, RefreshCw, Copy, Trash2, Wrench, ChevronRight, Zap, MessageSquare, AlertTriangle, Bell, Settings, Plus, Minus, User, Lock, Eye, EyeOff, CreditCard } from 'lucide-react';
+import { Calendar, Clock, AlertCircle, CheckCircle, RefreshCw, Copy, Trash2, Wrench, ChevronRight, Zap, MessageSquare, AlertTriangle, Bell, Settings, Plus, Minus, User, Lock, Eye, EyeOff, CreditCard, FileText, AlertOctagon } from 'lucide-react';
 
-const GeneradorComunicados = () => {
-  // Servicios transaccionales
-  const SERVICIOS_TRANSACCIONALES = [
-    {
-      id: 'datafast-visa-mc',
-      nombre: 'DATAFAST VISA-MC',
-      descripcion: 'Transacciones locales Visa (débito/crédito) y MasterCard (crédito) en red propia',
-      categoria: 'datafast',
-      icono: '💳'
-    },
-    {
-      id: 'datafast-diners-dc',
-      nombre: 'DATAFAST DINERS-DC', 
-      descripcion: 'Transacciones locales Diners (débito/crédito) y Discover (crédito) en red propia',
-      categoria: 'datafast',
-      icono: '💳'
-    },
-    {
-      id: 'banred-pago-tc',
-      nombre: 'BANRED (PAGO A TARJETA DE CRÉDITO)',
-      descripcion: 'Transacciones entre bancos asociados BANRED: tarjetas de crédito, cuentas corrientes y ahorro',
-      categoria: 'banred',
-      icono: '🏦'
-    },
-    {
-      id: 'banred-base24',
-      nombre: 'BANRED BASE 24 (DÉBITOS)',
-      descripcion: 'Transacciones tarjetas de débito Banco Pichincha y bancos asociados BANRED',
-      categoria: 'banred',
-      icono: '🏦'
-    },
-    {
-      id: 'banred-base25',
-      nombre: 'BANRED BASE 25 (ATM - TARJETAS DE CRÉDITO)',
-      descripcion: 'Transacciones ATM tarjetas de crédito Banco Pichincha y bancos asociados BANRED',
-      categoria: 'banred',
-      icono: '🏧'
-    },
-    {
-      id: 'usp-atalla',
-      nombre: 'USP ATALLA',
-      descripcion: 'Validación de tarjetas propias de débito y crédito BANCO PICHINCHA',
-      categoria: 'validacion',
-      icono: '🔐'
-    },
-    {
-      id: 'efectivo-express',
-      nombre: 'EFECTIVO EXPRESS',
-      descripcion: 'Avances de efectivo por ventanilla Banco Pichincha',
-      categoria: 'efectivo',
-      icono: '💵'
-    },
-    {
-      id: 'diners-internacional-1',
-      nombre: 'DINERS CLUB INTERNACIONAL 1',
-      descripcion: 'Transacciones crédito Diners/Discover: tarjetas propias en red ajena y ajenas en red propia',
-      categoria: 'internacional',
-      icono: '🌐'
-    },
-    {
-      id: 'diners-internacional-2',
-      nombre: 'DINERS CLUB INTERNACIONAL 2',
-      descripcion: 'Transacciones crédito Diners/Discover: tarjetas propias en red ajena y ajenas en red propia',
-      categoria: 'internacional',
-      icono: '🌐'
-    },
-    {
-      id: 'pulse-discover',
-      nombre: 'PULSE / DISCOVER FS',
-      descripcion: 'Transacciones tarjetas ajenas Diners y Discover en cajeros autorizados',
-      categoria: 'internacional',
-      icono: '🏧'
-    },
-    {
-      id: 'llaves-dci',
-      nombre: 'LLAVES DCI',
-      descripcion: 'Intercambio de llaves con franquicias DCI/Discover',
-      categoria: 'seguridad',
-      icono: '🔑'
-    },
-    {
-      id: 'visa-int-emision',
-      nombre: 'VISA INTERNACIONAL EMISIÓN',
-      descripcion: 'Transacciones débito/crédito tarjetas propias en red ajena',
-      categoria: 'internacional',
-      icono: '🌍'
-    },
-    {
-      id: 'visa-int-adquirencia',
-      nombre: 'VISA INTERNACIONAL ADQUIRENCIA',
-      descripcion: 'Transacciones crédito tarjetas ajenas en red propia',
-      categoria: 'internacional',
-      icono: '🌍'
-    },
-    {
-      id: 'mastercard-mci',
-      nombre: 'MASTERCARD INTERNACIONAL MCI',
-      descripcion: 'Transacciones crédito tarjetas propias en red ajena',
-      categoria: 'internacional',
-      icono: '🌍'
-    },
-    {
-      id: 'mastercard-mds',
-      nombre: 'MASTERCARD INTERNACIONAL MDS',
-      descripcion: 'Transacciones crédito tarjetas ajenas en red propia',
-      categoria: 'internacional',
-      icono: '🌍'
-    },
-    {
-      id: 'broker',
-      nombre: 'BROKER',
-      descripcion: 'Avances de efectivo en cajeros ATM sin tarjeta de crédito',
-      categoria: 'efectivo',
-      icono: '🏧'
-    },
-    {
-      id: 'jardin-azuayo',
-      nombre: 'JARDÍN AZUAYO',
-      descripcion: 'Transacciones débito Visa de Cooperativa Jardín Azuayo',
-      categoria: 'cooperativas',
-      icono: '🏛️'
-    },
-    {
-      id: 'dock',
-      nombre: 'DOCK (EN PROCESO DE IMPLEMENTACIÓN)',
-      descripcion: 'Transacciones débito Banco Diners Club del Ecuador',
-      categoria: 'implementacion',
-      icono: '⚡'
-    },
-    {
-      id: 'bpc-bp',
-      nombre: 'BPC-BP',
-      descripcion: 'Transacciones tarjeta prepago de transporte Banco Pichincha',
-      categoria: 'prepago',
-      icono: '🚌'
-    }
-  ];
+// Constantes
+const USUARIOS_VALIDOS = [
+  { usuario: 'fractalia', password: 'fractalia4ever' },
+  { usuario: 'monitoreot', password: 'M0n1t0r30.kyndryl' },
+  { usuario: 'gestores', password: 'todosLosSapitos' },
+  { usuario: 'dorian', password: 'dorianGrayIncidentes' }
+];
 
+const SERVICIOS_TRANSACCIONALES = [
+  { id: 'datafast-visa-mc', nombre: 'DATAFAST VISA-MC', descripcion: 'Transacciones locales Visa (débito/crédito) y MasterCard (crédito) en red propia', categoria: 'datafast' },
+  { id: 'datafast-diners-dc', nombre: 'DATAFAST DINERS-DC', descripcion: 'Transacciones locales Diners (débito/crédito) y Discover (crédito) en red propia', categoria: 'datafast' },
+  { id: 'banred-pago-tc', nombre: 'BANRED (PAGO A TARJETA DE CRÉDITO)', descripcion: 'Transacciones entre bancos asociados BANRED: tarjetas de crédito, cuentas corrientes y ahorro', categoria: 'banred' },
+  { id: 'banred-base24', nombre: 'BANRED BASE 24 (DÉBITOS)', descripcion: 'Transacciones tarjetas de débito Banco Pichincha y bancos asociados BANRED', categoria: 'banred' },
+  { id: 'banred-base25', nombre: 'BANRED BASE 25 (ATM - TARJETAS DE CRÉDITO)', descripcion: 'Transacciones ATM tarjetas de crédito Banco Pichincha y bancos asociados BANRED', categoria: 'banred' },
+  { id: 'usp-atalla', nombre: 'USP ATALLA', descripcion: 'Validación de tarjetas propias de débito y crédito BANCO PICHINCHA', categoria: 'validacion' },
+  { id: 'efectivo-express', nombre: 'EFECTIVO EXPRESS', descripcion: 'Avances de efectivo por ventanilla Banco Pichincha', categoria: 'efectivo' },
+  { id: 'diners-internacional-1', nombre: 'DINERS CLUB INTERNACIONAL 1', descripcion: 'Transacciones crédito Diners/Discover: tarjetas propias en red ajena y ajenas en red propia', categoria: 'internacional' },
+  { id: 'diners-internacional-2', nombre: 'DINERS CLUB INTERNACIONAL 2', descripcion: 'Transacciones crédito Diners/Discover: tarjetas propias en red ajena y ajenas en red propia', categoria: 'internacional' },
+  { id: 'pulse-discover', nombre: 'PULSE / DISCOVER FS', descripcion: 'Transacciones tarjetas ajenas Diners y Discover en cajeros autorizados', categoria: 'internacional' },
+  { id: 'llaves-dci', nombre: 'LLAVES DCI', descripcion: 'Intercambio de llaves con franquicias DCI/Discover', categoria: 'seguridad' },
+  { id: 'visa-int-emision', nombre: 'VISA INTERNACIONAL EMISIÓN', descripcion: 'Transacciones débito/crédito tarjetas propias en red ajena', categoria: 'internacional' },
+  { id: 'visa-int-adquirencia', nombre: 'VISA INTERNACIONAL ADQUIRENCIA', descripcion: 'Transacciones crédito tarjetas ajenas en red propia', categoria: 'internacional' },
+  { id: 'mastercard-mci', nombre: 'MASTERCARD INTERNACIONAL MCI', descripcion: 'Transacciones crédito tarjetas propias en red ajena', categoria: 'internacional' },
+  { id: 'mastercard-mds', nombre: 'MASTERCARD INTERNACIONAL MDS', descripcion: 'Transacciones crédito tarjetas ajenas en red propia', categoria: 'internacional' },
+  { id: 'broker', nombre: 'BROKER', descripcion: 'Avances de efectivo en cajeros ATM sin tarjeta de crédito', categoria: 'efectivo' },
+  { id: 'jardin-azuayo', nombre: 'JARDÍN AZUAYO', descripcion: 'Transacciones débito Visa de Cooperativa Jardín Azuayo', categoria: 'cooperativas' },
+  { id: 'dock', nombre: 'DOCK (EN PROCESO DE IMPLEMENTACIÓN)', descripcion: 'Transacciones débito Banco Diners Club del Ecuador', categoria: 'implementacion' },
+  { id: 'bpc-bp', nombre: 'BPC-BP', descripcion: 'Transacciones tarjeta prepago de transporte Banco Pichincha', categoria: 'prepago' }
+];
+
+const OPCIONES_ENCOLAMIENTO = [
+  'Variable General',
+  'OTP General',
+  'SMS Masivo',
+  'Notificaciones Push',
+  'Validaciones KYC'
+];
+
+// Funciones utilitarias
+const formatearFecha = (fechaISO) => {
+  if (!fechaISO) return "";
+  const [year, month, day] = fechaISO.split('-');
+  return `${day}/${month}/${year}`;
+};
+
+const calcularDuracion = (fechaInicio, horaInicio, fechaFin, horaFin) => {
+  try {
+    if (!fechaInicio || !horaInicio || !fechaFin || !horaFin) return '00:00:00';
+    const inicio = new Date(`${fechaInicio}T${horaInicio}`);
+    const fin = new Date(`${fechaFin}T${horaFin}`);
+    if (isNaN(inicio.getTime()) || isNaN(fin.getTime())) return '00:00:00';
+    const diferencia = fin.getTime() - inicio.getTime();
+    if (diferencia < 0) return 'Error';
+    const horas = Math.floor(diferencia / (1000 * 60 * 60));
+    const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+    const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+    return `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+  } catch (error) {
+    return '00:00:00';
+  }
+};
+
+export default function GeneradorComunicados() {
   // Estados de autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginForm, setLoginForm] = useState({ usuario: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
 
-  // Credenciales - Usuarios válidos
-  const USUARIOS_VALIDOS = [
-    { usuario: 'fractalia', password: 'fractalia4ever' },
-    { usuario: 'gabriela', password: 'gabyRocks2025' },
-    { usuario: 'gestores', password: 'todosLosSapitos' },
-    { usuario: 'dorian', password: 'dorianGrayIncidentes' }
-  ];
-
   // Estados principales
   const [tipo, setTipo] = useState('evento-inicio');
+  const [modoBLU, setModoBLU] = useState(false);
+  const [tipoBLU, setTipoBLU] = useState('aplicacion');
+  const [alertaCompleta, setAlertaCompleta] = useState('');
+  const [mostrarPegarAlerta, setMostrarPegarAlerta] = useState(false);
   const [multiplesAlertamientos, setMultiplesAlertamientos] = useState(false);
   const [periodosAlertamiento, setPeriodosAlertamiento] = useState([
     { fechaInicio: '', horaInicio: '', fechaFin: '', horaFin: '', duracion: '00:00:00' }
   ]);
   const [multiplesEncolamientos, setMultiplesEncolamientos] = useState(false);
   const [serviciosEncolamiento, setServiciosEncolamiento] = useState([
-    { tipo: 'Variable General', fechaInicio: '', horaInicio: '', fechaFin: '', horaFin: '', duracion: '00:00:00', encolados: '' }
+    { tipo: 'Variable General', tipoCustom: '', fechaInicio: '', horaInicio: '', fechaFin: '', horaFin: '', duracion: '00:00:00', encolados: '' }
   ]);
   const [formData, setFormData] = useState({
     descripcion: '',
@@ -185,137 +106,63 @@ const GeneradorComunicados = () => {
   });
   const [resultado, setResultado] = useState('');
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
-  const [alertaMensaje, setAlertaMensaje] = useState('¡Comunicado copiado al portapapeles!');
+  const [alertaMensaje, setAlertaMensaje] = useState('');
   const [mostrarServicios, setMostrarServicios] = useState(false);
-  
-  // Estados del semáforo
   const [tiempoAbierto, setTiempoAbierto] = useState(Date.now());
   const [mostrarActualizacion, setMostrarActualizacion] = useState(false);
   const [mostrarConfirmacionDuracion, setMostrarConfirmacionDuracion] = useState(false);
   const [noPreguntar, setNoPreguntar] = useState(false);
-  
-  // Estados de validación de fechas
   const [errorFechaFin, setErrorFechaFin] = useState('');
   const [mostrarErrorFecha, setMostrarErrorFecha] = useState(false);
   const [sugerenciasFecha, setSugerenciasFecha] = useState([]);
+  const [escalamientoBLU, setEscalamientoBLU] = useState('');
 
-  // Establecer fechas y horas actuales al cargar
+  // Establecer fechas al cargar
   useEffect(() => {
     establecerFechaHoraActual();
   }, []);
 
-  // Timer del semáforo - actualizar cada minuto
+  // Timer del semáforo
   useEffect(() => {
     const interval = setInterval(() => {
       const horasAbierto = (Date.now() - tiempoAbierto) / (1000 * 60 * 60);
-      
-      // Auto-refresh cada hora (si no ha dicho "no preguntar")
-      if (!noPreguntar && horasAbierto >= 1 && horasAbierto % 1 < 0.017) { // ~1 minuto de margen
+      if (!noPreguntar && horasAbierto >= 1 && horasAbierto % 1 < 0.017) {
         setMostrarActualizacion(true);
       }
-    }, 60000); // Cada minuto
-
+    }, 60000);
     return () => clearInterval(interval);
   }, [tiempoAbierto, noPreguntar]);
 
-  // Calcular duración cuando cambien las fechas u horas relevantes
+  // Calcular duración
   useEffect(() => {
-    const calcularDuracionInterna = () => {
-      try {
-        if (!formData.fechaInicioFin || !formData.horaInicioFin || !formData.fechaFin || !formData.horaFin) {
-          return;
-        }
-        
-        const inicio = new Date(`${formData.fechaInicioFin}T${formData.horaInicioFin}`);
-        const fin = new Date(`${formData.fechaFin}T${formData.horaFin}`);
-        
-        // Verificar que las fechas sean válidas
-        if (isNaN(inicio.getTime()) || isNaN(fin.getTime())) {
-          setFormData(prev => ({ ...prev, duracionCalculada: '00:00:00' }));
-          return;
-        }
-        
-        const diferencia = fin.getTime() - inicio.getTime();
-        
-        // Si la diferencia es negativa, no calcular
-        if (diferencia < 0) {
-          setFormData(prev => ({ ...prev, duracionCalculada: '⚠️ Error' }));
-          return;
-        }
-        
-        const horas = Math.floor(diferencia / (1000 * 60 * 60));
-        const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-        const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
-        
-        const duracion = 
-          `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
-        
-        setFormData(prev => ({ ...prev, duracionCalculada: duracion }));
-      } catch (error) {
-        console.error('Error al calcular duración:', error);
-        setFormData(prev => ({ ...prev, duracionCalculada: '00:00:00' }));
-      }
-    };
-    
-    calcularDuracionInterna();
+    if (!formData.fechaInicioFin || !formData.horaInicioFin || !formData.fechaFin || !formData.horaFin) return;
+    const duracion = calcularDuracion(formData.fechaInicioFin, formData.horaInicioFin, formData.fechaFin, formData.horaFin);
+    setFormData(prev => ({ ...prev, duracionCalculada: duracion }));
   }, [formData.fechaInicioFin, formData.horaInicioFin, formData.fechaFin, formData.horaFin]);
-  
-  
-  // Actualizar estados por defecto cuando cambia el tipo
+
+  // Actualizar estados por defecto
   useEffect(() => {
     setFormData(prev => {
       let estadoInicio = prev.estadoInicio;
       let estadoFin = prev.estadoFin;
-      
-      if (tipo === 'evento-inicio' || tipo === 'incidente-inicio') {
-        estadoInicio = 'En revisión';
-      } else if (tipo === 'evento-fin' || tipo === 'incidente-fin') {
-        estadoFin = 'Recuperado';
-      } else if (tipo === 'mantenimiento-inicio') {
-        estadoInicio = 'En curso';
-      } else if (tipo === 'mantenimiento-fin') {
-        estadoFin = 'Finalizado';
-      }
-      
+      if (tipo === 'evento-inicio' || tipo === 'incidente-inicio') estadoInicio = 'En revisión';
+      else if (tipo === 'evento-fin' || tipo === 'incidente-fin') estadoFin = 'Recuperado';
+      else if (tipo === 'mantenimiento-inicio') estadoInicio = 'En curso';
+      else if (tipo === 'mantenimiento-fin') estadoFin = 'Finalizado';
       return { ...prev, estadoInicio, estadoFin };
     });
   }, [tipo]);
 
-  // Efecto para limpiar errores cuando las fechas son válidas
-  useEffect(() => {
-    if (tipo.endsWith('-fin') && formData.fechaInicioFin && formData.horaInicioFin && formData.fechaFin && formData.horaFin) {
-      try {
-        const inicio = new Date(`${formData.fechaInicioFin}T${formData.horaInicioFin}`);
-        const fin = new Date(`${formData.fechaFin}T${formData.horaFin}`);
-        
-        if (!isNaN(inicio.getTime()) && !isNaN(fin.getTime())) {
-          const diferencia = fin.getTime() - inicio.getTime();
-          
-          // Si la diferencia es positiva (fecha fin es posterior), limpiar errores
-          if (diferencia >= 0 && errorFechaFin) {
-            setErrorFechaFin('');
-            setSugerenciasFecha([]);
-            setMostrarErrorFecha(false);
-          }
-        }
-      } catch (error) {
-        console.error('Error en validación automática:', error);
-      }
-    }
-  }, [formData.fechaInicioFin, formData.horaInicioFin, formData.fechaFin, formData.horaFin, tipo, errorFechaFin]);
-
   // Funciones de autenticación
   const handleLogin = () => {
-    // Verificar si las credenciales coinciden con algún usuario válido
     const usuarioValido = USUARIOS_VALIDOS.find(
       user => user.usuario === loginForm.usuario && user.password === loginForm.password
     );
-    
     if (usuarioValido) {
       setIsAuthenticated(true);
       setLoginError('');
     } else {
-      setLoginError('¡Credenciales incorrectas! ¿Eres realmente del equipo? 🤔');
+      setLoginError('Credenciales incorrectas');
       setTimeout(() => setLoginError(''), 3000);
     }
   };
@@ -330,27 +177,89 @@ const GeneradorComunicados = () => {
     setLoginForm({ usuario: '', password: '' });
   };
 
-  // Funciones de servicios transaccionales
+  // Función para procesar alerta completa BLU 2.0
+  const procesarAlertaBLU = () => {
+    if (!alertaCompleta) {
+      setAlertaMensaje('Por favor, pega el contenido de la alerta');
+      setMostrarAlerta(true);
+      setTimeout(() => setMostrarAlerta(false), 3000);
+      return;
+    }
+
+    const texto = alertaCompleta.toLowerCase();
+    let descripcionExtraida = '';
+    let tipoDetectado = 'aplicacion';
+    let fechaExtraida = '';
+    let horaExtraida = '';
+
+    // Detectar si es BIAN
+    if (texto.includes('namespace.name:') && texto.includes('bian')) {
+      const regexNamespace = /namespace\.name:\s*([^\s\n]+)/i;
+      const matchNamespace = alertaCompleta.match(regexNamespace);
+      if (matchNamespace) {
+        descripcionExtraida = `Alertamiento ${matchNamespace[1]}`;
+        tipoDetectado = 'bian';
+      }
+    } else {
+      const regexCluster = /cluster\.name:\s*([^\s\n]+)/i;
+      const matchCluster = alertaCompleta.match(regexCluster);
+      if (matchCluster) {
+        descripcionExtraida = `Alertamiento ${matchCluster[1]}`;
+      }
+
+      if (texto.includes('application')) {
+        tipoDetectado = 'aplicacion';
+      } else if (texto.includes('performance') || texto.includes('hardware')) {
+        tipoDetectado = 'infraestructura';
+      }
+    }
+
+    // Extraer fecha y hora
+    const regexFecha = /(\d{1,2})\.(\d{2})\.(\d{4})/;
+    const matchFecha = alertaCompleta.match(regexFecha);
+    if (matchFecha) {
+      fechaExtraida = `${matchFecha[3]}-${matchFecha[2]}-${matchFecha[1].padStart(2, '0')}`;
+    }
+
+    const regexHora = /(\d{2}):(\d{2})\s*\(UTC\)/;
+    const matchHora = alertaCompleta.match(regexHora);
+    if (matchHora) {
+      horaExtraida = `${matchHora[1]}:${matchHora[2]}:00`;
+    }
+
+    if (descripcionExtraida) {
+      setFormData(prev => ({
+        ...prev,
+        descripcion: descripcionExtraida,
+        fechaInicio: fechaExtraida || prev.fechaInicio,
+        horaInicio: horaExtraida || prev.horaInicio
+      }));
+    }
+
+    setTipoBLU(tipoDetectado);
+    
+    if (tipoDetectado === 'bian') {
+      setEscalamientoBLU('Miguel Angel López Garavito');
+    } else if (tipoDetectado === 'infraestructura') {
+      setEscalamientoBLU('Infraestructura Cloud');
+    } else {
+      setEscalamientoBLU('Paul Chamorro / David Albuja');
+    }
+
+    setMostrarPegarAlerta(false);
+    setAlertaCompleta('');
+    setAlertaMensaje('✅ Alerta procesada correctamente');
+    setMostrarAlerta(true);
+    setTimeout(() => setMostrarAlerta(false), 3000);
+  };
+
+  // Funciones de servicios
   const seleccionarServicio = (servicio) => {
     const campoImpacto = tipo.startsWith('mantenimiento-') ? 'impactoMant' : 'impacto';
     const impactoActual = formData[campoImpacto];
-    
-    // Usar solo la descripción del servicio afectado
-    const servicioTexto = servicio.descripcion;
-    
-    // Agregar al campo de impacto
-    let nuevoImpacto;
-    if (!impactoActual || impactoActual.trim() === '') {
-      nuevoImpacto = servicioTexto;
-    } else {
-      // Si ya hay contenido, agregar en nueva línea
-      nuevoImpacto = impactoActual + '\n' + servicioTexto;
-    }
-    
+    const nuevoImpacto = !impactoActual ? servicio.descripcion : impactoActual + '\n' + servicio.descripcion;
     setFormData(prev => ({ ...prev, [campoImpacto]: nuevoImpacto }));
-    
-    // Mostrar confirmación
-    setAlertaMensaje(`✅ Servicio "${servicio.nombre}" agregado al impacto`);
+    setAlertaMensaje(`Servicio agregado: ${servicio.nombre}`);
     setMostrarAlerta(true);
     setTimeout(() => setMostrarAlerta(false), 2000);
   };
@@ -358,8 +267,7 @@ const GeneradorComunicados = () => {
   const limpiarImpactos = () => {
     const campoImpacto = tipo.startsWith('mantenimiento-') ? 'impactoMant' : 'impacto';
     setFormData(prev => ({ ...prev, [campoImpacto]: '' }));
-    
-    setAlertaMensaje('🧹 Impactos limpiados');
+    setAlertaMensaje('Impactos limpiados');
     setMostrarAlerta(true);
     setTimeout(() => setMostrarAlerta(false), 2000);
   };
@@ -374,147 +282,16 @@ const GeneradorComunicados = () => {
 
   const getEstadoSemaforo = () => {
     const { total } = calcularTiempoAbierto();
-    if (total < 1) return { color: '🟢', estado: 'Fechas actualizadas', clase: 'text-green-400' };
-    if (total < 4) return { color: '🟡', estado: 'Revisar fechas', clase: 'text-yellow-400' };
-    return { color: '🔴', estado: '¡Fechas desactualizadas!', clase: 'text-red-400' };
+    if (total < 1) return { color: '🟢', estado: 'Actualizado', clase: 'text-green-500' };
+    if (total < 4) return { color: '🟡', estado: 'Revisar', clase: 'text-yellow-500' };
+    return { color: '🔴', estado: 'Desactualizado', clase: 'text-red-500' };
   };
 
   const actualizarFechasAhora = () => {
     establecerFechaHoraActual();
     setTiempoAbierto(Date.now());
     setMostrarActualizacion(false);
-    setAlertaMensaje('🔄 Fechas actualizadas a la hora actual');
-    setMostrarAlerta(true);
-    setTimeout(() => setMostrarAlerta(false), 3000);
-  };
-
-  const verificarDuracionSospechosa = () => {
-    if (!formData.fechaInicioFin || !formData.horaInicioFin || !formData.fechaFin || !formData.horaFin) {
-      return false;
-    }
-
-    try {
-      const inicio = new Date(`${formData.fechaInicioFin}T${formData.horaInicioFin}`);
-      const fin = new Date(`${formData.fechaFin}T${formData.horaFin}`);
-      const diferencia = fin - inicio;
-      const horas = diferencia / (1000 * 60 * 60);
-      
-      return horas > 4; // Más de 4 horas es sospechoso
-    } catch {
-      return false;
-    }
-  };
-
-  // Funciones de validación de fechas
-  const validarFechasFin = () => {
-    // Obtener los valores actuales del estado
-    const fechaInicioFin = formData.fechaInicioFin;
-    const horaInicioFin = formData.horaInicioFin;
-    const fechaFin = formData.fechaFin;
-    const horaFin = formData.horaFin;
-    
-    console.log('Validando fechas:', {
-      inicio: `${fechaInicioFin} ${horaInicioFin}`,
-      fin: `${fechaFin} ${horaFin}`
-    });
-    
-    if (!fechaInicioFin || !horaInicioFin || !fechaFin || !horaFin) {
-      setErrorFechaFin('');
-      return true;
-    }
-
-    try {
-      // Crear objetos Date con fecha y hora completas
-      const inicio = new Date(`${fechaInicioFin}T${horaInicioFin}`);
-      const fin = new Date(`${fechaFin}T${horaFin}`);
-      
-      console.log('Timestamps:', {
-        inicio: inicio.getTime(),
-        fin: fin.getTime(),
-        diferencia: fin.getTime() - inicio.getTime()
-      });
-      
-      // Verificar si las fechas son válidas
-      if (isNaN(inicio.getTime()) || isNaN(fin.getTime())) {
-        setErrorFechaFin('⚠️ Error en formato de fecha/hora');
-        return false;
-      }
-      
-      // Calcular la diferencia en milisegundos
-      const diferencia = fin.getTime() - inicio.getTime();
-      
-      // Si la diferencia es negativa, hay un error
-      if (diferencia < 0) {
-        const fechaInicioFormateada = formatearFecha(fechaInicioFin);
-        const fechaFinFormateada = formatearFecha(fechaFin);
-        
-        console.log('ERROR: Fecha fin anterior a inicio');
-        
-        setErrorFechaFin(`🚨 ERROR: La fecha/hora de fin no puede ser anterior al inicio\nInicio: ${fechaInicioFormateada} ${horaInicioFin}\nFin: ${fechaFinFormateada} ${horaFin}`);
-        
-        // Generar sugerencias inteligentes
-        const hoy = new Date();
-        const fechaActual = hoy.toISOString().split('T')[0];
-        const horaActual = hoy.toTimeString().split(' ')[0];
-        
-        // Si las fechas son iguales pero la hora es menor, sugerir el día siguiente
-        const sugerencias = [
-          { 
-            texto: `✅ Usar fecha y hora actual: ${formatearFecha(fechaActual)} ${horaActual}`,
-            fecha: fechaActual,
-            hora: horaActual,
-            icono: '🕐'
-          }
-        ];
-        
-        // Si es el mismo día, sugerir el día siguiente
-        if (fechaInicioFin === fechaFin) {
-          const diaSiguiente = new Date(fechaFin);
-          diaSiguiente.setDate(diaSiguiente.getDate() + 1);
-          const fechaDiaSiguiente = diaSiguiente.toISOString().split('T')[0];
-          
-          sugerencias.push({
-            texto: `📅 Usar día siguiente: ${formatearFecha(fechaDiaSiguiente)} ${horaFin}`,
-            fecha: fechaDiaSiguiente,
-            hora: horaFin,
-            icono: '📆'
-          });
-        }
-        
-        setSugerenciasFecha(sugerencias);
-        
-        // Mostrar error
-        setMostrarErrorFecha(true);
-        
-        return false;
-      } else {
-        // Todo está bien, limpiar errores
-        console.log('Validación OK: fechas correctas');
-        setErrorFechaFin('');
-        setSugerenciasFecha([]);
-        setMostrarErrorFecha(false);
-        return true;
-      }
-    } catch (error) {
-      console.error('Error al validar fechas:', error);
-      setErrorFechaFin('⚠️ Error al procesar las fechas');
-      return false;
-    }
-  };
-
-  const aplicarSugerenciaFecha = (fecha, hora) => {
-    setFormData(prev => ({
-      ...prev,
-      fechaFin: fecha,
-      horaFin: hora
-    }));
-    setErrorFechaFin('');
-    setSugerenciasFecha([]);
-    setMostrarErrorFecha(false);
-    
-    // Mostrar confirmación visual
-    const fechaFormateada = formatearFecha(fecha);
-    setAlertaMensaje(`✅ Fecha corregida: ${fechaFormateada} ${hora}`);
+    setAlertaMensaje('Fechas actualizadas');
     setMostrarAlerta(true);
     setTimeout(() => setMostrarAlerta(false), 3000);
   };
@@ -535,7 +312,6 @@ const GeneradorComunicados = () => {
       horaFin: horaActual
     }));
     
-    // Actualizar también el primer período
     setPeriodosAlertamiento([{
       fechaInicio: fechaActual,
       horaInicio: horaActual,
@@ -544,9 +320,9 @@ const GeneradorComunicados = () => {
       duracion: '00:00:00'
     }]);
     
-    // Actualizar también el primer servicio de encolamiento
     setServiciosEncolamiento([{
       tipo: 'Variable General',
+      tipoCustom: '',
       fechaInicio: fechaActual,
       horaInicio: horaActual,
       fechaFin: fechaActual,
@@ -555,12 +331,9 @@ const GeneradorComunicados = () => {
       encolados: ''
     }]);
   };
-  
+
   const limpiarCampos = () => {
-    const hoy = new Date();
-    const fechaActual = hoy.toISOString().split('T')[0];
-    const horaActual = hoy.toTimeString().split(' ')[0];
-    
+    establecerFechaHoraActual();
     setFormData(prev => ({
       ...prev,
       descripcion: '',
@@ -571,33 +344,17 @@ const GeneradorComunicados = () => {
       acciones: '',
       accionesEjecutadas: '',
       accionesEnCurso: '',
-      nota: '',
-      fechaInicio: fechaActual,
-      horaInicio: horaActual,
-      fechaInicioFin: fechaActual,
-      horaInicioFin: horaActual,
-      fechaFin: fechaActual,
-      horaFin: horaActual
+      nota: ''
     }));
-    
-    // Resetear múltiples alertamientos
     setMultiplesAlertamientos(false);
-    setPeriodosAlertamiento([
-      { fechaInicio: fechaActual, horaInicio: horaActual, fechaFin: fechaActual, horaFin: horaActual, duracion: '00:00:00' }
-    ]);
-    
-    // Resetear múltiples encolamientos
     setMultiplesEncolamientos(false);
-    setServiciosEncolamiento([
-      { tipo: 'Variable General', fechaInicio: fechaActual, horaInicio: horaActual, fechaFin: fechaActual, horaFin: horaActual, duracion: '00:00:00', encolados: '' }
-    ]);
-    
-    // Resetear errores de validación
+    setMostrarConfirmacionDuracion(false);
     setErrorFechaFin('');
     setMostrarErrorFecha(false);
     setSugerenciasFecha([]);
-    
-    setAlertaMensaje('¡Campos limpiados correctamente!');
+    setAlertaCompleta('');
+    setEscalamientoBLU('');
+    setAlertaMensaje('Campos limpiados');
     setMostrarAlerta(true);
     setTimeout(() => setMostrarAlerta(false), 3000);
   };
@@ -606,7 +363,6 @@ const GeneradorComunicados = () => {
     const hoy = new Date();
     const fechaActual = hoy.toISOString().split('T')[0];
     const horaActual = hoy.toTimeString().split(' ')[0];
-    
     setPeriodosAlertamiento(prev => [...prev, {
       fechaInicio: fechaActual,
       horaInicio: horaActual,
@@ -622,14 +378,13 @@ const GeneradorComunicados = () => {
     }
   };
 
-  // Funciones para encolamientos
   const agregarServicioEncolamiento = () => {
     const hoy = new Date();
     const fechaActual = hoy.toISOString().split('T')[0];
     const horaActual = hoy.toTimeString().split(' ')[0];
-    
     setServiciosEncolamiento(prev => [...prev, {
       tipo: 'Variable General',
+      tipoCustom: '',
       fechaInicio: fechaActual,
       horaInicio: horaActual,
       fechaFin: fechaActual,
@@ -650,34 +405,9 @@ const GeneradorComunicados = () => {
       prev.map((servicio, i) => {
         if (i === index) {
           const nuevoServicio = { ...servicio, [campo]: valor };
-          
-          // Calcular duración si tenemos todos los datos necesarios
           if (nuevoServicio.fechaInicio && nuevoServicio.horaInicio && nuevoServicio.fechaFin && nuevoServicio.horaFin) {
-            try {
-              const inicio = new Date(`${nuevoServicio.fechaInicio}T${nuevoServicio.horaInicio}`);
-              const fin = new Date(`${nuevoServicio.fechaFin}T${nuevoServicio.horaFin}`);
-              const diferencia = fin - inicio;
-              
-              if (diferencia >= 0) {
-                const horas = Math.floor(diferencia / (1000 * 60 * 60));
-                const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-                const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
-                
-                nuevoServicio.duracion = `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
-              } else {
-                nuevoServicio.duracion = '⚠️ Error';
-                // Mostrar alerta de error
-                setAlertaMensaje('⚠️ La fecha de fin no puede ser anterior al inicio en el servicio ' + (index + 1));
-                setMostrarAlerta(true);
-                setTimeout(() => setMostrarAlerta(false), 3000);
-              }
-            } catch (error) {
-              nuevoServicio.duracion = '00:00:00';
-            }
-          } else {
-            nuevoServicio.duracion = '00:00:00';
+            nuevoServicio.duracion = calcularDuracion(nuevoServicio.fechaInicio, nuevoServicio.horaInicio, nuevoServicio.fechaFin, nuevoServicio.horaFin);
           }
-          
           return nuevoServicio;
         }
         return servicio;
@@ -690,34 +420,9 @@ const GeneradorComunicados = () => {
       prev.map((periodo, i) => {
         if (i === index) {
           const nuevoPeriodo = { ...periodo, [campo]: valor };
-          
-          // Calcular duración si tenemos todos los datos necesarios
           if (nuevoPeriodo.fechaInicio && nuevoPeriodo.horaInicio && nuevoPeriodo.fechaFin && nuevoPeriodo.horaFin) {
-            try {
-              const inicio = new Date(`${nuevoPeriodo.fechaInicio}T${nuevoPeriodo.horaInicio}`);
-              const fin = new Date(`${nuevoPeriodo.fechaFin}T${nuevoPeriodo.horaFin}`);
-              const diferencia = fin - inicio;
-              
-              if (diferencia >= 0) {
-                const horas = Math.floor(diferencia / (1000 * 60 * 60));
-                const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-                const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
-                
-                nuevoPeriodo.duracion = `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
-              } else {
-                nuevoPeriodo.duracion = '⚠️ Error';
-                // Mostrar alerta de error
-                setAlertaMensaje('⚠️ La fecha de fin no puede ser anterior al inicio en el período ' + (index + 1));
-                setMostrarAlerta(true);
-                setTimeout(() => setMostrarAlerta(false), 3000);
-              }
-            } catch (error) {
-              nuevoPeriodo.duracion = '00:00:00';
-            }
-          } else {
-            nuevoPeriodo.duracion = '00:00:00';
+            nuevoPeriodo.duracion = calcularDuracion(nuevoPeriodo.fechaInicio, nuevoPeriodo.horaInicio, nuevoPeriodo.fechaFin, nuevoPeriodo.horaFin);
           }
-          
           return nuevoPeriodo;
         }
         return periodo;
@@ -727,56 +432,13 @@ const GeneradorComunicados = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    setFormData(prev => {
-      const newData = { ...prev, [name]: value };
-      
-      // Validar fechas inmediatamente cuando cambian campos de fin
-      if (name === 'fechaFin' || name === 'horaFin' || name === 'fechaInicioFin' || name === 'horaInicioFin') {
-        // Crear una validación temporal con los nuevos valores
-        const tempFormData = newData;
-        
-        // Ejecutar validación con los valores actualizados
-        setTimeout(() => {
-          const fechaInicioFin = tempFormData.fechaInicioFin;
-          const horaInicioFin = tempFormData.horaInicioFin;
-          const fechaFin = tempFormData.fechaFin;
-          const horaFin = tempFormData.horaFin;
-          
-          if (fechaInicioFin && horaInicioFin && fechaFin && horaFin) {
-            try {
-              const inicio = new Date(`${fechaInicioFin}T${horaInicioFin}`);
-              const fin = new Date(`${fechaFin}T${horaFin}`);
-              
-              if (!isNaN(inicio.getTime()) && !isNaN(fin.getTime())) {
-                const diferencia = fin.getTime() - inicio.getTime();
-                
-                if (diferencia < 0) {
-                  // Hay error, ejecutar validación completa
-                  validarFechasFin();
-                } else {
-                  // Todo bien, limpiar errores
-                  setErrorFechaFin('');
-                  setSugerenciasFecha([]);
-                  setMostrarErrorFecha(false);
-                }
-              }
-            } catch (error) {
-              console.error('Error en validación temporal:', error);
-            }
-          }
-        }, 0);
-      }
-      
-      return newData;
-    });
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const seleccionarTipo = (nuevoTipo) => {
     const tipoAnterior = tipo;
     setTipo(nuevoTipo);
     
-    // Auto-completar fecha actual al cambiar a tipos "fin"
     if ((tipoAnterior.endsWith('-inicio') || tipoAnterior.endsWith('-avance') || tipoAnterior.endsWith('-seguimiento')) && nuevoTipo.endsWith('-fin')) {
       const hoy = new Date();
       const fechaActual = hoy.toISOString().split('T')[0];
@@ -784,102 +446,76 @@ const GeneradorComunicados = () => {
       
       setFormData(prev => ({
         ...prev,
-        fechaInicioFin: prev.fechaInicio, // Copiar fecha inicio
-        horaInicioFin: prev.horaInicio,   // Copiar hora inicio  
-        fechaFin: fechaActual,            // Auto-llenar fin con fecha actual
-        horaFin: horaActual               // Auto-llenar fin con hora actual
+        fechaInicioFin: prev.fechaInicio,
+        horaInicioFin: prev.horaInicio,
+        fechaFin: fechaActual,
+        horaFin: horaActual
       }));
       
-      setAlertaMensaje('✨ Fechas auto-completadas: inicio copiado, fin establecido al momento actual');
+      setAlertaMensaje('Fechas auto-completadas');
       setMostrarAlerta(true);
       setTimeout(() => setMostrarAlerta(false), 4000);
-      
-      // Resetear error de fecha si existe
-      setErrorFechaFin('');
-      setSugerenciasFecha([]);
-    }
-    
-    // Transferir datos entre tipos del mismo grupo (lógica existente)
-    
-    // Para eventos
-    if (tipoAnterior.startsWith('evento-') && nuevoTipo.startsWith('evento-')) {
-      if (nuevoTipo === 'evento-fin') {
-        setFormData(prev => ({
-          ...prev,
-          fechaInicioFin: prev.fechaInicio,
-          horaInicioFin: prev.horaInicio,
-          nota: tipoAnterior === 'evento-seguimiento' && prev.acciones && !prev.nota ? 
-                "Acciones realizadas:\n" + prev.acciones : prev.nota
-        }));
-        
-        // Validar fechas después de la actualización
-        setTimeout(() => validarFechasFin(), 100);
-      }
-      
-      if (nuevoTipo === 'evento-seguimiento' && tipoAnterior === 'evento-inicio' && !formData.acciones) {
-        setFormData(prev => ({ ...prev, acciones: "Acciones en proceso:\n" }));
-      }
-    }
-    
-    // Para incidentes
-    if (tipoAnterior.startsWith('incidente-') && nuevoTipo.startsWith('incidente-')) {
-      if (nuevoTipo === 'incidente-fin') {
-        setFormData(prev => ({
-          ...prev,
-          fechaInicioFin: prev.fechaInicio,
-          horaInicioFin: prev.horaInicio
-        }));
-        
-        // Validar fechas después de la actualización
-        setTimeout(() => validarFechasFin(), 100);
-      }
-      
-      if (nuevoTipo === 'incidente-avance' && tipoAnterior === 'incidente-inicio') {
-        setFormData(prev => ({ ...prev, accionesEnCurso: "Acción 1. Proveedor / Área interna\n" }));
-      }
-    }
-    
-    // Para mantenimientos
-    if (tipoAnterior.startsWith('mantenimiento-') && nuevoTipo.startsWith('mantenimiento-')) {
-      if (tipoAnterior === 'mantenimiento-inicio' && nuevoTipo === 'mantenimiento-fin') {
-        setFormData(prev => ({
-          ...prev,
-          fechaInicioFin: prev.fechaInicio,
-          horaInicioFin: prev.horaInicio
-        }));
-        
-        // Validar fechas después de la actualización
-        setTimeout(() => validarFechasFin(), 100);
-      }
     }
   };
 
-  const formatearFecha = (fechaISO) => {
-    if (!fechaISO) return "";
+  const validarFechasFin = () => {
+    const { fechaInicioFin, horaInicioFin, fechaFin, horaFin } = formData;
     
-    const partes = fechaISO.split('-');
-    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    if (!fechaInicioFin || !horaInicioFin || !fechaFin || !horaFin) {
+      setErrorFechaFin('');
+      return true;
+    }
+
+    try {
+      const inicio = new Date(`${fechaInicioFin}T${horaInicioFin}`);
+      const fin = new Date(`${fechaFin}T${horaFin}`);
+      
+      if (fin < inicio) {
+        setErrorFechaFin(`La fecha/hora de fin no puede ser anterior al inicio`);
+        const hoy = new Date();
+        const fechaActual = hoy.toISOString().split('T')[0];
+        const horaActual = hoy.toTimeString().split(' ')[0];
+        
+        setSugerenciasFecha([
+          { texto: `Usar fecha y hora actual: ${formatearFecha(fechaActual)} ${horaActual}`, fecha: fechaActual, hora: horaActual }
+        ]);
+        setMostrarErrorFecha(true);
+        return false;
+      }
+      
+      setErrorFechaFin('');
+      setSugerenciasFecha([]);
+      setMostrarErrorFecha(false);
+      return true;
+    } catch (error) {
+      setErrorFechaFin('Error al procesar las fechas');
+      return false;
+    }
+  };
+
+  const aplicarSugerenciaFecha = (fecha, hora) => {
+    setFormData(prev => ({ ...prev, fechaFin: fecha, horaFin: hora }));
+    setErrorFechaFin('');
+    setSugerenciasFecha([]);
+    setMostrarErrorFecha(false);
+    setAlertaMensaje(`Fecha corregida`);
+    setMostrarAlerta(true);
+    setTimeout(() => setMostrarAlerta(false), 3000);
   };
 
   const calcularDuracionTotal = () => {
-    if (!multiplesAlertamientos || periodosAlertamiento.length === 0) {
-      return formData.duracionCalculada;
-    }
-    
+    if (!multiplesAlertamientos || periodosAlertamiento.length === 0) return formData.duracionCalculada;
     let totalSegundos = 0;
-    
     periodosAlertamiento.forEach(periodo => {
-      if (periodo.duracion !== '00:00:00') {
+      if (periodo.duracion !== '00:00:00' && periodo.duracion !== 'Error') {
         const [horas, minutos, segundos] = periodo.duracion.split(':').map(Number);
         totalSegundos += (horas * 3600) + (minutos * 60) + segundos;
       }
     });
-    
     const horas = Math.floor(totalSegundos / 3600);
     const minutos = Math.floor((totalSegundos % 3600) / 60);
     const segundos = totalSegundos % 60;
-    
-    return `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}:${segundos < 10 ? '0' + segundos : segundos}`;
+    return `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
   };
 
   const formatearPeriodosMultiples = () => {
@@ -888,9 +524,7 @@ const GeneradorComunicados = () => {
       const fechaFinFormateada = formatearFecha(formData.fechaFin);
       return `Inicio: ${fechaInicioFormateada} - ${formData.horaInicioFin}\nFin: ${fechaFinFormateada} - ${formData.horaFin}\nDuración: ${formData.duracionCalculada}`;
     }
-    
     let resultado = `Duración Total: ${calcularDuracionTotal()}\nPeríodos de Alertamiento:`;
-    
     periodosAlertamiento.forEach((periodo, index) => {
       const fechaInicioFormateada = formatearFecha(periodo.fechaInicio);
       const fechaFinFormateada = formatearFecha(periodo.fechaFin);
@@ -898,208 +532,167 @@ const GeneradorComunicados = () => {
       resultado += `\n        Inicio: ${fechaInicioFormateada} - ${periodo.horaInicio}`;
       resultado += `\n        Fin: ${fechaFinFormateada} - ${periodo.horaFin}`;
       resultado += `\n        Duración: ${periodo.duracion}`;
-      if (index < periodosAlertamiento.length - 1) {
-        resultado += `\n`;
-      }
+      if (index < periodosAlertamiento.length - 1) resultado += `\n`;
     });
-    
     return resultado;
   };
 
   const formatearImpacto = (impacto, valorPorDefecto) => {
     const impactoVal = impacto || valorPorDefecto;
     const lineas = impactoVal.split('\n').filter(linea => linea.trim() !== '');
-    
-    if (lineas.length <= 1) {
-      // Una sola línea: mostrar en la misma línea
-      return `Impacto: ${impactoVal}`;
-    } else {
-      // Múltiples líneas: mostrar debajo
-      let resultado = "Impacto:";
-      lineas.forEach(linea => {
-        const lineaLimpia = linea.trim();
-        if (lineaLimpia) {
-          // Si la línea ya tiene bullet point, la dejamos como está; si no, la agregamos
-          if (lineaLimpia.startsWith('•') || lineaLimpia.startsWith('-') || lineaLimpia.startsWith('*')) {
-            resultado += `\n        ${lineaLimpia}`;
-          } else {
-            resultado += `\n        • ${lineaLimpia}`;
-          }
-        }
-      });
-      return resultado;
-    }
-  };
-
-  // Funciones para formatear encolamientos
-  const formatearInicioEncolamientos = () => {
-    if (!multiplesEncolamientos || serviciosEncolamiento.length === 0) return '';
-    
-    let resultado = '\nInicio de encolamiento por servicio:';
-    serviciosEncolamiento.forEach(servicio => {
-      const fechaFormateada = formatearFecha(servicio.fechaInicio);
-      resultado += `\n        • ${servicio.tipo}: ${fechaFormateada} - ${servicio.horaInicio}`;
-    });
-    return resultado;
-  };
-
-  const formatearDetalleEncolamientos = () => {
-    if (!multiplesEncolamientos || serviciosEncolamiento.length === 0) return '';
-    
-    let resultado = '\nEncolamiento detalle temporal:';
-    serviciosEncolamiento.forEach(servicio => {
-      const fechaInicioFormateada = formatearFecha(servicio.fechaInicio);
-      const fechaFinFormateada = formatearFecha(servicio.fechaFin);
-      resultado += `\n        ${servicio.tipo}:`;
-      resultado += `\n        Inicio: ${fechaInicioFormateada} - ${servicio.horaInicio}`;
-      resultado += `\n        Fin: ${fechaFinFormateada} - ${servicio.horaFin}`;
-      resultado += `\n        Duración: ${servicio.duracion}`;
-      resultado += '\n';
+    if (lineas.length <= 1) return `Impacto: ${impactoVal}`;
+    let resultado = "Impacto:";
+    lineas.forEach(linea => {
+      const lineaLimpia = linea.trim();
+      if (lineaLimpia) {
+        resultado += `\n        • ${lineaLimpia}`;
+      }
     });
     return resultado;
   };
 
   const formatearNotaEncolamientos = () => {
     if (!multiplesEncolamientos || serviciosEncolamiento.length === 0) return '';
-    
     let resultado = 'Encolamientos por servicio:';
     serviciosEncolamiento.forEach(servicio => {
       if (servicio.encolados && servicio.encolados.trim() !== '') {
-        resultado += `\n        • ${servicio.tipo}: ${servicio.encolados}`;
+        const tipoServicio = servicio.tipo === 'Otro' ? servicio.tipoCustom : servicio.tipo;
+        resultado += `\n        • ${tipoServicio}: ${servicio.encolados}`;
       }
     });
     return resultado;
   };
 
   const generarMensaje = () => {
-    // Validar fechas antes de generar - con valores actuales del estado
+    if (tipo.endsWith('-fin') && !validarFechasFin()) {
+      return;
+    }
+    
+    // Validar duración mayor a 4 horas
     if (tipo.endsWith('-fin')) {
-      const fechaInicioFin = formData.fechaInicioFin;
-      const horaInicioFin = formData.horaInicioFin;
-      const fechaFin = formData.fechaFin;
-      const horaFin = formData.horaFin;
+      let duracionAValidar = '';
       
-      if (fechaInicioFin && horaInicioFin && fechaFin && horaFin) {
-        try {
-          const inicio = new Date(`${fechaInicioFin}T${horaInicioFin}`);
-          const fin = new Date(`${fechaFin}T${horaFin}`);
-          
-          // Solo mostrar error si realmente la fecha fin es anterior
-          if (!isNaN(inicio.getTime()) && !isNaN(fin.getTime()) && fin.getTime() < inicio.getTime()) {
-            validarFechasFin(); // Esto mostrará el error y las sugerencias
-            setMostrarErrorFecha(true);
-            return;
-          }
-        } catch (error) {
-          console.error('Error al validar antes de generar:', error);
-        }
+      if (multiplesAlertamientos && periodosAlertamiento.length > 0) {
+        duracionAValidar = calcularDuracionTotal();
+      } else {
+        duracionAValidar = formData.duracionCalculada;
+      }
+      
+      // Convertir duración a horas
+      const [horas, minutos, segundos] = duracionAValidar.split(':').map(Number);
+      const duracionEnHoras = horas + (minutos / 60) + (segundos / 3600);
+      
+      if (duracionEnHoras > 4) {
+        setMostrarConfirmacionDuracion(true);
+        return;
       }
     }
     
-    // Verificar duración sospechosa antes de generar
-    if ((tipo.endsWith('-fin')) && verificarDuracionSospechosa()) {
-      setMostrarConfirmacionDuracion(true);
-      return;
-    }
-
-    // Continúa con la generación normal
     generarMensajeInterno();
   };
 
   const generarMensajeInterno = () => {
     let mensaje = "";
     
+    const getTitulo = () => {
+      if (!modoBLU) {
+        if (tipo.startsWith('evento-')) return 'GESTIÓN EVENTO';
+        if (tipo.startsWith('incidente-')) return 'GESTIÓN INCIDENTE';
+        if (tipo.startsWith('mantenimiento-')) return tipo.includes('inicio') ? '⚠️ MANTENIMIENTO' : '✅ MANTENIMIENTO';
+      }
+      if (tipo.startsWith('evento-')) {
+        if (tipoBLU === 'bian') return 'GESTIÓN EVENTO BIAN';
+        return 'GESTIÓN EVENTO BLU 2.0';
+      }
+      if (tipo.startsWith('incidente-')) return 'GESTIÓN INCIDENTE';
+      if (tipo.startsWith('mantenimiento-')) return tipo.includes('inicio') ? '⚠️ MANTENIMIENTO' : '✅ MANTENIMIENTO';
+    };
+    
     if (tipo === 'evento-inicio') {
-      const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
+      const descripcionVal = formData.descripcion || (modoBLU ? "Alertamiento [cluster/namespace]" : "DESCRIPCION DEL INCIDENTE");
       const estadoVal = formData.estadoInicio || "En revisión";
       const fechaFormateada = formatearFecha(formData.fechaInicio);
-      const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
-      mensaje = `GESTIÓN EVENTO\n🟡 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
+      mensaje = `${getTitulo()}\n🟡 ${estadoVal}\n\nDescripción: ${descripcionVal}`;
       
-      // Agregar inicio normal o encolamientos
-      if (multiplesEncolamientos) {
-        mensaje += formatearInicioEncolamientos();
-      } else {
-        mensaje += `\nInicio: ${fechaFormateada} - ${formData.horaInicio}`;
+      if (!modoBLU) {
+        const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
+        mensaje = `${getTitulo()}\n🟡 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
       }
+      
+      mensaje += `\nInicio: ${fechaFormateada} - ${formData.horaInicio}`;
     }
     else if (tipo === 'evento-seguimiento') {
-      const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
-      const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
+      const descripcionVal = formData.descripcion || (modoBLU ? "Alertamiento [cluster/namespace]" : "DESCRIPCION DEL INCIDENTE");
       
-      mensaje = `GESTIÓN EVENTO\n🔁 Seguimiento\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
+      mensaje = `${getTitulo()}\n🔁 Seguimiento\n\nDescripción: ${descripcionVal}`;
+      
+      if (!modoBLU) {
+        const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
+        mensaje += `\n${impactoFormateado}`;
+      }
       
       if (formData.acciones && formData.acciones.trim()) {
         mensaje += "\nAcciones:";
-        const lineasAcciones = formData.acciones.split('\n');
-        for (let i = 0; i < lineasAcciones.length; i++) {
-          const linea = lineasAcciones[i].trim();
-          if (linea) {
-            if (linea.includes('%%')) {
-              const [accion, responsable] = linea.split('%%').map(s => s.trim());
+        formData.acciones.split('\n').forEach(linea => {
+          const lineaLimpia = linea.trim();
+          if (lineaLimpia) {
+            if (lineaLimpia.includes('%%')) {
+              const [accion, responsable] = lineaLimpia.split('%%').map(s => s.trim());
               mensaje += `\n        • ${accion}`;
-              if (responsable) {
-                mensaje += `\n          Responsable: ${responsable}`;
-              }
+              if (responsable) mensaje += `\n          Responsable: ${responsable}`;
             } else {
-              mensaje += `\n        • ${linea}`;
+              mensaje += `\n        • ${lineaLimpia}`;
             }
           }
-        }
+        });
       }
     }
     else if (tipo === 'evento-fin') {
-      const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
+      const descripcionVal = formData.descripcion || (modoBLU ? "Alertamiento [cluster/namespace]" : "DESCRIPCION DEL INCIDENTE");
       const estadoVal = formData.estadoFin || "Recuperado";
-      const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
-      mensaje = `GESTIÓN EVENTO\n🟢 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
+      mensaje = `${getTitulo()}\n🟢 ${estadoVal}\n\nDescripción: ${descripcionVal}`;
       
-      // Agregar períodos o encolamientos
-      if (multiplesEncolamientos) {
-        mensaje += formatearDetalleEncolamientos();
-      } else {
-        const periodosFormateados = formatearPeriodosMultiples();
-        mensaje += `\n${periodosFormateados}`;
+      if (!modoBLU) {
+        const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
+        mensaje = `${getTitulo()}\n🟢 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
       }
+      
+      mensaje += `\n${formatearPeriodosMultiples()}`;
       
       if (formData.acciones && formData.acciones.trim()) {
         mensaje += "\nAcciones:";
-        const lineasAcciones = formData.acciones.split('\n');
-        for (let i = 0; i < lineasAcciones.length; i++) {
-          const linea = lineasAcciones[i].trim();
-          if (linea) {
-            if (linea.includes('%%')) {
-              const [accion, responsable] = linea.split('%%').map(s => s.trim());
+        formData.acciones.split('\n').forEach(linea => {
+          const lineaLimpia = linea.trim();
+          if (lineaLimpia) {
+            if (lineaLimpia.includes('%%')) {
+              const [accion, responsable] = lineaLimpia.split('%%').map(s => s.trim());
               mensaje += `\n        • ${accion}`;
-              if (responsable) {
-                mensaje += `\n          Responsable: ${responsable}`;
-              }
+              if (responsable) mensaje += `\n          Responsable: ${responsable}`;
             } else {
-              mensaje += `\n        • ${linea}`;
+              mensaje += `\n        • ${lineaLimpia}`;
             }
           }
-        }
+        });
       }
     }
     else if (tipo === 'mantenimiento-inicio') {
       const motivoVal = formData.motivo || "Descripción del Mantenimiento";
-      const ejecutorVal = formData.ejecutor || "Nombre del proveedor o área interna que ejecuta el mantenimiento";
+      const ejecutorVal = formData.ejecutor || "Proveedor o área interna";
       const estadoVal = formData.estadoInicio || "En curso";
       const fechaFormateada = formatearFecha(formData.fechaInicio);
       const impactoFormateado = formatearImpacto(formData.impactoMant, "Impacto servicio / usuarios / clientes");
       
-      mensaje = `⚠️ MANTENIMIENTO\n\nEstado: ${estadoVal}\nMotivo: ${motivoVal}\n${impactoFormateado}\nEjecutor: ${ejecutorVal}\nInicio: ${fechaFormateada} - ${formData.horaInicio}`;
+      mensaje = `${getTitulo()}\n\nEstado: ${estadoVal}\nMotivo: ${motivoVal}\n${impactoFormateado}\nEjecutor: ${ejecutorVal}\nInicio: ${fechaFormateada} - ${formData.horaInicio}`;
     }
     else if (tipo === 'mantenimiento-fin') {
       const motivoVal = formData.motivo || "Descripción del Mantenimiento";
-      const ejecutorVal = formData.ejecutor || "Nombre del proveedor o área interna que ejecuta el mantenimiento";
+      const ejecutorVal = formData.ejecutor || "Proveedor o área interna";
       const estadoVal = formData.estadoFin || "Finalizado";
       const impactoFormateado = formatearImpacto(formData.impactoMant, "Impacto servicio / usuarios / clientes");
-      const periodosFormateados = formatearPeriodosMultiples();
       
-      mensaje = `✅ MANTENIMIENTO\n\nEstado: ${estadoVal}\nMotivo: ${motivoVal}\n${impactoFormateado}\nEjecutor: ${ejecutorVal}\n${periodosFormateados}`;
+      mensaje = `${getTitulo()}\n\nEstado: ${estadoVal}\nMotivo: ${motivoVal}\n${impactoFormateado}\nEjecutor: ${ejecutorVal}\n${formatearPeriodosMultiples()}`;
     }
     else if (tipo === 'incidente-inicio') {
       const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
@@ -1107,96 +700,78 @@ const GeneradorComunicados = () => {
       const fechaFormateada = formatearFecha(formData.fechaInicio);
       const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
-      mensaje = `GESTIÓN INCIDENTE\n🟡 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}\nInicio: ${fechaFormateada} - ${formData.horaInicio}`;
+      mensaje = `${getTitulo()}\n🟡 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}\nInicio: ${fechaFormateada} - ${formData.horaInicio}`;
     }
     else if (tipo === 'incidente-avance') {
       const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
       const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
-      mensaje = `GESTIÓN INCIDENTE\n🔁 Avance\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
+      mensaje = `${getTitulo()}\n🔁 Avance\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
       
       if (formData.accionesEnCurso && formData.accionesEnCurso.trim()) {
         mensaje += "\nAcciones en curso:";
-        const lineasAcciones = formData.accionesEnCurso.split('\n');
-        for (let i = 0; i < lineasAcciones.length; i++) {
-          const linea = lineasAcciones[i].trim();
-          if (linea) {
-            if (linea.includes('%%')) {
-              const [accion, responsable] = linea.split('%%').map(s => s.trim());
+        formData.accionesEnCurso.split('\n').forEach(linea => {
+          const lineaLimpia = linea.trim();
+          if (lineaLimpia) {
+            if (lineaLimpia.includes('%%')) {
+              const [accion, responsable] = lineaLimpia.split('%%').map(s => s.trim());
               mensaje += `\n        • ${accion}`;
-              if (responsable) {
-                mensaje += `\n          Responsable: ${responsable}`;
-              }
+              if (responsable) mensaje += `\n          Responsable: ${responsable}`;
             } else {
-              mensaje += `\n        • ${linea}`;
+              mensaje += `\n        • ${lineaLimpia}`;
             }
           }
-        }
+        });
       }
       
       if (formData.accionesEjecutadas && formData.accionesEjecutadas.trim()) {
         mensaje += "\nAcciones ejecutadas:";
-        const lineasAcciones = formData.accionesEjecutadas.split('\n');
-        for (let i = 0; i < lineasAcciones.length; i++) {
-          const linea = lineasAcciones[i].trim();
-          if (linea) {
-            if (linea.includes('%%')) {
-              const [accion, responsable] = linea.split('%%').map(s => s.trim());
+        formData.accionesEjecutadas.split('\n').forEach(linea => {
+          const lineaLimpia = linea.trim();
+          if (lineaLimpia) {
+            if (lineaLimpia.includes('%%')) {
+              const [accion, responsable] = lineaLimpia.split('%%').map(s => s.trim());
               mensaje += `\n        • ${accion}`;
-              if (responsable) {
-                mensaje += `\n          Responsable: ${responsable}`;
-              }
+              if (responsable) mensaje += `\n          Responsable: ${responsable}`;
             } else {
-              mensaje += `\n        • ${linea}`;
+              mensaje += `\n        • ${lineaLimpia}`;
             }
           }
-        }
+        });
       }
     }
     else if (tipo === 'incidente-fin') {
       const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
       const estadoFin = 'Recuperado';
       const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
-      const periodosFormateados = formatearPeriodosMultiples();
       
-      mensaje = `GESTIÓN INCIDENTE\n🟢 ${estadoFin}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}\n${periodosFormateados}`;
+      mensaje = `${getTitulo()}\n🟢 ${estadoFin}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}\n${formatearPeriodosMultiples()}`;
       
       if (formData.accionesEjecutadas && formData.accionesEjecutadas.trim()) {
         mensaje += "\nAcciones ejecutadas:";
-        const lineasAcciones = formData.accionesEjecutadas.split('\n');
-        for (let i = 0; i < lineasAcciones.length; i++) {
-          const linea = lineasAcciones[i].trim();
-          if (linea) {
-            if (linea.includes('%%')) {
-              const [accion, responsable] = linea.split('%%').map(s => s.trim());
+        formData.accionesEjecutadas.split('\n').forEach(linea => {
+          const lineaLimpia = linea.trim();
+          if (lineaLimpia) {
+            if (lineaLimpia.includes('%%')) {
+              const [accion, responsable] = lineaLimpia.split('%%').map(s => s.trim());
               mensaje += `\n        • ${accion}`;
-              if (responsable) {
-                mensaje += `\n          Responsable: ${responsable}`;
-              }
+              if (responsable) mensaje += `\n          Responsable: ${responsable}`;
             } else {
-              mensaje += `\n        • ${linea}`;
+              mensaje += `\n        • ${lineaLimpia}`;
             }
           }
-        }
+        });
       }
     }
     
-    // Agregar nota si existe
     if (formData.nota || (multiplesEncolamientos && tipo.startsWith('evento-'))) {
       if (tipo.startsWith('mantenimiento-')) {
-        mensaje += `\n\n📣 NOTA:\n        Observaciones con detalle que permitan brindar más información en el caso que amerite.`;
-        if (formData.nota.trim() !== "") {
-          mensaje = mensaje.replace("Observaciones con detalle que permitan brindar más información en el caso que amerite.", formData.nota);
-        }
+        mensaje += `\n\n📣 NOTA:\n        ${formData.nota || 'Observaciones adicionales'}`;
       } else {
         mensaje += `\n\n📣 NOTA:`;
-        
-        // Agregar nota personalizada si existe
         if (formData.nota && formData.nota.trim() !== "") {
           mensaje += `\n        ${formData.nota}`;
         }
-        
-        // Agregar encolamientos en eventos
         if (multiplesEncolamientos && tipo.startsWith('evento-')) {
           const notaEncolamientos = formatearNotaEncolamientos();
           if (notaEncolamientos) {
@@ -1207,8 +782,6 @@ const GeneradorComunicados = () => {
             }
           }
         }
-        
-        // Si no hay nota personalizada ni encolamientos, no agregar la sección
         if (!formData.nota && !multiplesEncolamientos) {
           mensaje = mensaje.replace('\n\n📣 NOTA:', '');
         }
@@ -1221,460 +794,253 @@ const GeneradorComunicados = () => {
 
   const copiar = () => {
     if (!resultado) {
-      alert("No hay ningún comunicado generado para copiar.");
+      alert("No hay comunicado generado");
       return;
     }
-    
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(resultado)
-        .then(() => {
-          setAlertaMensaje('¡Comunicado copiado al portapapeles!');
-          setMostrarAlerta(true);
-          setTimeout(() => setMostrarAlerta(false), 3000);
-        })
-        .catch(err => {
-          console.error('Error al copiar:', err);
-          copiarMetodoAlternativo();
-        });
-    } else {
-      copiarMetodoAlternativo();
-    }
-  };
-
-  const copiarMetodoAlternativo = () => {
-    const textArea = document.createElement("textarea");
-    textArea.value = resultado;
-    
-    textArea.style.position = "fixed";
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.width = "2em";
-    textArea.style.height = "2em";
-    textArea.style.padding = "0";
-    textArea.style.border = "none";
-    textArea.style.outline = "none";
-    textArea.style.boxShadow = "none";
-    textArea.style.background = "transparent";
-    
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    
-    try {
-      const successful = document.execCommand('copy');
-      
-      if (successful) {
-        setAlertaMensaje('¡Comunicado copiado al portapapeles!');
+    navigator.clipboard.writeText(resultado)
+      .then(() => {
+        setAlertaMensaje('Comunicado copiado');
         setMostrarAlerta(true);
         setTimeout(() => setMostrarAlerta(false), 3000);
-      } else {
-        alert("No se pudo copiar automáticamente. Por favor, selecciona y copia el texto manualmente:\n\n" + resultado);
-      }
-    } catch (err) {
-      console.error('Error al copiar:', err);
-      alert("Error al copiar. Por favor, selecciona y copia el texto manualmente.");
-    } finally {
-      document.body.removeChild(textArea);
-    }
+      })
+      .catch(() => {
+        alert("Error al copiar");
+      });
   };
 
-  // Renderizado condicional para login
+  // Estilos
+  const btnPrimary = "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium transition-colors";
+  const btnSecondary = "bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded font-medium transition-colors";
+  const input = "w-full p-3 bg-gray-900 border border-gray-700 rounded text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none";
+  const label = "block mb-2 text-sm font-medium text-gray-300";
+  const card = "bg-gray-800 rounded-lg p-6 border border-gray-700";
+
+  // Login
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          <div className="bg-slate-800/95 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-emerald-400/40">
-            {/* Logo y título */}
-            <div className="text-center mb-8">
-              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-emerald-600 to-teal-600 rounded-full flex items-center justify-center shadow-lg mb-4">
-                <MessageSquare className="w-12 h-12 text-white" />
-              </div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent mb-2">
-                Generador de Comunicados
-              </h1>
-              <p className="text-gray-400 text-sm">Versión 5.0 - Acceso Restringido</p>
-            </div>
-
-            {/* Formulario de login */}
-            <div className="space-y-6">
-              <div>
-                <label className="block text-gray-300 text-sm font-semibold mb-2">
-                  Usuario
-                </label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-emerald-400" />
-                  <input
-                    type="text"
-                    name="usuario"
-                    value={loginForm.usuario}
-                    onChange={handleLoginInputChange}
-                    className="w-full pl-12 pr-4 py-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                    placeholder="Ingresa tu usuario"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-gray-300 text-sm font-semibold mb-2">
-                  Contraseña
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-emerald-400" />
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    value={loginForm.password}
-                    onChange={handleLoginInputChange}
-                    className="w-full pl-12 pr-12 py-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                    placeholder="Ingresa tu contraseña"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-emerald-400 transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
-                </div>
-              </div>
-
-              {loginError && (
-                <div className="p-4 rounded-xl bg-red-500/20 border-l-4 border-red-500">
-                  <p className="text-red-300 text-sm flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-2" />
-                    {loginError}
-                  </p>
-                </div>
-              )}
-
-              <button
-                onClick={handleLogin}
-                className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-teal-500/25 transform hover:-translate-y-1"
-              >
-                <div className="flex items-center justify-center gap-2">
-                  <Zap className="w-5 h-5" />
-                  Acceder al Sistema
-                </div>
-              </button>
-            </div>
-
-            {/* Banner informativo */}
-            <div className="mt-6 p-4 bg-emerald-700/15 border border-emerald-400/30 rounded-xl">
-              <p className="text-emerald-200/70 text-xs text-center">
-                💬 <strong>Generador de Comunicados</strong> - Eventos, Incidentes y Mantenimientos
-              </p>
-              <p className="text-emerald-200/50 text-xs text-center mt-2">
-                Sistema especializado para comunicaciones de monitoreo
-              </p>
-            </div>
+      <div className="min-h-screen bg-black flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-gray-900 rounded-lg p-8 border border-gray-800">
+          <div className="text-center mb-8">
+            <MessageSquare className="w-16 h-16 mx-auto text-blue-500 mb-4" />
+            <h1 className="text-2xl font-bold text-white mb-2">Generador de Comunicados</h1>
+            <p className="text-gray-500 text-sm">v5.0 - Acceso Restringido</p>
+            <p className="text-gray-600 text-xs mt-1">Actualizado: 10/08/2025</p>
           </div>
-
-          <div className="text-center mt-6">
-            <p className="text-gray-400 text-xs">
-              Generador de Comunicados Pro v5.0 - Desarrollado por Luis Alberto Herrera Lara
-            </p>
+          <div className="space-y-4">
+            <div>
+              <label className={label}>Usuario</label>
+              <input
+                type="text"
+                name="usuario"
+                value={loginForm.usuario}
+                onChange={handleLoginInputChange}
+                className={input}
+                placeholder="Usuario"
+              />
+            </div>
+            <div>
+              <label className={label}>Contraseña</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={loginForm.password}
+                  onChange={handleLoginInputChange}
+                  className={input}
+                  placeholder="Contraseña"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+            {loginError && (
+              <div className="p-3 rounded bg-red-900/30 border border-red-800">
+                <p className="text-red-400 text-sm">{loginError}</p>
+              </div>
+            )}
+            <button onClick={handleLogin} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded font-medium transition-colors">
+              Acceder
+            </button>
           </div>
         </div>
       </div>
     );
   }
 
-  // Aplicación principal
+  // App principal - Parte 1: Header y Modal
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <header className="bg-gradient-to-r from-emerald-700/30 via-teal-700/30 to-green-700/30 backdrop-blur-lg p-8 text-center rounded-3xl mb-10 border border-emerald-400/30 shadow-2xl relative">
-          {/* Semáforo de estado */}
-          <div className="absolute top-4 left-4 bg-slate-800/80 backdrop-blur-sm rounded-xl p-3 border border-emerald-400/30">
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-lg">{getEstadoSemaforo().color}</span>
-              <div>
-                <div className={`font-semibold ${getEstadoSemaforo().clase}`}>
-                  {calcularTiempoAbierto().horas}h {calcularTiempoAbierto().minutos}m abierta
-                </div>
-                <div className="text-xs text-gray-400">{getEstadoSemaforo().estado}</div>
-              </div>
-              <button
-                onClick={actualizarFechasAhora}
-                className="ml-2 bg-teal-600/20 hover:bg-teal-600/40 text-teal-300 px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1"
-              >
-                <RefreshCw className="w-3 h-3" />
-                Actualizar
-              </button>
-            </div>
+    <div className="min-h-screen bg-black text-gray-100">
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        <header className="bg-gray-900 p-6 rounded-lg mb-6 border border-gray-800 relative">
+          <div className="absolute top-4 left-4 bg-gray-800 rounded p-2 text-xs">
+            <span className={getEstadoSemaforo().clase}>{getEstadoSemaforo().color} {calcularTiempoAbierto().horas}h {calcularTiempoAbierto().minutos}m</span>
+            <button onClick={actualizarFechasAhora} className="ml-2 text-blue-400 hover:text-blue-300">
+              <RefreshCw className="w-3 h-3 inline" />
+            </button>
           </div>
-
-          {/* Botón de logout */}
-          <button
-            onClick={handleLogout}
-            className="absolute top-4 right-4 bg-slate-700/60 hover:bg-slate-600/60 text-gray-300 hover:text-white p-2 rounded-lg transition-all duration-200 text-sm flex items-center gap-1"
-            title="Cerrar Sesión"
-          >
-            <User className="w-4 h-4" />
-            <span className="hidden sm:inline">Salir</span>
+          <button onClick={handleLogout} className="absolute top-4 right-4 text-gray-400 hover:text-white text-sm">
+            Salir
           </button>
-
-          <div className="flex items-center justify-center mb-6">
-            <div className="relative">
-              <div className="w-24 h-24 mx-auto bg-gradient-to-br from-emerald-600 to-teal-600 rounded-full flex items-center justify-center shadow-lg">
-                <MessageSquare className="w-14 h-14 text-white" />
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-teal-500 rounded-full flex items-center justify-center border-4 border-slate-900">
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-            </div>
-          </div>
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-300 via-teal-300 to-green-300 bg-clip-text text-transparent tracking-wider mb-3">
-            Generador de Comunicados
-          </h1>
-          <p className="text-xl text-gray-200">
-            Sistema Avanzado de Comunicaciones para el Grupo de Monitoreo
-          </p>
-          <div className="flex items-center justify-center gap-4 mt-4 text-sm text-gray-300">
-            <span className="flex items-center gap-1">
-              <Bell className="w-4 h-4" />
-              Notificaciones en tiempo real
-            </span>
-            <span className="w-1 h-1 bg-gray-500 rounded-full"></span>
-            <span className="flex items-center gap-1">
-              <Settings className="w-4 h-4" />
-              Configuración avanzada
-            </span>
-            <span className="w-1 h-1 bg-gray-500 rounded-full"></span>
-            <span className="flex items-center gap-1 text-emerald-300">
-              <User className="w-4 h-4" />
-              Usuario: {loginForm.usuario || 'invitado'}
-            </span>
+          <div className="text-center">
+            <MessageSquare className="w-12 h-12 mx-auto text-blue-500 mb-3" />
+            <h1 className="text-3xl font-bold text-white mb-2">Generador de Comunicados</h1>
+            <p className="text-gray-400">Sistema de Comunicaciones - Monitoreo</p>
+            <button
+              onClick={() => setModoBLU(!modoBLU)}
+              className={`mt-3 px-4 py-2 rounded text-sm ${modoBLU ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+            >
+              {modoBLU ? '🔵 BLU 2.0 Activo' : '⚪ Activar Modo BLU 2.0'}
+            </button>
+            {modoBLU && (
+              <>
+                <div className="mt-3 inline-flex gap-2">
+                  {['aplicacion', 'infraestructura', 'bian'].map(t => (
+                    <button
+                      key={t}
+                      onClick={() => setTipoBLU(t)}
+                      className={`px-3 py-1 rounded text-xs ${tipoBLU === t ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+                    >
+                      {t === 'aplicacion' ? '📱 App' : t === 'infraestructura' ? '🖥️ Infra' : '⚠️ BIAN'}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setMostrarPegarAlerta(!mostrarPegarAlerta)}
+                  className="ml-3 px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-xs"
+                >
+                  <FileText className="w-3 h-3 inline mr-1" />
+                  Pegar Alerta
+                </button>
+              </>
+            )}
           </div>
         </header>
         
-        <div className="grid lg:grid-cols-4 gap-8">
-          {/* Panel de tipos de comunicado */}
+        {/* Modal para pegar alerta BLU */}
+        {mostrarPegarAlerta && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+            <div className="bg-gray-900 rounded-lg p-6 border border-gray-700 max-w-3xl mx-4 w-full">
+              <h3 className="text-lg font-bold text-white mb-3">Pegar Alerta BLU 2.0</h3>
+              <p className="text-sm text-gray-400 mb-3">Pega el contenido completo de la alerta y el sistema detectará automáticamente el tipo y extraerá la información</p>
+              <textarea
+                value={alertaCompleta}
+                onChange={(e) => setAlertaCompleta(e.target.value)}
+                className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white placeholder-gray-500 h-64 font-mono text-xs"
+                placeholder="Pega aquí el contenido de la alerta..."
+              />
+              <div className="flex gap-3 mt-4">
+                <button onClick={procesarAlertaBLU} className={btnPrimary + " flex-1"}>
+                  <AlertOctagon className="w-4 h-4 inline mr-2" />
+                  Procesar Alerta
+                </button>
+                <button onClick={() => {setMostrarPegarAlerta(false); setAlertaCompleta('');}} className={btnSecondary + " flex-1"}>
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Contenido principal - Parte 2 */}
+        <div className="grid lg:grid-cols-4 gap-6">
+          {/* Panel lateral izquierdo */}
           <div className="lg:col-span-1">
-            <div className="space-y-6">
-              <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-emerald-400/40 sticky top-8">
-                <h2 className="text-xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2 mb-4">
-                  <ChevronRight className="w-5 h-5 text-emerald-400" />
-                  Tipo de Comunicado
-                </h2>
-                
-                <div className="space-y-4">
-                  {/* Eventos */}
-                  <div className="border border-emerald-400/40 rounded-lg p-3">
-                    <h3 className="text-sm font-semibold text-gray-300 mb-2 flex items-center uppercase tracking-wider">
-                      <AlertCircle className="w-4 h-4 mr-1.5 text-emerald-400" />
-                      Eventos
-                    </h3>
+            <div className="space-y-4">
+              <div className={card}>
+                <h2 className="text-lg font-bold text-white mb-4">Tipo de Comunicado</h2>
+                <div className="space-y-3">
+                  <div className="border border-gray-700 rounded p-3">
+                    <h3 className="text-xs font-semibold text-gray-400 mb-2 uppercase">Eventos</h3>
                     <div className="grid grid-cols-3 gap-2">
-                      <button
-                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                          tipo === 'evento-inicio'
-                            ? 'bg-emerald-600/90 text-white shadow-lg shadow-emerald-600/40'
-                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-emerald-400/20 border border-transparent'
-                        }`}
-                        onClick={() => seleccionarTipo('evento-inicio')}
-                      >
-                        <span className="text-lg mb-1">🟡</span>
-                        <span className="text-xs font-medium">Inicio</span>
-                      </button>
-                      <button
-                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                          tipo === 'evento-seguimiento'
-                            ? 'bg-teal-600/90 text-white shadow-lg shadow-teal-600/40'
-                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-teal-400/20 border border-transparent'
-                        }`}
-                        onClick={() => seleccionarTipo('evento-seguimiento')}
-                      >
-                        <RefreshCw className="w-4 h-4 mb-1" />
-                        <span className="text-xs font-medium">Seguim.</span>
-                      </button>
-                      <button
-                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                          tipo === 'evento-fin'
-                            ? 'bg-green-600/90 text-white shadow-lg shadow-green-600/40'
-                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-green-400/20 border border-transparent'
-                        }`}
-                        onClick={() => seleccionarTipo('evento-fin')}
-                      >
-                        <span className="text-lg mb-1">🟢</span>
-                        <span className="text-xs font-medium">Fin</span>
-                      </button>
+                      {['evento-inicio', 'evento-seguimiento', 'evento-fin'].map((t, i) => (
+                        <button
+                          key={t}
+                          className={`p-2 rounded text-xs ${tipo === t ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
+                          onClick={() => seleccionarTipo(t)}
+                        >
+                          {i === 0 ? '🟡' : i === 1 ? '🔁' : '🟢'}<br/>{i === 0 ? 'Inicio' : i === 1 ? 'Seg.' : 'Fin'}
+                        </button>
+                      ))}
                     </div>
                   </div>
-                  
-                  {/* Mantenimientos */}
-                  <div className="border border-emerald-400/40 rounded-lg p-3">
-                    <h3 className="text-sm font-semibold text-gray-300 mb-2 flex items-center uppercase tracking-wider">
-                      <Wrench className="w-4 h-4 mr-1.5 text-teal-400" />
-                      Mantenimientos
-                    </h3>
+                  <div className="border border-gray-700 rounded p-3">
+                    <h3 className="text-xs font-semibold text-gray-400 mb-2 uppercase">Mantenimientos</h3>
                     <div className="grid grid-cols-2 gap-2">
-                      <button
-                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                          tipo === 'mantenimiento-inicio'
-                            ? 'bg-emerald-700/90 text-white shadow-lg shadow-emerald-700/40'
-                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-emerald-400/20 border border-transparent'
-                        }`}
-                        onClick={() => seleccionarTipo('mantenimiento-inicio')}
-                      >
-                        <span className="text-lg mb-1">⚠️</span>
-                        <span className="text-xs font-medium">Inicio</span>
-                      </button>
-                      <button
-                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                          tipo === 'mantenimiento-fin'
-                            ? 'bg-green-600/90 text-white shadow-lg shadow-green-600/40'
-                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-green-400/20 border border-transparent'
-                        }`}
-                        onClick={() => seleccionarTipo('mantenimiento-fin')}
-                      >
-                        <span className="text-lg mb-1">✅</span>
-                        <span className="text-xs font-medium">Fin</span>
-                      </button>
+                      {['mantenimiento-inicio', 'mantenimiento-fin'].map((t, i) => (
+                        <button
+                          key={t}
+                          className={`p-2 rounded text-xs ${tipo === t ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
+                          onClick={() => seleccionarTipo(t)}
+                        >
+                          {i === 0 ? '⚠️' : '✅'}<br/>{i === 0 ? 'Inicio' : 'Fin'}
+                        </button>
+                      ))}
                     </div>
                   </div>
-                  
-                  {/* Incidentes */}
-                  <div className="border border-emerald-400/40 rounded-lg p-3">
-                    <h3 className="text-sm font-semibold text-gray-300 mb-2 flex items-center uppercase tracking-wider">
-                      <AlertTriangle className="w-4 h-4 mr-1.5 text-emerald-300" />
-                      Incidentes
-                    </h3>
+                  <div className="border border-gray-700 rounded p-3">
+                    <h3 className="text-xs font-semibold text-gray-400 mb-2 uppercase">Incidentes</h3>
                     <div className="grid grid-cols-3 gap-2">
-                      <button
-                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                          tipo === 'incidente-inicio'
-                            ? 'bg-emerald-600/90 text-white shadow-lg shadow-emerald-600/40'
-                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-emerald-400/20 border border-transparent'
-                        }`}
-                        onClick={() => seleccionarTipo('incidente-inicio')}
-                      >
-                        <span className="text-lg mb-1">🟡</span>
-                        <span className="text-xs font-medium">Inicio</span>
-                      </button>
-                      <button
-                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                          tipo === 'incidente-avance'
-                            ? 'bg-teal-600/90 text-white shadow-lg shadow-teal-600/40'
-                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-teal-400/20 border border-transparent'
-                        }`}
-                        onClick={() => seleccionarTipo('incidente-avance')}
-                      >
-                        <RefreshCw className="w-4 h-4 mb-1" />
-                        <span className="text-xs font-medium">Avance</span>
-                      </button>
-                      <button
-                        className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${
-                          tipo === 'incidente-fin'
-                            ? 'bg-green-600/90 text-white shadow-lg shadow-green-600/40'
-                            : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700/70 hover:border-green-400/20 border border-transparent'
-                        }`}
-                        onClick={() => seleccionarTipo('incidente-fin')}
-                      >
-                        <span className="text-lg mb-1">🟢</span>
-                        <span className="text-xs font-medium">Fin</span>
-                      </button>
+                      {['incidente-inicio', 'incidente-avance', 'incidente-fin'].map((t, i) => (
+                        <button
+                          key={t}
+                          className={`p-2 rounded text-xs ${tipo === t ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
+                          onClick={() => seleccionarTipo(t)}
+                        >
+                          {i === 0 ? '🟡' : i === 1 ? '🔁' : '🟢'}<br/>{i === 0 ? 'Inicio' : i === 1 ? 'Avance' : 'Fin'}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Panel de Servicios Transaccionales */}
-              <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-emerald-400/40">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2">
-                    <CreditCard className="w-5 h-5 text-emerald-400" />
-                    Servicios Transaccionales
-                  </h2>
-                  <button
-                    onClick={() => setMostrarServicios(!mostrarServicios)}
-                    className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 p-2 rounded-lg transition-all duration-200"
-                  >
+              <div className={card}>
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-sm font-bold text-white">Servicios Transaccionales</h2>
+                  <button onClick={() => setMostrarServicios(!mostrarServicios)} className="text-gray-400 hover:text-white">
                     {mostrarServicios ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
                   </button>
                 </div>
-
                 {mostrarServicios && (
-                  <div className="space-y-4">
-                    <div className="flex gap-2 mb-4">
-                      <button
-                        onClick={limpiarImpactos}
-                        className="text-xs bg-slate-700/60 hover:bg-slate-600/60 text-gray-300 px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-1"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                        Limpiar
-                      </button>
-                    </div>
-
-                    {/* DATAFAST */}
-                    <div className="border border-blue-400/30 rounded-lg p-3">
-                      <h4 className="text-xs font-semibold text-blue-300 mb-2 uppercase tracking-wider">
-                        💳 DATAFAST
-                      </h4>
-                      <div className="grid grid-cols-1 gap-2">
-                        {SERVICIOS_TRANSACCIONALES.filter(s => s.categoria === 'datafast').map(servicio => (
-                          <button
-                            key={servicio.id}
-                            onClick={() => seleccionarServicio(servicio)}
-                            className="text-left bg-slate-700/50 hover:bg-blue-600/30 border border-transparent hover:border-blue-400/40 text-gray-300 hover:text-blue-200 p-2 rounded-lg transition-all duration-200 text-xs"
-                          >
-                            <div className="font-medium">{servicio.nombre}</div>
-                          </button>
-                        ))}
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    <button onClick={limpiarImpactos} className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 rounded">
+                      <Trash2 className="w-3 h-3 inline mr-1" />Limpiar
+                    </button>
+                    
+                    {['datafast', 'banred', 'internacional'].map(categoria => (
+                      <div key={categoria} className="border border-gray-700 rounded p-2">
+                        <h4 className="text-xs font-semibold text-gray-400 mb-1 uppercase">{categoria}</h4>
+                        <div className="space-y-1">
+                          {SERVICIOS_TRANSACCIONALES.filter(s => s.categoria === categoria).map(servicio => (
+                            <button
+                              key={servicio.id}
+                              onClick={() => seleccionarServicio(servicio)}
+                              className="text-left w-full text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 p-1 rounded truncate"
+                              title={servicio.descripcion}
+                            >
+                              {servicio.nombre}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-
-                    {/* BANRED */}
-                    <div className="border border-purple-400/30 rounded-lg p-3">
-                      <h4 className="text-xs font-semibold text-purple-300 mb-2 uppercase tracking-wider">
-                        🏦 BANRED
-                      </h4>
-                      <div className="grid grid-cols-1 gap-2">
-                        {SERVICIOS_TRANSACCIONALES.filter(s => s.categoria === 'banred').map(servicio => (
-                          <button
-                            key={servicio.id}
-                            onClick={() => seleccionarServicio(servicio)}
-                            className="text-left bg-slate-700/50 hover:bg-purple-600/30 border border-transparent hover:border-purple-400/40 text-gray-300 hover:text-purple-200 p-2 rounded-lg transition-all duration-200 text-xs"
-                          >
-                            <div className="font-medium">{servicio.nombre}</div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* INTERNACIONAL */}
-                    <div className="border border-teal-400/30 rounded-lg p-3">
-                      <h4 className="text-xs font-semibold text-teal-300 mb-2 uppercase tracking-wider">
-                        🌍 INTERNACIONAL
-                      </h4>
-                      <div className="grid grid-cols-1 gap-2">
-                        {SERVICIOS_TRANSACCIONALES.filter(s => s.categoria === 'internacional').map(servicio => (
-                          <button
-                            key={servicio.id}
-                            onClick={() => seleccionarServicio(servicio)}
-                            className="text-left bg-slate-700/50 hover:bg-teal-600/30 border border-transparent hover:border-teal-400/40 text-gray-300 hover:text-teal-200 p-2 rounded-lg transition-all duration-200 text-xs"
-                          >
-                            <div className="font-medium">{servicio.nombre}</div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* OTROS SERVICIOS */}
-                    <div className="border border-emerald-400/30 rounded-lg p-3">
-                      <h4 className="text-xs font-semibold text-emerald-300 mb-2 uppercase tracking-wider">
-                        ⚡ OTROS SERVICIOS
-                      </h4>
-                      <div className="grid grid-cols-1 gap-2">
+                    ))}
+                    
+                    <div className="border border-gray-700 rounded p-2">
+                      <h4 className="text-xs font-semibold text-gray-400 mb-1 uppercase">OTROS SERVICIOS</h4>
+                      <div className="space-y-1">
                         {SERVICIOS_TRANSACCIONALES.filter(s => !['datafast', 'banred', 'internacional'].includes(s.categoria)).map(servicio => (
                           <button
                             key={servicio.id}
                             onClick={() => seleccionarServicio(servicio)}
-                            className="text-left bg-slate-700/50 hover:bg-emerald-600/30 border border-transparent hover:border-emerald-400/40 text-gray-300 hover:text-emerald-200 p-2 rounded-lg transition-all duration-200 text-xs"
+                            className="text-left w-full text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 p-1 rounded truncate"
+                            title={servicio.descripcion}
                           >
-                            <div className="font-medium">{servicio.icono} {servicio.nombre}</div>
+                            {servicio.nombre}
                           </button>
                         ))}
                       </div>
@@ -1685,206 +1051,169 @@ const GeneradorComunicados = () => {
             </div>
           </div>
           
-          {/* Panel de formulario y resultado */}
-          <div className="lg:col-span-3 space-y-8">
-            {/* Formulario */}
-            <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-emerald-400/40">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2 mb-6">
-                <Settings className="w-6 h-6 text-emerald-400" />
-                Detalles del Comunicado
-              </h2>
+          {/* Panel principal derecho - Parte 3 */}
+          <div className="lg:col-span-3 space-y-6">
+            <div className={card}>
+              <h2 className="text-xl font-bold text-white mb-4">Detalles del Comunicado</h2>
 
-              {/* Campos para Evento o Incidente */}
-              {(tipo.startsWith('evento-') || tipo.startsWith('incidente-')) && (
-                <div className="space-y-6">
-                  <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Descripción:</label>
-                    <div className="relative">
-                      <input 
-                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                        type="text" 
-                        name="descripcion"
-                        placeholder="DESCRIPCION DEL INCIDENTE"
-                        value={formData.descripcion}
-                        onChange={handleInputChange}
-                      />
+              {/* Panel de escalamiento BLU */}
+              {modoBLU && tipo.startsWith('evento-') && escalamientoBLU && (
+                <div className={`p-3 rounded mb-4 border ${
+                  tipoBLU === 'bian' ? 'bg-orange-900/20 border-orange-800' :
+                  tipoBLU === 'infraestructura' ? 'bg-purple-900/20 border-purple-800' :
+                  'bg-blue-900/20 border-blue-800'
+                }`}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1">Escalamiento BLU 2.0:</p>
+                      <p className="text-sm font-medium text-white">{escalamientoBLU}</p>
+                    </div>
+                    <div className={`text-2xl ${
+                      tipoBLU === 'bian' ? 'text-orange-400' :
+                      tipoBLU === 'infraestructura' ? 'text-purple-400' :
+                      'text-blue-400'
+                    }`}>
+                      {tipoBLU === 'bian' ? '⚠️' : tipoBLU === 'infraestructura' ? '🖥️' : '📱'}
                     </div>
                   </div>
-                  
+                </div>
+              )}
+
+              {/* Campos para eventos e incidentes */}
+              {(tipo.startsWith('evento-') || tipo.startsWith('incidente-')) && (
+                <div className="space-y-4">
                   <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Impacto:</label>
-                    <div className="relative">
+                    <label className={label}>
+                      Descripción:
+                      {modoBLU && (
+                        <span className="text-xs ml-2 text-blue-400">
+                          (Formato: Alertamiento [namespace/cluster])
+                        </span>
+                      )}
+                    </label>
+                    <input 
+                      className={input}
+                      type="text" 
+                      name="descripcion"
+                      placeholder={modoBLU ? "Alertamiento CLUSTER_EKS_KB" : "Descripción del incidente"}
+                      value={formData.descripcion}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  
+                  {!modoBLU && (
+                    <div>
+                      <label className={label}>Impacto:</label>
                       <textarea 
-                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 h-32 resize-y focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
+                        className={input + " h-24 resize-y"}
                         name="impacto"
-                        placeholder="Impacto servicio / usuarios
-Ejemplo:
-• Servicio de correo intermitente
-• Acceso lento a aplicaciones web
-• Usuarios reportan demoras"
+                        placeholder="Impacto servicio / usuarios"
                         value={formData.impacto}
                         onChange={handleInputChange}
-                      ></textarea>
+                      />
                     </div>
-                  </div>
+                  )}
                 </div>
               )}
               
-              {/* Campos para Mantenimiento */}
+              {/* Campos para mantenimientos */}
               {tipo.startsWith('mantenimiento-') && (
-                <div className="space-y-6">
+                <div className="space-y-4">
                   <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Motivo:</label>
-                    <div className="relative">
-                      <input 
-                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                        type="text" 
-                        name="motivo"
-                        placeholder="Descripción del Mantenimiento"
-                        value={formData.motivo}
-                        onChange={handleInputChange}
-                      />
-                    </div>
+                    <label className={label}>Motivo:</label>
+                    <input 
+                      className={input}
+                      type="text" 
+                      name="motivo"
+                      placeholder="Descripción del Mantenimiento"
+                      value={formData.motivo}
+                      onChange={handleInputChange}
+                    />
                   </div>
-                  
                   <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Impacto:</label>
-                    <div className="relative">
-                      <textarea 
-                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 h-32 resize-y focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                        name="impactoMant"
-                        placeholder="Impacto servicio / usuarios / clientes
-Ejemplo:
-• Indisponibilidad temporal del servicio X
-• Lentitud en procesamiento de transacciones
-• Acceso limitado a funcionalidades Y"
-                        value={formData.impactoMant}
-                        onChange={handleInputChange}
-                      ></textarea>
-                    </div>
+                    <label className={label}>Impacto:</label>
+                    <textarea 
+                      className={input + " h-24 resize-y"}
+                      name="impactoMant"
+                      placeholder="Impacto servicio / usuarios / clientes"
+                      value={formData.impactoMant}
+                      onChange={handleInputChange}
+                    />
                   </div>
-                  
                   <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Ejecutor:</label>
-                    <div className="relative">
-                      <input 
-                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                        type="text" 
-                        name="ejecutor"
-                        placeholder="Nombre del proveedor o área interna que ejecuta el mantenimiento"
-                        value={formData.ejecutor}
-                        onChange={handleInputChange}
-                      />
-                    </div>
+                    <label className={label}>Ejecutor:</label>
+                    <input 
+                      className={input}
+                      type="text" 
+                      name="ejecutor"
+                      placeholder="Proveedor o área interna"
+                      value={formData.ejecutor}
+                      onChange={handleInputChange}
+                    />
                   </div>
                 </div>
               )}
               
-              {/* Checkbox para encolamientos en eventos-inicio y seguimiento */}
+              {/* Múltiples encolamientos para eventos */}
               {(tipo === 'evento-inicio' || tipo === 'evento-seguimiento') && (
-                <div className="mt-6">
-                  <div className="bg-teal-700/15 border border-teal-400/30 rounded-xl p-4">
-                    <label className="flex items-center space-x-3 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={multiplesEncolamientos}
-                        onChange={(e) => setMultiplesEncolamientos(e.target.checked)}
-                        className="w-5 h-5 text-teal-600 border-2 border-teal-400 rounded focus:ring-2 focus:ring-emerald-400 focus:ring-offset-0 bg-slate-800"
-                      />
-                      <span className="text-teal-200 font-semibold">Evento con múltiples encolamientos</span>
-                    </label>
-                    <p className="text-sm text-teal-200/70 mt-2 ml-8">
-                      Activa esta opción para eventos con encolamientos en diferentes servicios
-                    </p>
-                  </div>
+                <div className="mt-4">
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={multiplesEncolamientos}
+                      onChange={(e) => setMultiplesEncolamientos(e.target.checked)}
+                      className="w-4 h-4 text-blue-600 bg-gray-900 border-gray-600 rounded focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-300">Múltiples encolamientos</span>
+                  </label>
                   
                   {multiplesEncolamientos && (
-                    <div className="mt-4 space-y-4">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold text-gray-300">Servicios con Encolamiento</h3>
-                        <button
-                          type="button"
-                          onClick={agregarServicioEncolamiento}
-                          className="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
-                        >
-                          <Plus className="w-4 h-4" />
-                          Agregar Servicio
+                    <div className="mt-4 space-y-3">
+                      <div className="flex justify-between">
+                        <h3 className="text-sm font-semibold text-gray-300">Servicios con Encolamiento</h3>
+                        <button onClick={agregarServicioEncolamiento} className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                          Agregar
                         </button>
                       </div>
-                      
                       {serviciosEncolamiento.map((servicio, index) => (
-                        <div key={index} className="bg-slate-700/60 rounded-xl p-6 relative border border-teal-400/20">
-                          <div className="flex items-center justify-between mb-4">
-                            <h4 className="text-md font-semibold text-gray-200">Servicio {index + 1}</h4>
+                        <div key={index} className="bg-gray-900 rounded p-4 border border-gray-700">
+                          <div className="flex justify-between mb-3">
+                            <span className="text-sm text-gray-300">Servicio {index + 1}</span>
                             {serviciosEncolamiento.length > 1 && (
-                              <button
-                                type="button"
-                                onClick={() => eliminarServicioEncolamiento(index)}
-                                className="bg-slate-600 hover:bg-slate-500 text-white p-2 rounded-lg transition-all duration-200"
-                              >
+                              <button onClick={() => eliminarServicioEncolamiento(index)} className="text-red-400 hover:text-red-300">
                                 <Minus className="w-4 h-4" />
                               </button>
                             )}
                           </div>
-                          
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="md:col-span-2">
-                              <label className="block mb-2 font-semibold text-gray-300">Tipo de Servicio:</label>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="col-span-2">
                               <select
                                 value={servicio.tipo}
                                 onChange={(e) => actualizarServicioEncolamiento(index, 'tipo', e.target.value)}
-                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
+                                className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm"
                               >
-                                <option value="Variable General">Variable General</option>
-                                <option value="OTP General">OTP General</option>
-                                <option value="SMS Masivo">SMS Masivo</option>
-                                <option value="Notificaciones Push">Notificaciones Push</option>
-                                <option value="Validaciones KYC">Validaciones KYC</option>
-                                <option value="Otro">Otro</option>
+                                {OPCIONES_ENCOLAMIENTO.map(opcion => (
+                                  <option key={opcion} value={opcion}>{opcion}</option>
+                                ))}
+                                <option value="Otro">Otro (especificar)</option>
                               </select>
+                              {servicio.tipo === 'Otro' && (
+                                <input
+                                  type="text"
+                                  placeholder="Especifica el tipo de servicio"
+                                  value={servicio.tipoCustom}
+                                  onChange={(e) => actualizarServicioEncolamiento(index, 'tipoCustom', e.target.value)}
+                                  className="w-full mt-2 p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm"
+                                />
+                              )}
                             </div>
-                            
-                            {tipo !== 'evento-inicio' && (
-                              <>
-                                <div>
-                                  <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                                    <Calendar className="w-4 h-4" />
-                                    Fecha inicio:
-                                  </label>
-                                  <input 
-                                    className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
-                                    type="date" 
-                                    value={servicio.fechaInicio}
-                                    onChange={(e) => actualizarServicioEncolamiento(index, 'fechaInicio', e.target.value)}
-                                  />
-                                </div>
-                                
-                                <div>
-                                  <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                                    <Clock className="w-4 h-4" />
-                                    Hora inicio:
-                                  </label>
-                                  <input 
-                                    className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
-                                    type="time" 
-                                    step="1"
-                                    value={servicio.horaInicio}
-                                    onChange={(e) => actualizarServicioEncolamiento(index, 'horaInicio', e.target.value)}
-                                  />
-                                </div>
-                              </>
-                            )}
-                            
-                            <div>
-                              <label className="block mb-2 font-semibold text-gray-300">Cantidad Encolados:</label>
-                              <input 
-                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
-                                type="number" 
-                                placeholder="8000"
-                                value={servicio.encolados}
-                                onChange={(e) => actualizarServicioEncolamiento(index, 'encolados', e.target.value)}
-                              />
-                            </div>
+                            <input 
+                              type="number"
+                              placeholder="Cantidad"
+                              value={servicio.encolados}
+                              onChange={(e) => actualizarServicioEncolamiento(index, 'encolados', e.target.value)}
+                              className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm col-span-2"
+                            />
                           </div>
                         </div>
                       ))}
@@ -1893,39 +1222,24 @@ Ejemplo:
                 </div>
               )}
               
-              {/* Campos comunes para Inicio */}
+              {/* Fechas para inicio */}
               {(tipo.endsWith('-inicio')) && (
-                <div className="space-y-6 mt-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-4 mt-4">
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                        <Calendar className="w-4 h-4" />
-                        Fecha:
-                        <span className="text-sm">{getEstadoSemaforo().color}</span>
-                      </label>
+                      <label className={label}>Fecha:</label>
                       <input 
-                        className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 focus:ring-teal-400/20 transition-all duration-200 ${
-                          getEstadoSemaforo().color === '🔴' ? 'border-red-500/60' : 
-                          getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60' : 'border-emerald-500/40'
-                        }`}
+                        className={input}
                         type="date" 
                         name="fechaInicio"
                         value={formData.fechaInicio}
                         onChange={handleInputChange}
                       />
                     </div>
-                    
                     <div>
-                      <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
-                        Hora:
-                        <span className="text-sm">{getEstadoSemaforo().color}</span>
-                      </label>
+                      <label className={label}>Hora:</label>
                       <input 
-                        className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 focus:ring-teal-400/20 transition-all duration-200 ${
-                          getEstadoSemaforo().color === '🔴' ? 'border-red-500/60' : 
-                          getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60' : 'border-emerald-500/40'
-                        }`}
+                        className={input}
                         type="time" 
                         step="1"
                         name="horaInicio"
@@ -1934,248 +1248,118 @@ Ejemplo:
                       />
                     </div>
                   </div>
-                  
+                </div>
+              )}
+
+              {/* Acciones para seguimiento */}
+              {tipo === 'evento-seguimiento' && (
+                <div className="mt-4">
+                  <label className={label}>Acciones:</label>
+                  <textarea 
+                    className={input + " h-32 resize-y"}
+                    placeholder="Acción %% Responsable (opcional)"
+                    name="acciones"
+                    value={formData.acciones}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              )}
+              
+              {/* Acciones para incidente avance */}
+              {tipo === 'incidente-avance' && (
+                <div className="space-y-4 mt-4">
                   <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Estado:</label>
-                    <input 
-                      className="w-full p-4 bg-slate-900/30 border border-emerald-500/30 rounded-xl text-gray-300 cursor-not-allowed"
-                      type="text" 
-                      value={formData.estadoInicio}
-                      readOnly
+                    <label className={label}>Acciones en curso:</label>
+                    <textarea 
+                      className={input + " h-24 resize-y"}
+                      placeholder="Acción %% Responsable"
+                      name="accionesEnCurso"
+                      value={formData.accionesEnCurso}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div>
+                    <label className={label}>Acciones ejecutadas:</label>
+                    <textarea 
+                      className={input + " h-24 resize-y"}
+                      placeholder="Acción %% Responsable"
+                      name="accionesEjecutadas"
+                      value={formData.accionesEjecutadas}
+                      onChange={handleInputChange}
                     />
                   </div>
                 </div>
               )}
-
-              {/* Campos para Seguimiento (solo Eventos) */}
-              {tipo === 'evento-seguimiento' && (
-                <div className="mt-6">
-                  <label className="block mb-2 font-semibold text-gray-300">Acciones (una por línea):</label>
-                  <textarea 
-                    className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                    placeholder="Formato: Acción %% Responsable (opcional)
-Ejemplo:
-Monitoreo continuo del servicio %% Equipo NOC
-Validación de métricas %% Soporte N2
-Revisión de logs de aplicación"
-                    name="acciones"
-                    value={formData.acciones}
-                    onChange={handleInputChange}
-                  ></textarea>
-                  <p className="text-sm text-gray-400 mt-2 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
-                  </p>
-                </div>
-              )}
               
-              {/* Campos para Avance (solo Incidentes) */}
-              {tipo === 'incidente-avance' && (
-                <div className="space-y-6 mt-6">
-                  <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Acciones en curso (una por línea):</label>
-                    <textarea 
-                      className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                      placeholder="Formato: Acción %% Responsable (opcional)
-Ejemplo:
-Análisis de logs %% Equipo de Monitoreo
-Revisión de configuración %% DBA Team
-Escalamiento a proveedor"
-                      name="accionesEnCurso"
-                      value={formData.accionesEnCurso}
-                      onChange={handleInputChange}
-                    ></textarea>
-                  </div>
-                  
-                  <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas (una por línea):</label>
-                    <textarea 
-                      className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                      placeholder="Formato: Acción %% Responsable (opcional)
-Ejemplo:
-Reinicio de servicios %% Equipo de Infraestructura
-Limpieza de caché %% Soporte N1
-Verificación inicial"
-                      name="accionesEjecutadas"
-                      value={formData.accionesEjecutadas}
-                      onChange={handleInputChange}
-                    ></textarea>
-                  </div>
-                  <p className="text-sm text-gray-400 mt-2 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
-                  </p>
-                </div>
-              )}
-              
-              {/* Campos para Fin */}
+              {/* Campos para fin */}
               {tipo.endsWith('-fin') && (
-                <div className="space-y-6 mt-6">
-                  {/* Mensaje informativo de auto-completado */}
-                  <div className="bg-emerald-900/20 border border-emerald-400/30 rounded-lg p-3 flex items-center gap-3">
-                    <span className="text-2xl">✨</span>
-                    <div className="flex-1">
-                      <p className="text-emerald-200 text-sm">
-                        <strong>Auto-completado inteligente:</strong> Las fechas se han llenado automáticamente.
-                      </p>
-                      <p className="text-emerald-200/70 text-xs mt-1">
-                        • Fecha inicio copiada • Fecha fin establecida al momento actual • Puedes ajustar si es necesario
-                      </p>
-                    </div>
-                  </div>
+                <div className="space-y-4 mt-4">
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={multiplesAlertamientos}
+                      onChange={(e) => setMultiplesAlertamientos(e.target.checked)}
+                      className="w-4 h-4 text-blue-600 bg-gray-900 border-gray-600 rounded focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-300">Múltiples alertamientos temporales</span>
+                  </label>
 
-                  {/* Checkbox para múltiples alertamientos */}
-                  <div className="bg-emerald-700/15 border border-emerald-400/30 rounded-xl p-4">
-                    <label className="flex items-center space-x-3 cursor-pointer">
+                  {tipo.startsWith('evento-') && (
+                    <label className="flex items-center space-x-2 cursor-pointer">
                       <input
                         type="checkbox"
-                        checked={multiplesAlertamientos}
-                        onChange={(e) => setMultiplesAlertamientos(e.target.checked)}
-                        className="w-5 h-5 text-emerald-600 border-2 border-emerald-400 rounded focus:ring-2 focus:ring-teal-400 focus:ring-offset-0 bg-slate-800"
+                        checked={multiplesEncolamientos}
+                        onChange={(e) => setMultiplesEncolamientos(e.target.checked)}
+                        className="w-4 h-4 text-blue-600 bg-gray-900 border-gray-600 rounded focus:ring-blue-500"
                       />
-                      <span className="text-emerald-200 font-semibold">Múltiples alertamientos temporales</span>
+                      <span className="text-sm text-gray-300">Múltiples encolamientos</span>
                     </label>
-                    <p className="text-sm text-emerald-200/70 mt-2 ml-8">
-                      Activa esta opción si el incidente tuvo múltiples períodos de activación/recuperación
-                    </p>
-                  </div>
-
-                  {/* Checkbox para múltiples encolamientos */}
-                  {tipo.startsWith('evento-') && (
-                    <div className="bg-teal-700/15 border border-teal-400/30 rounded-xl p-4">
-                      <label className="flex items-center space-x-3 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={multiplesEncolamientos}
-                          onChange={(e) => setMultiplesEncolamientos(e.target.checked)}
-                          className="w-5 h-5 text-teal-600 border-2 border-teal-400 rounded focus:ring-2 focus:ring-emerald-400 focus:ring-offset-0 bg-slate-800"
-                        />
-                        <span className="text-teal-200 font-semibold">Evento con múltiples encolamientos</span>
-                      </label>
-                      <p className="text-sm text-teal-200/70 mt-2 ml-8">
-                        Activa esta opción para eventos con encolamientos en diferentes servicios
-                      </p>
-                    </div>
                   )}
 
                   {multiplesEncolamientos ? (
-                    /* Panel para múltiples encolamientos */
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-gray-300">Servicios con Encolamiento</h3>
-                        <button
-                          type="button"
-                          onClick={agregarServicioEncolamiento}
-                          className="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
-                        >
-                          <Plus className="w-4 h-4" />
-                          Agregar Servicio
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <h3 className="text-sm font-semibold text-gray-300">Servicios con Encolamiento</h3>
+                        <button onClick={agregarServicioEncolamiento} className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                          Agregar
                         </button>
                       </div>
-                      
                       {serviciosEncolamiento.map((servicio, index) => (
-                        <div key={index} className="bg-slate-700/60 rounded-xl p-6 relative border border-teal-400/20">
-                          <div className="flex items-center justify-between mb-4">
-                            <h4 className="text-md font-semibold text-gray-200">Servicio {index + 1}</h4>
+                        <div key={index} className="bg-gray-900 rounded p-4 border border-gray-700">
+                          <div className="flex justify-between mb-3">
+                            <span className="text-sm text-gray-300">Servicio {index + 1}</span>
                             {serviciosEncolamiento.length > 1 && (
-                              <button
-                                type="button"
-                                onClick={() => eliminarServicioEncolamiento(index)}
-                                className="bg-slate-600 hover:bg-slate-500 text-white p-2 rounded-lg transition-all duration-200"
-                              >
+                              <button onClick={() => eliminarServicioEncolamiento(index)} className="text-red-400 hover:text-red-300">
                                 <Minus className="w-4 h-4" />
                               </button>
                             )}
                           </div>
-                          
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="md:col-span-2">
-                              <label className="block mb-2 font-semibold text-gray-300">Tipo de Servicio:</label>
-                              <select
-                                value={servicio.tipo}
-                                onChange={(e) => actualizarServicioEncolamiento(index, 'tipo', e.target.value)}
-                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
-                              >
-                                <option value="Variable General">Variable General</option>
-                                <option value="OTP General">OTP General</option>
-                                <option value="SMS Masivo">SMS Masivo</option>
-                                <option value="Notificaciones Push">Notificaciones Push</option>
-                                <option value="Validaciones KYC">Validaciones KYC</option>
-                                <option value="Otro">Otro</option>
-                              </select>
-                            </div>
-                            
-                            <div>
-                              <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                                <Calendar className="w-4 h-4" />
-                                Fecha inicio:
-                              </label>
-                              <input 
-                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
-                                type="date" 
-                                value={servicio.fechaInicio}
-                                onChange={(e) => actualizarServicioEncolamiento(index, 'fechaInicio', e.target.value)}
+                          <div className="grid grid-cols-2 gap-3">
+                            <select
+                              value={servicio.tipo}
+                              onChange={(e) => actualizarServicioEncolamiento(index, 'tipo', e.target.value)}
+                              className="col-span-2 p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm"
+                            >
+                              {OPCIONES_ENCOLAMIENTO.map(opcion => (
+                                <option key={opcion} value={opcion}>{opcion}</option>
+                              ))}
+                              <option value="Otro">Otro (especificar)</option>
+                            </select>
+                            {servicio.tipo === 'Otro' && (
+                              <input
+                                type="text"
+                                placeholder="Especifica el tipo de servicio"
+                                value={servicio.tipoCustom}
+                                onChange={(e) => actualizarServicioEncolamiento(index, 'tipoCustom', e.target.value)}
+                                className="col-span-2 p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm"
                               />
-                            </div>
-                            
-                            <div>
-                              <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                                <Clock className="w-4 h-4" />
-                                Hora inicio:
-                              </label>
-                              <input 
-                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
-                                type="time" 
-                                step="1"
-                                value={servicio.horaInicio}
-                                onChange={(e) => actualizarServicioEncolamiento(index, 'horaInicio', e.target.value)}
-                              />
-                            </div>
-                            
-                            <div>
-                              <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                                <Calendar className="w-4 h-4" />
-                                Fecha fin:
-                              </label>
-                              <input 
-                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
-                                type="date" 
-                                value={servicio.fechaFin}
-                                onChange={(e) => actualizarServicioEncolamiento(index, 'fechaFin', e.target.value)}
-                              />
-                            </div>
-                            
-                            <div>
-                              <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                                <Clock className="w-4 h-4" />
-                                Hora fin:
-                              </label>
-                              <input 
-                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
-                                type="time" 
-                                step="1"
-                                value={servicio.horaFin}
-                                onChange={(e) => actualizarServicioEncolamiento(index, 'horaFin', e.target.value)}
-                              />
-                            </div>
-                            
-                            <div>
-                              <label className="block mb-2 font-semibold text-gray-300">Cantidad Encolados:</label>
-                              <input 
-                                className="w-full p-3 bg-slate-900/60 border border-teal-500/40 rounded-lg text-white focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20 transition-all duration-200"
-                                type="number" 
-                                placeholder="8000"
-                                value={servicio.encolados}
-                                onChange={(e) => actualizarServicioEncolamiento(index, 'encolados', e.target.value)}
-                              />
-                            </div>
-                          </div>
-                          
-                          <div className="mt-4">
-                            <label className="block mb-2 font-semibold text-gray-300">Duración:</label>
-                            <div className="p-4 bg-gradient-to-r from-teal-600/15 to-emerald-600/15 border border-teal-400/25 rounded-lg text-center">
-                              <span className="text-2xl font-bold text-teal-300">{servicio.duracion}</span>
-                            </div>
+                            )}
+                            <input type="date" value={servicio.fechaInicio} onChange={(e) => actualizarServicioEncolamiento(index, 'fechaInicio', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
+                            <input type="time" step="1" value={servicio.horaInicio} onChange={(e) => actualizarServicioEncolamiento(index, 'horaInicio', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
+                            <input type="date" value={servicio.fechaFin} onChange={(e) => actualizarServicioEncolamiento(index, 'fechaFin', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
+                            <input type="time" step="1" value={servicio.horaFin} onChange={(e) => actualizarServicioEncolamiento(index, 'horaFin', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
+                            <input type="number" placeholder="Cantidad" value={servicio.encolados} onChange={(e) => actualizarServicioEncolamiento(index, 'encolados', e.target.value)} className="col-span-2 p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
+                            <div className="col-span-2 text-center text-blue-400 text-sm">Duración: {servicio.duracion}</div>
                           </div>
                         </div>
                       ))}
@@ -2183,447 +1367,218 @@ Verificación inicial"
                   ) : null}
 
                   {(multiplesAlertamientos && !multiplesEncolamientos) ? (
-                    /* Campos para múltiples períodos */
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-gray-300">Períodos de Alertamiento</h3>
-                        <button
-                          type="button"
-                          onClick={agregarPeriodo}
-                          className="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
-                        >
-                          <Plus className="w-4 h-4" />
-                          Agregar Período
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <h3 className="text-sm font-semibold text-gray-300">Períodos de Alertamiento</h3>
+                        <button onClick={agregarPeriodo} className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                          Agregar
                         </button>
                       </div>
-                      
                       {periodosAlertamiento.map((periodo, index) => (
-                        <div key={index} className="bg-slate-700/60 rounded-xl p-6 relative border border-emerald-400/20">
-                          <div className="flex items-center justify-between mb-4">
-                            <h4 className="text-md font-semibold text-gray-200">Período {index + 1}</h4>
+                        <div key={index} className="bg-gray-900 rounded p-4 border border-gray-700">
+                          <div className="flex justify-between mb-3">
+                            <span className="text-sm text-gray-300">Período {index + 1}</span>
                             {periodosAlertamiento.length > 1 && (
-                              <button
-                                type="button"
-                                onClick={() => eliminarPeriodo(index)}
-                                className="bg-slate-600 hover:bg-slate-500 text-white p-2 rounded-lg transition-all duration-200"
-                              >
+                              <button onClick={() => eliminarPeriodo(index)} className="text-red-400 hover:text-red-300">
                                 <Minus className="w-4 h-4" />
                               </button>
                             )}
                           </div>
-                          
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                              <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                                <Calendar className="w-4 h-4" />
-                                Fecha inicio:
-                              </label>
-                              <input 
-                                className="w-full p-3 bg-slate-900/60 border border-emerald-500/40 rounded-lg text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                                type="date" 
-                                value={periodo.fechaInicio}
-                                onChange={(e) => actualizarPeriodo(index, 'fechaInicio', e.target.value)}
-                              />
-                            </div>
-                            
-                            <div>
-                              <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                                <Clock className="w-4 h-4" />
-                                Hora inicio:
-                              </label>
-                              <input 
-                                className="w-full p-3 bg-slate-900/60 border border-emerald-500/40 rounded-lg text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                                type="time" 
-                                step="1"
-                                value={periodo.horaInicio}
-                                onChange={(e) => actualizarPeriodo(index, 'horaInicio', e.target.value)}
-                              />
-                            </div>
-                            
-                            <div>
-                              <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                                <Calendar className="w-4 h-4" />
-                                Fecha fin:
-                              </label>
-                              <input 
-                                className="w-full p-3 bg-slate-900/60 border border-emerald-500/40 rounded-lg text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                                type="date" 
-                                value={periodo.fechaFin}
-                                onChange={(e) => actualizarPeriodo(index, 'fechaFin', e.target.value)}
-                              />
-                            </div>
-                            
-                            <div>
-                              <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                                <Clock className="w-4 h-4" />
-                                Hora fin:
-                              </label>
-                              <input 
-                                className="w-full p-3 bg-slate-900/60 border border-emerald-500/40 rounded-lg text-white focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                                type="time" 
-                                step="1"
-                                value={periodo.horaFin}
-                                onChange={(e) => actualizarPeriodo(index, 'horaFin', e.target.value)}
-                              />
-                            </div>
-                          </div>
-                          
-                          <div className="mt-4">
-                            <label className="block mb-2 font-semibold text-gray-300">Duración:</label>
-                            <div className="p-4 bg-gradient-to-r from-teal-600/15 to-emerald-600/15 border border-teal-400/25 rounded-lg text-center">
-                              <span className="text-2xl font-bold text-teal-300">{periodo.duracion}</span>
-                            </div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <input type="date" value={periodo.fechaInicio} onChange={(e) => actualizarPeriodo(index, 'fechaInicio', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
+                            <input type="time" step="1" value={periodo.horaInicio} onChange={(e) => actualizarPeriodo(index, 'horaInicio', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
+                            <input type="date" value={periodo.fechaFin} onChange={(e) => actualizarPeriodo(index, 'fechaFin', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
+                            <input type="time" step="1" value={periodo.horaFin} onChange={(e) => actualizarPeriodo(index, 'horaFin', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
+                            <div className="col-span-2 text-center text-blue-400 text-sm">Duración: {periodo.duracion}</div>
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (!multiplesEncolamientos && (
-                    /* Campos normales de fecha/hora */
-                    <div className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
-                            Fecha inicio:
-                            <span className="text-sm">{getEstadoSemaforo().color}</span>
-                          </label>
-                          <input 
-                            className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 focus:ring-teal-400/20 transition-all duration-200 ${
-                              getEstadoSemaforo().color === '🔴' ? 'border-red-500/60' : 
-                              getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60' : 'border-emerald-500/40'
-                            }`}
-                            type="date" 
-                            name="fechaInicioFin"
-                            value={formData.fechaInicioFin}
-                            onChange={handleInputChange}
-                          />
+                          <label className={label}>Fecha inicio:</label>
+                          <input className={errorFechaFin ? input + " border-red-500" : input} type="date" name="fechaInicioFin" value={formData.fechaInicioFin} onChange={handleInputChange} />
                         </div>
-                        
                         <div>
-                          <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                            <Clock className="w-4 h-4" />
-                            Hora inicio:
-                            <span className="text-sm">{getEstadoSemaforo().color}</span>
-                          </label>
-                          <input 
-                            className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 focus:ring-teal-400/20 transition-all duration-200 ${
-                              getEstadoSemaforo().color === '🔴' ? 'border-red-500/60' : 
-                              getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60' : 'border-emerald-500/40'
-                            }`}
-                            type="time" 
-                            step="1"
-                            name="horaInicioFin"
-                            value={formData.horaInicioFin}
-                            onChange={handleInputChange}
-                          />
+                          <label className={label}>Hora inicio:</label>
+                          <input className={errorFechaFin ? input + " border-red-500" : input} type="time" step="1" name="horaInicioFin" value={formData.horaInicioFin} onChange={handleInputChange} />
                         </div>
-                        
                         <div>
-                          <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
-                            Fecha fin:
-                            <span className="text-sm">{getEstadoSemaforo().color}</span>
-                            {errorFechaFin && <span className="text-red-400 text-xs animate-pulse">⚠️</span>}
-                          </label>
-                          <input 
-                            className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 transition-all duration-200 ${
-                              errorFechaFin ? 'border-red-500 ring-2 ring-red-500/20 animate-pulse' :
-                              getEstadoSemaforo().color === '🔴' ? 'border-red-500/60 focus:ring-teal-400/20' : 
-                              getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60 focus:ring-teal-400/20' : 'border-emerald-500/40 focus:ring-teal-400/20'
-                            }`}
-                            type="date" 
-                            name="fechaFin"
-                            value={formData.fechaFin}
-                            onChange={handleInputChange}
-                          />
+                          <label className={label}>Fecha fin:</label>
+                          <input className={errorFechaFin ? input + " border-red-500" : input} type="date" name="fechaFin" value={formData.fechaFin} onChange={handleInputChange} />
                           {errorFechaFin && (
                             <div className="mt-2 space-y-2">
-                              <p className="text-red-400 text-xs whitespace-pre-line">{errorFechaFin}</p>
-                              <div className="flex flex-col gap-1">
-                                {sugerenciasFecha.map((sugerencia, index) => (
-                                  <button
-                                    key={index}
-                                    onClick={() => aplicarSugerenciaFecha(sugerencia.fecha, sugerencia.hora)}
-                                    className="text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-2"
-                                  >
-                                    <span>{sugerencia.icono || '💡'}</span>
-                                    {sugerencia.texto}
-                                  </button>
-                                ))}
-                              </div>
+                              <p className="text-red-400 text-xs">{errorFechaFin}</p>
+                              {sugerenciasFecha.map((sug, i) => (
+                                <button key={i} onClick={() => aplicarSugerenciaFecha(sug.fecha, sug.hora)} className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded">
+                                  {sug.texto}
+                                </button>
+                              ))}
                             </div>
                           )}
                         </div>
-                        
                         <div>
-                          <label className="block mb-2 font-semibold text-gray-300 flex items-center gap-2">
-                            <Clock className="w-4 h-4" />
-                            Hora fin:
-                            <span className="text-sm">{getEstadoSemaforo().color}</span>
-                            {errorFechaFin && <span className="text-red-400 text-xs animate-pulse">⚠️</span>}
-                          </label>
-                          <input 
-                            className={`w-full p-4 bg-slate-900/60 border rounded-xl text-white focus:ring-2 transition-all duration-200 ${
-                              errorFechaFin ? 'border-red-500 ring-2 ring-red-500/20 animate-pulse' :
-                              getEstadoSemaforo().color === '🔴' ? 'border-red-500/60 focus:ring-teal-400/20' : 
-                              getEstadoSemaforo().color === '🟡' ? 'border-yellow-500/60 focus:ring-teal-400/20' : 'border-emerald-500/40 focus:ring-teal-400/20'
-                            }`}
-                            type="time" 
-                            step="1"
-                            name="horaFin"
-                            value={formData.horaFin}
-                            onChange={handleInputChange}
-                          />
+                          <label className={label}>Hora fin:</label>
+                          <input className={errorFechaFin ? input + " border-red-500" : input} type="time" step="1" name="horaFin" value={formData.horaFin} onChange={handleInputChange} />
                         </div>
                       </div>
-                      
-                      <div>
-                        <label className="block mb-2 font-semibold text-gray-300">Duración calculada:</label>
-                        <div className="p-6 bg-gradient-to-r from-teal-600/15 to-emerald-600/15 border border-teal-400/25 rounded-xl text-center">
-                          <span className="text-3xl font-bold text-teal-300">{formData.duracionCalculada}</span>
-                          {formData.duracionCalculada === '⚠️ Error' && (
-                            <p className="text-red-400 text-xs mt-2 animate-pulse">
-                              ⚠️ Corrige las fechas para calcular la duración correcta
-                            </p>
-                          )}
-                        </div>
+                      <div className="p-4 bg-gray-900 rounded text-center">
+                        <span className="text-2xl font-bold text-blue-400">{formData.duracionCalculada}</span>
                       </div>
                     </div>
                   ))}
                   
-                  <div>
-                    <label className="block mb-2 font-semibold text-gray-300">Estado:</label>
-                    <input 
-                      className="w-full p-4 bg-slate-900/30 border border-emerald-500/30 rounded-xl text-gray-300 cursor-not-allowed"
-                      type="text" 
-                      value={formData.estadoFin}
-                      readOnly
-                    />
-                  </div>
-                  
                   {(tipo === 'evento-fin' || tipo === 'incidente-fin') && (
                     <div>
-                      <label className="block mb-2 font-semibold text-gray-300">Acciones ejecutadas:</label>
+                      <label className={label}>Acciones ejecutadas:</label>
                       <textarea 
-                        className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 h-40 resize-y focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                        placeholder="Formato: Acción %% Responsable (opcional)
-Ejemplo:
-Reinicio del servidor %% Equipo de Infraestructura
-Actualización de base de datos %% DBA Team
-Verificación de logs"
+                        className={input + " h-32 resize-y"}
+                        placeholder="Acción %% Responsable"
                         name={tipo === 'evento-fin' ? 'acciones' : 'accionesEjecutadas'}
                         value={tipo === 'evento-fin' ? formData.acciones : formData.accionesEjecutadas}
                         onChange={handleInputChange}
-                      ></textarea>
-                      <p className="text-sm text-gray-400 mt-2 flex items-center">
-                        <AlertCircle className="w-4 h-4 mr-1" />
-                        Use %% para separar la acción del responsable. Si no incluye responsable, solo escriba la acción.
-                      </p>
+                      />
                     </div>
                   )}
                 </div>
               )}
               
-              <div className="mt-8">
-                <label className="block mb-2 font-semibold text-gray-300">Nota adicional (opcional):</label>
+              <div className="mt-4">
+                <label className={label}>Nota adicional (opcional):</label>
                 <textarea 
-                  className="w-full p-4 bg-slate-900/60 border border-emerald-500/40 rounded-xl text-white placeholder-gray-400 h-32 resize-y focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20 transition-all duration-200"
-                  placeholder="Observaciones con detalle que permitan brindar más información en el caso que amerite"
+                  className={input + " h-20 resize-y"}
+                  placeholder="Observaciones adicionales"
                   name="nota"
                   value={formData.nota}
                   onChange={handleInputChange}
-                ></textarea>
+                />
               </div>
               
-              <div className="flex gap-4 mt-8">
-                <button 
-                  className={`flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-teal-500/25 transform hover:-translate-y-1 flex items-center justify-center gap-2 ${
-                    getEstadoSemaforo().color === '🔴' ? 'ring-2 ring-red-500/50' : 
-                    getEstadoSemaforo().color === '🟡' ? 'ring-1 ring-yellow-500/30' : ''
-                  } ${errorFechaFin && errorFechaFin.includes('ERROR') ? 'opacity-75 cursor-not-allowed' : ''}`}
-                  onClick={generarMensaje}
-                >
-                  <Zap className="w-5 h-5" />
-                  {errorFechaFin && errorFechaFin.includes('ERROR') ? '⚠️ Corrige las fechas primero' : 'Generar Comunicado'}
-                  <span className="ml-2">{getEstadoSemaforo().color}</span>
-                </button>
-              </div>
+              <button 
+                className={`w-full mt-6 ${errorFechaFin ? 'bg-gray-600 cursor-not-allowed' : btnPrimary}`}
+                onClick={generarMensaje}
+                disabled={errorFechaFin && errorFechaFin.includes('ERROR')}
+              >
+                <Zap className="w-5 h-5 inline mr-2" />
+                Generar Comunicado
+              </button>
             </div>
             
-            {/* Resultado */}
-            <div className="bg-slate-800/95 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-emerald-400/40">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent flex items-center gap-2 mb-6">
-                <CheckCircle className="w-6 h-6 text-emerald-400" />
-                Comunicado Generado
-              </h2>
-              <div className="bg-slate-900/90 p-6 rounded-xl font-mono border-l-4 border-teal-500 mt-4 min-h-[200px] overflow-x-auto leading-relaxed">
-                <pre className="whitespace-pre-wrap text-gray-100">{resultado || 'El comunicado generado aparecerá aquí...'}</pre>
+            <div className={card}>
+              <h2 className="text-xl font-bold text-white mb-4">Comunicado Generado</h2>
+              <div className="bg-gray-900 p-4 rounded font-mono text-sm min-h-[150px] border border-gray-700">
+                <pre className="whitespace-pre-wrap text-gray-100">{resultado || 'El comunicado aparecerá aquí...'}</pre>
               </div>
               
               {mostrarAlerta && (
-                <div className="my-6 p-4 rounded-xl bg-teal-500/20 border-l-4 border-teal-500 backdrop-blur-sm">
-                  <p className="text-teal-300 flex items-center">
-                    <CheckCircle className="w-5 h-5 mr-2" />
-                    {alertaMensaje}
-                  </p>
+                <div className="mt-4 p-3 rounded bg-blue-900/30 border border-blue-800">
+                  <p className="text-blue-300 text-sm">{alertaMensaje}</p>
                 </div>
               )}
               
-              <div className="flex gap-4 mt-8">
-                <button 
-                  className="flex-1 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-teal-500/25 transform hover:-translate-y-1 flex items-center justify-center gap-2"
-                  onClick={copiar}
-                >
-                  <Copy className="w-5 h-5" />
-                  Copiar al Portapapeles
+              <div className="flex gap-4 mt-4">
+                <button className={btnPrimary + " flex-1"} onClick={copiar}>
+                  <Copy className="w-4 h-4 inline mr-2" />
+                  Copiar
                 </button>
-                <button 
-                  className="flex-1 bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-500 hover:to-slate-600 text-white py-4 px-6 rounded-xl font-semibold uppercase transition-all duration-300 shadow-lg hover:shadow-slate-500/25 transform hover:-translate-y-1 flex items-center justify-center gap-2"
-                  onClick={limpiarCampos}
-                >
-                  <Trash2 className="w-5 h-5" />
-                  Limpiar Campos
+                <button className={btnSecondary + " flex-1"} onClick={limpiarCampos}>
+                  <Trash2 className="w-4 h-4 inline mr-2" />
+                  Limpiar
                 </button>
               </div>
             </div>
           </div>
         </div>
         
-        {/* Modal de actualización automática */}
+        {/* Modales */}
         {mostrarActualizacion && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-slate-800 rounded-2xl p-6 border border-emerald-400/40 max-w-md mx-4">
-              <div className="text-center mb-4">
-                <div className="text-4xl mb-2">⏰</div>
-                <h3 className="text-xl font-bold text-emerald-300 mb-2">Actualización de Fechas</h3>
-                <p className="text-gray-300 text-sm">
-                  La página lleva abierta {calcularTiempoAbierto().horas}h {calcularTiempoAbierto().minutos}m
-                </p>
-                <p className="text-gray-400 text-xs mt-2">
-                  ¿Deseas actualizar las fechas a la hora actual?
-                </p>
-              </div>
-              
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+            <div className="bg-gray-900 rounded-lg p-6 border border-gray-700 max-w-md mx-4">
+              <h3 className="text-lg font-bold text-white mb-2">Actualizar Fechas</h3>
+              <p className="text-gray-400 text-sm mb-4">
+                La página lleva abierta {calcularTiempoAbierto().horas}h {calcularTiempoAbierto().minutos}m
+              </p>
               <div className="flex gap-3">
-                <button
-                  onClick={actualizarFechasAhora}
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-2 px-4 rounded-lg font-medium transition-all duration-200"
-                >
-                  ✅ Sí, actualizar
-                </button>
-                <button
-                  onClick={() => setMostrarActualizacion(false)}
-                  className="flex-1 bg-slate-600 hover:bg-slate-500 text-white py-2 px-4 rounded-lg font-medium transition-all duration-200"
-                >
-                  ⏰ Después
-                </button>
+                <button onClick={actualizarFechasAhora} className={btnPrimary + " flex-1"}>Actualizar</button>
+                <button onClick={() => setMostrarActualizacion(false)} className={btnSecondary + " flex-1"}>Después</button>
               </div>
-              
-              <button
-                onClick={() => {
-                  setNoPreguntar(true);
-                  setMostrarActualizacion(false);
-                }}
-                className="w-full mt-2 text-xs text-gray-400 hover:text-gray-300 py-1"
-              >
-                ❌ No preguntar más (esta sesión)
+              <button onClick={() => {setNoPreguntar(true); setMostrarActualizacion(false);}} className="w-full mt-2 text-xs text-gray-500 hover:text-gray-300">
+                No preguntar más
               </button>
             </div>
           </div>
         )}
 
-        {/* Modal de confirmación de duración */}
         {mostrarConfirmacionDuracion && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-slate-800 rounded-2xl p-6 border border-yellow-400/40 max-w-md mx-4">
-              <div className="text-center mb-4">
-                <div className="text-4xl mb-2">🤔</div>
-                <h3 className="text-xl font-bold text-yellow-300 mb-2">Confirmación de Duración</h3>
-                <p className="text-gray-300 text-sm mb-2">
-                  Duración calculada: <span className="font-bold text-yellow-300">{formData.duracionCalculada}</span>
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+            <div className="bg-gray-900 rounded-lg p-6 border border-yellow-700 max-w-md mx-4">
+              <h3 className="text-xl font-bold text-yellow-400 mb-4">Confirmación de Duración</h3>
+              <div className="bg-yellow-900/20 border border-yellow-800 rounded p-4 mb-4">
+                <p className="text-gray-300 mb-2">
+                  Duración calculada: <span className="font-bold text-yellow-400 text-xl">
+                    {multiplesAlertamientos && periodosAlertamiento.length > 0 ? calcularDuracionTotal() : formData.duracionCalculada}
+                  </span>
                 </p>
-                <p className="text-gray-400 text-xs">
+                <p className="text-gray-400 text-sm">
                   ¿El incidente realmente duró tanto tiempo?
                 </p>
               </div>
-              
               <div className="flex gap-3">
-                <button
+                <button 
                   onClick={() => {
                     setMostrarConfirmacionDuracion(false);
                     generarMensajeInterno();
-                  }}
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-2 px-4 rounded-lg font-medium transition-all duration-200"
+                  }} 
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium transition-colors"
                 >
-                  ✅ Sí, correcto
+                  ✓ Sí, correcto
                 </button>
-                <button
-                  onClick={() => setMostrarConfirmacionDuracion(false)}
-                  className="flex-1 bg-yellow-600 hover:bg-yellow-500 text-white py-2 px-4 rounded-lg font-medium transition-all duration-200"
+                <button 
+                  onClick={() => setMostrarConfirmacionDuracion(false)} 
+                  className="flex-1 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded font-medium transition-colors"
                 >
-                  🔄 Revisar fechas
+                  Revisar fechas
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Modal de error de fechas */}
         {mostrarErrorFecha && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-slate-800 rounded-2xl p-6 border border-red-400/40 max-w-lg mx-4 animate-bounce">
-              <div className="text-center mb-4">
-                <div className="text-5xl mb-3 animate-pulse">🚨</div>
-                <h3 className="text-2xl font-bold text-red-300 mb-2">Error en Fechas</h3>
-                <div className="bg-red-900/30 border border-red-500/50 rounded-lg p-3 mb-4">
-                  <p className="text-red-200 text-sm whitespace-pre-line">
-                    {errorFechaFin}
-                  </p>
-                </div>
-                
-                {sugerenciasFecha.length > 0 && (
-                  <div className="text-left bg-slate-700/60 rounded-lg p-4 mb-4">
-                    <h4 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
-                      💡 Sugerencias Inteligentes:
-                    </h4>
-                    <div className="space-y-2">
-                      {sugerenciasFecha.map((sugerencia, index) => (
-                        <button
-                          key={index}
-                          onClick={() => {
-                            aplicarSugerenciaFecha(sugerencia.fecha, sugerencia.hora);
-                            setMostrarErrorFecha(false);
-                          }}
-                          className="w-full text-left bg-slate-600/60 hover:bg-emerald-600/30 text-gray-300 hover:text-emerald-200 p-3 rounded-lg transition-all duration-200 text-sm flex items-center gap-3 group"
-                        >
-                          <span className="text-xl group-hover:animate-bounce">{sugerencia.icono || '💡'}</span>
-                          <span>{sugerencia.texto}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+            <div className="bg-gray-900 rounded-lg p-6 border border-red-800 max-w-lg mx-4">
+              <h3 className="text-xl font-bold text-red-400 mb-3">Error en Fechas</h3>
+              <div className="bg-red-900/30 border border-red-700 rounded p-3 mb-4">
+                <p className="text-red-300 text-sm whitespace-pre-line">{errorFechaFin}</p>
               </div>
-              
-              <button
-                onClick={() => setMostrarErrorFecha(false)}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 px-4 rounded-lg font-medium transition-all duration-200 transform hover:scale-105"
-              >
-                ✅ Entendido, corregiré las fechas
+              {sugerenciasFecha.length > 0 && (
+                <div className="space-y-2 mb-4">
+                  <p className="text-sm text-gray-400">Sugerencias:</p>
+                  {sugerenciasFecha.map((sug, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {aplicarSugerenciaFecha(sug.fecha, sug.hora); setMostrarErrorFecha(false);}}
+                      className="w-full text-left bg-gray-800 hover:bg-gray-700 text-gray-300 p-3 rounded text-sm"
+                    >
+                      {sug.texto}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <button onClick={() => setMostrarErrorFecha(false)} className={btnPrimary + " w-full"}>
+                Entendido
               </button>
             </div>
           </div>
         )}
         
-        <footer className="text-center py-8 mt-12 text-gray-300 text-sm border-t border-emerald-400/30">
-          <p className="mb-2">Desarrollado por Luis Alberto Herrera Lara</p>
-          <p className="text-emerald-200">Generador de Comunicados Pro - Versión 5.0</p>
-          <p className="text-xs mt-1">Sistema Avanzado de Comunicaciones</p>
-          <p className="text-xs text-emerald-300/70 mt-2">Actualizado el 13 de junio de 2025</p>
+        <footer className="text-center py-6 mt-8 text-gray-500 text-xs border-t border-gray-800">
+          <p>Desarrollado por Luis Alberto Herrera Lara</p>
+          <p>Generador de Comunicados v5.0 - BLU 2.0 Enhanced</p>
         </footer>
       </div>
     </div>
   );
-};
-
-export default GeneradorComunicados;
+}
