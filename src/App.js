@@ -1,34 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, AlertCircle, CheckCircle, RefreshCw, Copy, Trash2, Wrench, ChevronRight, Zap, MessageSquare, AlertTriangle, Bell, Settings, Plus, Minus, User, Lock, Eye, EyeOff, CreditCard, FileText, AlertOctagon } from 'lucide-react';
+import { Terminal, AlertTriangle, Clock, CheckCircle, RefreshCw, Copy, Trash2, Plus, Minus, User, Lock, Eye, EyeOff, Shield, Activity, Zap } from 'lucide-react';
 
 // Constantes
 const USUARIOS_VALIDOS = [
-  { usuario: 'fractalia', password: 'fractalia4ever' },
-  { usuario: 'gabriela', password: 'gabyRocks2025' },
-  { usuario: 'gestores', password: 'todosLosSapitos' },
-  { usuario: 'dorian', password: 'dorianGrayIncidentes' }
+  { usuario: 'fractalia', password: 'fractalia4ever' }
 ];
 
 const SERVICIOS_TRANSACCIONALES = [
-  { id: 'datafast-visa-mc', nombre: 'DATAFAST VISA-MC', descripcion: 'Transacciones locales Visa (débito/crédito) y MasterCard (crédito) en red propia', categoria: 'datafast' },
-  { id: 'datafast-diners-dc', nombre: 'DATAFAST DINERS-DC', descripcion: 'Transacciones locales Diners (débito/crédito) y Discover (crédito) en red propia', categoria: 'datafast' },
-  { id: 'banred-pago-tc', nombre: 'BANRED (PAGO A TARJETA DE CRÉDITO)', descripcion: 'Transacciones entre bancos asociados BANRED: tarjetas de crédito, cuentas corrientes y ahorro', categoria: 'banred' },
-  { id: 'banred-base24', nombre: 'BANRED BASE 24 (DÉBITOS)', descripcion: 'Transacciones tarjetas de débito Banco Pichincha y bancos asociados BANRED', categoria: 'banred' },
-  { id: 'banred-base25', nombre: 'BANRED BASE 25 (ATM - TARJETAS DE CRÉDITO)', descripcion: 'Transacciones ATM tarjetas de crédito Banco Pichincha y bancos asociados BANRED', categoria: 'banred' },
-  { id: 'usp-atalla', nombre: 'USP ATALLA', descripcion: 'Validación de tarjetas propias de débito y crédito BANCO PICHINCHA', categoria: 'validacion' },
-  { id: 'efectivo-express', nombre: 'EFECTIVO EXPRESS', descripcion: 'Avances de efectivo por ventanilla Banco Pichincha', categoria: 'efectivo' },
-  { id: 'diners-internacional-1', nombre: 'DINERS CLUB INTERNACIONAL 1', descripcion: 'Transacciones crédito Diners/Discover: tarjetas propias en red ajena y ajenas en red propia', categoria: 'internacional' },
-  { id: 'diners-internacional-2', nombre: 'DINERS CLUB INTERNACIONAL 2', descripcion: 'Transacciones crédito Diners/Discover: tarjetas propias en red ajena y ajenas en red propia', categoria: 'internacional' },
-  { id: 'pulse-discover', nombre: 'PULSE / DISCOVER FS', descripcion: 'Transacciones tarjetas ajenas Diners y Discover en cajeros autorizados', categoria: 'internacional' },
-  { id: 'llaves-dci', nombre: 'LLAVES DCI', descripcion: 'Intercambio de llaves con franquicias DCI/Discover', categoria: 'seguridad' },
-  { id: 'visa-int-emision', nombre: 'VISA INTERNACIONAL EMISIÓN', descripcion: 'Transacciones débito/crédito tarjetas propias en red ajena', categoria: 'internacional' },
-  { id: 'visa-int-adquirencia', nombre: 'VISA INTERNACIONAL ADQUIRENCIA', descripcion: 'Transacciones crédito tarjetas ajenas en red propia', categoria: 'internacional' },
-  { id: 'mastercard-mci', nombre: 'MASTERCARD INTERNACIONAL MCI', descripcion: 'Transacciones crédito tarjetas propias en red ajena', categoria: 'internacional' },
-  { id: 'mastercard-mds', nombre: 'MASTERCARD INTERNACIONAL MDS', descripcion: 'Transacciones crédito tarjetas ajenas en red propia', categoria: 'internacional' },
-  { id: 'broker', nombre: 'BROKER', descripcion: 'Avances de efectivo en cajeros ATM sin tarjeta de crédito', categoria: 'efectivo' },
-  { id: 'jardin-azuayo', nombre: 'JARDÍN AZUAYO', descripcion: 'Transacciones débito Visa de Cooperativa Jardín Azuayo', categoria: 'cooperativas' },
-  { id: 'dock', nombre: 'DOCK (EN PROCESO DE IMPLEMENTACIÓN)', descripcion: 'Transacciones débito Banco Diners Club del Ecuador', categoria: 'implementacion' },
-  { id: 'bpc-bp', nombre: 'BPC-BP', descripcion: 'Transacciones tarjeta prepago de transporte Banco Pichincha', categoria: 'prepago' }
+  { id: 'datafast-visa-mc', nombre: '💳 DATAFAST VISA-MC', descripcion: 'Transacciones locales Visa (débito/crédito) y MasterCard (crédito) en red propia', categoria: 'datafast' },
+  { id: 'datafast-diners-dc', nombre: '💳 DATAFAST DINERS-DC', descripcion: 'Transacciones locales Diners (débito/crédito) y Discover (crédito) en red propia', categoria: 'datafast' },
+  { id: 'banred-pago-tc', nombre: '🏦 BANRED (PAGO TC)', descripcion: 'Transacciones entre bancos asociados BANRED: tarjetas de crédito, cuentas corrientes y ahorro', categoria: 'banred' },
+  { id: 'banred-base24', nombre: '🏧 BANRED BASE 24', descripcion: 'Transacciones tarjetas de débito Banco Pichincha y bancos asociados BANRED', categoria: 'banred' },
+  { id: 'banred-base25', nombre: '🏧 BANRED BASE 25 (ATM)', descripcion: 'Transacciones ATM tarjetas de crédito Banco Pichincha y bancos asociados BANRED', categoria: 'banred' },
+  { id: 'usp-atalla', nombre: '🔐 USP ATALLA', descripcion: 'Validación de tarjetas propias de débito y crédito BANCO PICHINCHA', categoria: 'validacion' },
+  { id: 'efectivo-express', nombre: '💵 EFECTIVO EXPRESS', descripcion: 'Avances de efectivo por ventanilla Banco Pichincha', categoria: 'efectivo' },
+  { id: 'diners-internacional-1', nombre: '🌍 DINERS INTERNACIONAL 1', descripcion: 'Transacciones crédito Diners/Discover: tarjetas propias en red ajena y ajenas en red propia', categoria: 'internacional' },
+  { id: 'diners-internacional-2', nombre: '🌎 DINERS INTERNACIONAL 2', descripcion: 'Transacciones crédito Diners/Discover: tarjetas propias en red ajena y ajenas en red propia', categoria: 'internacional' },
+  { id: 'pulse-discover', nombre: '💎 PULSE/DISCOVER FS', descripcion: 'Transacciones tarjetas ajenas Diners y Discover en cajeros autorizados', categoria: 'internacional' },
+  { id: 'llaves-dci', nombre: '🔑 LLAVES DCI', descripcion: 'Intercambio de llaves con franquicias DCI/Discover', categoria: 'seguridad' },
+  { id: 'visa-int-emision', nombre: '✈️ VISA INT. EMISIÓN', descripcion: 'Transacciones débito/crédito tarjetas propias en red ajena', categoria: 'internacional' },
+  { id: 'visa-int-adquirencia', nombre: '🛬 VISA INT. ADQUIRENCIA', descripcion: 'Transacciones crédito tarjetas ajenas en red propia', categoria: 'internacional' },
+  { id: 'mastercard-mci', nombre: '🌐 MASTERCARD MCI', descripcion: 'Transacciones crédito tarjetas propias en red ajena', categoria: 'internacional' },
+  { id: 'mastercard-mds', nombre: '🌏 MASTERCARD MDS', descripcion: 'Transacciones crédito tarjetas ajenas en red propia', categoria: 'internacional' },
+  { id: 'broker', nombre: '🤝 BROKER', descripcion: 'Avances de efectivo en cajeros ATM sin tarjeta de crédito', categoria: 'efectivo' },
+  { id: 'jardin-azuayo', nombre: '🌱 JARDÍN AZUAYO', descripcion: 'Transacciones débito Visa de Cooperativa Jardín Azuayo', categoria: 'cooperativas' },
+  { id: 'dock', nombre: '🚧 DOCK (IMPLEMENTANDO)', descripcion: 'Transacciones débito Banco Diners Club del Ecuador', categoria: 'implementacion' },
+  { id: 'bpc-bp', nombre: '🚌 BPC-BP', descripcion: 'Transacciones tarjeta prepago de transporte Banco Pichincha', categoria: 'prepago' }
 ];
 
 const OPCIONES_ENCOLAMIENTO = [
@@ -74,8 +71,6 @@ export default function GeneradorComunicados() {
   const [tipo, setTipo] = useState('evento-inicio');
   const [modoBLU, setModoBLU] = useState(false);
   const [tipoBLU, setTipoBLU] = useState('aplicacion');
-  const [alertaCompleta, setAlertaCompleta] = useState('');
-  const [mostrarPegarAlerta, setMostrarPegarAlerta] = useState(false);
   const [multiplesAlertamientos, setMultiplesAlertamientos] = useState(false);
   const [periodosAlertamiento, setPeriodosAlertamiento] = useState([
     { fechaInicio: '', horaInicio: '', fechaFin: '', horaFin: '', duracion: '00:00:00' }
@@ -87,6 +82,7 @@ export default function GeneradorComunicados() {
   const [formData, setFormData] = useState({
     descripcion: '',
     impacto: '',
+    escaladoA: '',
     motivo: '',
     impactoMant: '',
     ejecutor: '',
@@ -115,7 +111,8 @@ export default function GeneradorComunicados() {
   const [errorFechaFin, setErrorFechaFin] = useState('');
   const [mostrarErrorFecha, setMostrarErrorFecha] = useState(false);
   const [sugerenciasFecha, setSugerenciasFecha] = useState([]);
-  const [escalamientoBLU, setEscalamientoBLU] = useState('');
+  const [autoLimpiarEscalado, setAutoLimpiarEscalado] = useState(true);
+  const [ultimoEscalado, setUltimoEscalado] = useState('');
 
   // Establecer fechas al cargar
   useEffect(() => {
@@ -177,82 +174,6 @@ export default function GeneradorComunicados() {
     setLoginForm({ usuario: '', password: '' });
   };
 
-  // Función para procesar alerta completa BLU 2.0
-  const procesarAlertaBLU = () => {
-    if (!alertaCompleta) {
-      setAlertaMensaje('Por favor, pega el contenido de la alerta');
-      setMostrarAlerta(true);
-      setTimeout(() => setMostrarAlerta(false), 3000);
-      return;
-    }
-
-    const texto = alertaCompleta.toLowerCase();
-    let descripcionExtraida = '';
-    let tipoDetectado = 'aplicacion';
-    let fechaExtraida = '';
-    let horaExtraida = '';
-
-    // Detectar si es BIAN
-    if (texto.includes('namespace.name:') && texto.includes('bian')) {
-      const regexNamespace = /namespace\.name:\s*([^\s\n]+)/i;
-      const matchNamespace = alertaCompleta.match(regexNamespace);
-      if (matchNamespace) {
-        descripcionExtraida = `Alertamiento ${matchNamespace[1]}`;
-        tipoDetectado = 'bian';
-      }
-    } else {
-      const regexCluster = /cluster\.name:\s*([^\s\n]+)/i;
-      const matchCluster = alertaCompleta.match(regexCluster);
-      if (matchCluster) {
-        descripcionExtraida = `Alertamiento ${matchCluster[1]}`;
-      }
-
-      if (texto.includes('application')) {
-        tipoDetectado = 'aplicacion';
-      } else if (texto.includes('performance') || texto.includes('hardware')) {
-        tipoDetectado = 'infraestructura';
-      }
-    }
-
-    // Extraer fecha y hora
-    const regexFecha = /(\d{1,2})\.(\d{2})\.(\d{4})/;
-    const matchFecha = alertaCompleta.match(regexFecha);
-    if (matchFecha) {
-      fechaExtraida = `${matchFecha[3]}-${matchFecha[2]}-${matchFecha[1].padStart(2, '0')}`;
-    }
-
-    const regexHora = /(\d{2}):(\d{2})\s*\(UTC\)/;
-    const matchHora = alertaCompleta.match(regexHora);
-    if (matchHora) {
-      horaExtraida = `${matchHora[1]}:${matchHora[2]}:00`;
-    }
-
-    if (descripcionExtraida) {
-      setFormData(prev => ({
-        ...prev,
-        descripcion: descripcionExtraida,
-        fechaInicio: fechaExtraida || prev.fechaInicio,
-        horaInicio: horaExtraida || prev.horaInicio
-      }));
-    }
-
-    setTipoBLU(tipoDetectado);
-    
-    if (tipoDetectado === 'bian') {
-      setEscalamientoBLU('Miguel Angel López Garavito');
-    } else if (tipoDetectado === 'infraestructura') {
-      setEscalamientoBLU('Infraestructura Cloud');
-    } else {
-      setEscalamientoBLU('Paul Chamorro / David Albuja');
-    }
-
-    setMostrarPegarAlerta(false);
-    setAlertaCompleta('');
-    setAlertaMensaje('✅ Alerta procesada correctamente');
-    setMostrarAlerta(true);
-    setTimeout(() => setMostrarAlerta(false), 3000);
-  };
-
   // Funciones de servicios
   const seleccionarServicio = (servicio) => {
     const campoImpacto = tipo.startsWith('mantenimiento-') ? 'impactoMant' : 'impacto';
@@ -267,7 +188,7 @@ export default function GeneradorComunicados() {
   const limpiarImpactos = () => {
     const campoImpacto = tipo.startsWith('mantenimiento-') ? 'impactoMant' : 'impacto';
     setFormData(prev => ({ ...prev, [campoImpacto]: '' }));
-    setAlertaMensaje('Impactos limpiados');
+    setAlertaMensaje('Impactos limpiados correctamente');
     setMostrarAlerta(true);
     setTimeout(() => setMostrarAlerta(false), 2000);
   };
@@ -282,16 +203,16 @@ export default function GeneradorComunicados() {
 
   const getEstadoSemaforo = () => {
     const { total } = calcularTiempoAbierto();
-    if (total < 1) return { color: '🟢', estado: 'Actualizado', clase: 'text-green-500' };
-    if (total < 4) return { color: '🟡', estado: 'Revisar', clase: 'text-yellow-500' };
-    return { color: '🔴', estado: 'Desactualizado', clase: 'text-red-500' };
+    if (total < 1) return { estado: 'SINCRONIZADO', clase: 'bg-green-500', texto: 'text-green-400', borde: 'border-green-500' };
+    if (total < 4) return { estado: 'REVISAR SINCRONIZACIÓN', clase: 'bg-yellow-500', texto: 'text-yellow-400', borde: 'border-yellow-500' };
+    return { estado: 'FUERA DE SINCRONÍA', clase: 'bg-red-500', texto: 'text-red-400', borde: 'border-red-500' };
   };
 
   const actualizarFechasAhora = () => {
     establecerFechaHoraActual();
     setTiempoAbierto(Date.now());
     setMostrarActualizacion(false);
-    setAlertaMensaje('Fechas actualizadas');
+    setAlertaMensaje('Fechas sincronizadas correctamente');
     setMostrarAlerta(true);
     setTimeout(() => setMostrarAlerta(false), 3000);
   };
@@ -338,6 +259,7 @@ export default function GeneradorComunicados() {
       ...prev,
       descripcion: '',
       impacto: '',
+      escaladoA: '',
       motivo: '',
       impactoMant: '',
       ejecutor: '',
@@ -352,9 +274,7 @@ export default function GeneradorComunicados() {
     setErrorFechaFin('');
     setMostrarErrorFecha(false);
     setSugerenciasFecha([]);
-    setAlertaCompleta('');
-    setEscalamientoBLU('');
-    setAlertaMensaje('Campos limpiados');
+    setAlertaMensaje('Campos limpiados correctamente');
     setMostrarAlerta(true);
     setTimeout(() => setMostrarAlerta(false), 3000);
   };
@@ -452,7 +372,7 @@ export default function GeneradorComunicados() {
         horaFin: horaActual
       }));
       
-      setAlertaMensaje('Fechas auto-completadas');
+      setAlertaMensaje('Fechas autocompletadas desde el inicio');
       setMostrarAlerta(true);
       setTimeout(() => setMostrarAlerta(false), 4000);
     }
@@ -471,13 +391,13 @@ export default function GeneradorComunicados() {
       const fin = new Date(`${fechaFin}T${horaFin}`);
       
       if (fin < inicio) {
-        setErrorFechaFin(`La fecha/hora de fin no puede ser anterior al inicio`);
+        setErrorFechaFin(`Error: La hora de fin es anterior a la hora de inicio`);
         const hoy = new Date();
         const fechaActual = hoy.toISOString().split('T')[0];
         const horaActual = hoy.toTimeString().split(' ')[0];
         
         setSugerenciasFecha([
-          { texto: `Usar fecha y hora actual: ${formatearFecha(fechaActual)} ${horaActual}`, fecha: fechaActual, hora: horaActual }
+          { texto: `Usar hora actual: ${formatearFecha(fechaActual)} ${horaActual}`, fecha: fechaActual, hora: horaActual }
         ]);
         setMostrarErrorFecha(true);
         return false;
@@ -498,7 +418,7 @@ export default function GeneradorComunicados() {
     setErrorFechaFin('');
     setSugerenciasFecha([]);
     setMostrarErrorFecha(false);
-    setAlertaMensaje(`Fecha corregida`);
+    setAlertaMensaje(`Fecha corregida correctamente`);
     setMostrarAlerta(true);
     setTimeout(() => setMostrarAlerta(false), 3000);
   };
@@ -568,7 +488,6 @@ export default function GeneradorComunicados() {
       return;
     }
     
-    // Validar duración mayor a 4 horas
     if (tipo.endsWith('-fin')) {
       let duracionAValidar = '';
       
@@ -578,7 +497,6 @@ export default function GeneradorComunicados() {
         duracionAValidar = formData.duracionCalculada;
       }
       
-      // Convertir duración a horas
       const [horas, minutos, segundos] = duracionAValidar.split(':').map(Number);
       const duracionEnHoras = horas + (minutos / 60) + (segundos / 3600);
       
@@ -593,6 +511,10 @@ export default function GeneradorComunicados() {
 
   const generarMensajeInterno = () => {
     let mensaje = "";
+    
+    if (formData.escaladoA && formData.escaladoA.trim() !== '') {
+      setUltimoEscalado(formData.escaladoA);
+    }
     
     const getTitulo = () => {
       if (!modoBLU) {
@@ -612,24 +534,25 @@ export default function GeneradorComunicados() {
       const descripcionVal = formData.descripcion || (modoBLU ? "Alertamiento [cluster/namespace]" : "DESCRIPCION DEL INCIDENTE");
       const estadoVal = formData.estadoInicio || "En revisión";
       const fechaFormateada = formatearFecha(formData.fechaInicio);
+      const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
-      mensaje = `${getTitulo()}\n🟡 ${estadoVal}\n\nDescripción: ${descripcionVal}`;
+      mensaje = `${getTitulo()}\n🟡 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
       
-      if (!modoBLU) {
-        const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
-        mensaje = `${getTitulo()}\n🟡 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
+      if (formData.escaladoA && formData.escaladoA.trim() !== '') {
+        mensaje += `\nEscalado a: ${formData.escaladoA}`;
       }
       
       mensaje += `\nInicio: ${fechaFormateada} - ${formData.horaInicio}`;
     }
     else if (tipo === 'evento-seguimiento') {
       const descripcionVal = formData.descripcion || (modoBLU ? "Alertamiento [cluster/namespace]" : "DESCRIPCION DEL INCIDENTE");
+      const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
       mensaje = `${getTitulo()}\n🔁 Seguimiento\n\nDescripción: ${descripcionVal}`;
+      mensaje += `\n${impactoFormateado}`;
       
-      if (!modoBLU) {
-        const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
-        mensaje += `\n${impactoFormateado}`;
+      if (formData.escaladoA && formData.escaladoA.trim() !== '') {
+        mensaje += `\nEscalado a: ${formData.escaladoA}`;
       }
       
       if (formData.acciones && formData.acciones.trim()) {
@@ -651,12 +574,12 @@ export default function GeneradorComunicados() {
     else if (tipo === 'evento-fin') {
       const descripcionVal = formData.descripcion || (modoBLU ? "Alertamiento [cluster/namespace]" : "DESCRIPCION DEL INCIDENTE");
       const estadoVal = formData.estadoFin || "Recuperado";
+      const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
-      mensaje = `${getTitulo()}\n🟢 ${estadoVal}\n\nDescripción: ${descripcionVal}`;
+      mensaje = `${getTitulo()}\n🟢 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
       
-      if (!modoBLU) {
-        const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
-        mensaje = `${getTitulo()}\n🟢 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
+      if (formData.escaladoA && formData.escaladoA.trim() !== '') {
+        mensaje += `\nEscalado a: ${formData.escaladoA}`;
       }
       
       mensaje += `\n${formatearPeriodosMultiples()}`;
@@ -700,13 +623,23 @@ export default function GeneradorComunicados() {
       const fechaFormateada = formatearFecha(formData.fechaInicio);
       const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
-      mensaje = `${getTitulo()}\n🟡 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}\nInicio: ${fechaFormateada} - ${formData.horaInicio}`;
+      mensaje = `${getTitulo()}\n🟡 ${estadoVal}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
+      
+      if (formData.escaladoA && formData.escaladoA.trim() !== '') {
+        mensaje += `\nEscalado a: ${formData.escaladoA}`;
+      }
+      
+      mensaje += `\nInicio: ${fechaFormateada} - ${formData.horaInicio}`;
     }
     else if (tipo === 'incidente-avance') {
       const descripcionVal = formData.descripcion || "DESCRIPCION DEL INCIDENTE";
       const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
       mensaje = `${getTitulo()}\n🔁 Avance\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
+      
+      if (formData.escaladoA && formData.escaladoA.trim() !== '') {
+        mensaje += `\nEscalado a: ${formData.escaladoA}`;
+      }
       
       if (formData.accionesEnCurso && formData.accionesEnCurso.trim()) {
         mensaje += "\nAcciones en curso:";
@@ -745,7 +678,13 @@ export default function GeneradorComunicados() {
       const estadoFin = 'Recuperado';
       const impactoFormateado = formatearImpacto(formData.impacto, "Impacto servicio / usuarios");
       
-      mensaje = `${getTitulo()}\n🟢 ${estadoFin}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}\n${formatearPeriodosMultiples()}`;
+      mensaje = `${getTitulo()}\n🟢 ${estadoFin}\n\nDescripción: ${descripcionVal}\n${impactoFormateado}`;
+      
+      if (formData.escaladoA && formData.escaladoA.trim() !== '') {
+        mensaje += `\nEscalado a: ${formData.escaladoA}`;
+      }
+      
+      mensaje += `\n${formatearPeriodosMultiples()}`;
       
       if (formData.accionesEjecutadas && formData.accionesEjecutadas.trim()) {
         mensaje += "\nAcciones ejecutadas:";
@@ -790,191 +729,249 @@ export default function GeneradorComunicados() {
     
     setResultado(mensaje);
     setMostrarAlerta(false);
+    
+    if (autoLimpiarEscalado && (tipo.startsWith('evento-') || tipo.startsWith('incidente-'))) {
+      setFormData(prev => ({ ...prev, escaladoA: '' }));
+    }
   };
 
   const copiar = () => {
     if (!resultado) {
-      alert("No hay comunicado generado");
+      alert("Por favor genere el mensaje primero");
       return;
     }
     navigator.clipboard.writeText(resultado)
       .then(() => {
-        setAlertaMensaje('Comunicado copiado');
+        setAlertaMensaje('Mensaje copiado al portapapeles');
         setMostrarAlerta(true);
         setTimeout(() => setMostrarAlerta(false), 3000);
       })
       .catch(() => {
-        alert("Error al copiar");
+        alert("Error al copiar el mensaje");
       });
   };
 
-  // Estilos
-  const btnPrimary = "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium transition-colors";
-  const btnSecondary = "bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded font-medium transition-colors";
-  const input = "w-full p-3 bg-gray-900 border border-gray-700 rounded text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none";
-  const label = "block mb-2 text-sm font-medium text-gray-300";
-  const card = "bg-gray-800 rounded-lg p-6 border border-gray-700";
+  // Estilos premium con azul oscuro y negro
+  const btnPrimary = "bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white px-4 py-2 rounded-lg font-semibold transition-all shadow-lg shadow-blue-900/50 transform hover:scale-105";
+  const btnSecondary = "bg-gray-800/80 hover:bg-gray-700/90 backdrop-blur text-blue-300 border border-blue-500/30 px-4 py-2 rounded-lg font-semibold transition-all transform hover:scale-105";
+  const btnWarning = "bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white px-4 py-2 rounded-lg font-semibold transition-all shadow-lg shadow-orange-900/50 transform hover:scale-105";
+  const input = "w-full p-3 bg-black/40 backdrop-blur border border-blue-500/30 rounded-lg text-blue-100 placeholder-blue-400/50 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-all";
+  const label = "block mb-2 text-sm font-semibold text-blue-300";
+  const card = "bg-gray-900/60 backdrop-blur-xl rounded-xl p-6 border border-blue-500/20 shadow-2xl shadow-blue-900/30 hover:shadow-blue-800/40 transition-all";
 
-  // Login
+  // Login premium
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-gray-900 rounded-lg p-8 border border-gray-800">
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-blue-950 flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Fondo animado mejorado */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-700/20 via-transparent to-transparent"></div>
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-700/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-blue-600/5 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        </div>
+        
+        <div className="w-full max-w-md bg-gray-900/90 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl shadow-blue-900/50 border border-blue-500/30 relative z-10 transform hover:scale-[1.02] transition-all duration-300">
+          {/* Logo Diners inspirado */}
           <div className="text-center mb-8">
-            <MessageSquare className="w-16 h-16 mx-auto text-blue-500 mb-4" />
-            <h1 className="text-2xl font-bold text-white mb-2">Generador de Comunicados</h1>
-            <p className="text-gray-500 text-sm">v5.0 - Acceso Restringido</p>
-            <p className="text-gray-600 text-xs mt-1">Actualizado: 10/08/2025</p>
+            <div className="relative w-24 h-24 mx-auto mb-6">
+              {/* Círculo exterior (luna) */}
+              <div className="absolute inset-0 rounded-full border-8 border-blue-600 bg-gradient-to-br from-blue-500 to-blue-700 shadow-lg shadow-blue-900/50"></div>
+              {/* Círculo interior blanco */}
+              <div className="absolute inset-2 rounded-full bg-white flex items-center justify-center">
+                {/* Dos semicírculos internos */}
+                <div className="relative w-full h-full flex items-center justify-center">
+                  <div className="absolute left-3 w-5 h-14 bg-gradient-to-r from-blue-600 to-blue-700 rounded-l-full"></div>
+                  <div className="absolute right-3 w-5 h-14 bg-gradient-to-l from-blue-600 to-blue-700 rounded-r-full"></div>
+                </div>
+              </div>
+              {/* Efecto de brillo */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/20 to-transparent"></div>
+            </div>
+            
+            <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-300 to-blue-500 mb-3 tracking-tight">
+              Centro de Comando
+            </h1>
+            <div className="h-1 w-32 mx-auto bg-gradient-to-r from-transparent via-blue-500 to-transparent rounded-full mb-3"></div>
+            <p className="text-blue-300 text-base font-semibold">Diners Club del Ecuador</p>
+            <p className="text-blue-400/70 text-sm mt-2">Sistema de Gestión de Comunicados</p>
+            <div className="mt-4 flex items-center justify-center space-x-2">
+              <div className="h-px w-8 bg-gradient-to-r from-transparent to-blue-500/50"></div>
+              <Shield className="w-4 h-4 text-blue-500/70" />
+              <div className="h-px w-8 bg-gradient-to-l from-transparent to-blue-500/50"></div>
+            </div>
           </div>
-          <div className="space-y-4">
+
+          <div className="space-y-5">
             <div>
-              <label className={label}>Usuario</label>
+              <label className={label + " flex items-center space-x-2"}>
+                <User className="w-4 h-4" />
+                <span>Usuario</span>
+              </label>
               <input
                 type="text"
                 name="usuario"
                 value={loginForm.usuario}
                 onChange={handleLoginInputChange}
-                className={input}
-                placeholder="Usuario"
+                className={input + " pl-4"}
+                placeholder="Ingrese su usuario"
+                autoComplete="username"
               />
             </div>
             <div>
-              <label className={label}>Contraseña</label>
+              <label className={label + " flex items-center space-x-2"}>
+                <Lock className="w-4 h-4" />
+                <span>Contraseña</span>
+              </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
                   value={loginForm.password}
                   onChange={handleLoginInputChange}
-                  className={input}
-                  placeholder="Contraseña"
+                  className={input + " pr-12"}
+                  placeholder="Ingrese su contraseña"
+                  autoComplete="current-password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-400 hover:text-blue-300 transition-colors p-1"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
             {loginError && (
-              <div className="p-3 rounded bg-red-900/30 border border-red-800">
-                <p className="text-red-400 text-sm">{loginError}</p>
+              <div className="p-4 rounded-xl bg-red-900/40 border border-red-500/50 backdrop-blur animate-pulse">
+                <div className="flex items-center space-x-2">
+                  <AlertTriangle className="w-5 h-5 text-red-400" />
+                  <p className="text-red-300 text-sm font-medium">{loginError}</p>
+                </div>
               </div>
             )}
-            <button onClick={handleLogin} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded font-medium transition-colors">
-              Acceder
+            <button 
+              onClick={handleLogin} 
+              className="w-full bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 hover:from-blue-700 hover:via-blue-800 hover:to-blue-900 text-white py-3.5 rounded-xl font-semibold transition-all shadow-lg shadow-blue-900/50 transform hover:scale-[1.02] hover:shadow-xl hover:shadow-blue-800/60 flex items-center justify-center space-x-2"
+            >
+              <Shield className="w-5 h-5" />
+              <span>Iniciar Sesión</span>
             </button>
+            
+            <div className="pt-4 border-t border-blue-500/20">
+              <p className="text-center text-xs text-blue-400/50">
+                Sistema seguro protegido con encriptación
+              </p>
+            </div>
           </div>
         </div>
       </div>
     );
   }
 
-  // App principal - Parte 1: Header y Modal
+  // App principal premium
   return (
-    <div className="min-h-screen bg-black text-gray-100">
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <header className="bg-gray-900 p-6 rounded-lg mb-6 border border-gray-800 relative">
-          <div className="absolute top-4 left-4 bg-gray-800 rounded p-2 text-xs">
-            <span className={getEstadoSemaforo().clase}>{getEstadoSemaforo().color} {calcularTiempoAbierto().horas}h {calcularTiempoAbierto().minutos}m</span>
-            <button onClick={actualizarFechasAhora} className="ml-2 text-blue-400 hover:text-blue-300">
-              <RefreshCw className="w-3 h-3 inline" />
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-blue-950 relative">
+      {/* Fondo decorativo */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-700/5 rounded-full blur-3xl"></div>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 py-6 relative z-10">
+        <header className="bg-gray-900/80 backdrop-blur-xl rounded-xl p-6 mb-6 shadow-2xl border border-blue-500/20">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-3">
+              <div className="bg-gradient-to-br from-blue-600 to-blue-800 w-12 h-12 rounded-lg flex items-center justify-center shadow-lg shadow-blue-900/50">
+                <Terminal className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
+                  Centro de Comando - Diners Club Ecuador
+                </h1>
+                <p className="text-blue-300 text-sm">Sistema de Gestión de Comunicados</p>
+              </div>
+            </div>
+            <button onClick={handleLogout} className="text-blue-300 hover:text-blue-100 text-sm font-medium transition-all">
+              Cerrar Sesión
             </button>
           </div>
-          <button onClick={handleLogout} className="absolute top-4 right-4 text-gray-400 hover:text-white text-sm">
-            Salir
-          </button>
-          <div className="text-center">
-            <MessageSquare className="w-12 h-12 mx-auto text-blue-500 mb-3" />
-            <h1 className="text-3xl font-bold text-white mb-2">Generador de Comunicados</h1>
-            <p className="text-gray-400">Sistema de Comunicaciones - Monitoreo</p>
-            <button
-              onClick={() => setModoBLU(!modoBLU)}
-              className={`mt-3 px-4 py-2 rounded text-sm ${modoBLU ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
-            >
-              {modoBLU ? '🔵 BLU 2.0 Activo' : '⚪ Activar Modo BLU 2.0'}
-            </button>
-            {modoBLU && (
-              <>
-                <div className="mt-3 inline-flex gap-2">
-                  {['aplicacion', 'infraestructura', 'bian'].map(t => (
-                    <button
-                      key={t}
-                      onClick={() => setTipoBLU(t)}
-                      className={`px-3 py-1 rounded text-xs ${tipoBLU === t ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
-                    >
-                      {t === 'aplicacion' ? '📱 App' : t === 'infraestructura' ? '🖥️ Infra' : '⚠️ BIAN'}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  onClick={() => setMostrarPegarAlerta(!mostrarPegarAlerta)}
-                  className="ml-3 px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-xs"
-                >
-                  <FileText className="w-3 h-3 inline mr-1" />
-                  Pegar Alerta
-                </button>
-              </>
-            )}
-          </div>
-        </header>
-        
-        {/* Modal para pegar alerta BLU */}
-        {mostrarPegarAlerta && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-            <div className="bg-gray-900 rounded-lg p-6 border border-gray-700 max-w-3xl mx-4 w-full">
-              <h3 className="text-lg font-bold text-white mb-3">Pegar Alerta BLU 2.0</h3>
-              <p className="text-sm text-gray-400 mb-3">Pega el contenido completo de la alerta y el sistema detectará automáticamente el tipo y extraerá la información</p>
-              <textarea
-                value={alertaCompleta}
-                onChange={(e) => setAlertaCompleta(e.target.value)}
-                className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white placeholder-gray-500 h-64 font-mono text-xs"
-                placeholder="Pega aquí el contenido de la alerta..."
-              />
-              <div className="flex gap-3 mt-4">
-                <button onClick={procesarAlertaBLU} className={btnPrimary + " flex-1"}>
-                  <AlertOctagon className="w-4 h-4 inline mr-2" />
-                  Procesar Alerta
-                </button>
-                <button onClick={() => {setMostrarPegarAlerta(false); setAlertaCompleta('');}} className={btnSecondary + " flex-1"}>
-                  Cancelar
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className={`flex items-center space-x-2 px-3 py-2 rounded-lg border ${getEstadoSemaforo().borde} bg-black/40 backdrop-blur`}>
+                <div className={`w-2 h-2 rounded-full ${getEstadoSemaforo().clase} animate-pulse`}></div>
+                <span className={`text-xs font-semibold ${getEstadoSemaforo().texto}`}>
+                  {getEstadoSemaforo().estado}
+                </span>
+                <span className="text-blue-400/70 text-xs">
+                  ({calcularTiempoAbierto().horas}h {calcularTiempoAbierto().minutos}m)
+                </span>
+                <button onClick={actualizarFechasAhora} className="text-blue-400 hover:text-blue-300 transition-all">
+                  <RefreshCw className="w-4 h-4" />
                 </button>
               </div>
             </div>
+            
+            <button
+              onClick={() => setModoBLU(!modoBLU)}
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all transform hover:scale-105 ${
+                modoBLU 
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg shadow-blue-900/50' 
+                  : 'bg-gray-800/60 text-blue-300 border border-blue-500/30 backdrop-blur hover:bg-gray-700/70'
+              }`}
+            >
+              {modoBLU ? '● Modo BLU 2.0 Activo' : '○ Activar Modo BLU 2.0'}
+            </button>
           </div>
-        )}
-
-        {/* Contenido principal - Parte 2 */}
+          
+          {modoBLU && (
+            <div className="mt-4 flex gap-2">
+              {['aplicacion', 'infraestructura', 'bian'].map(t => (
+                <button
+                  key={t}
+                  onClick={() => setTipoBLU(t)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all transform hover:scale-105 ${
+                    tipoBLU === t 
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg' 
+                      : 'bg-gray-800/60 text-blue-400 border border-blue-500/30 backdrop-blur hover:bg-gray-700/70'
+                  }`}
+                >
+                  {t === 'aplicacion' ? '📱 Aplicación' : t === 'infraestructura' ? '🖥️ Infraestructura' : '⚠️ BIAN'}
+                </button>
+              ))}
+            </div>
+          )}
+        </header>
+        
         <div className="grid lg:grid-cols-4 gap-6">
           {/* Panel lateral izquierdo */}
           <div className="lg:col-span-1">
             <div className="space-y-4">
               <div className={card}>
-                <h2 className="text-lg font-bold text-white mb-4">Tipo de Comunicado</h2>
+                <h2 className="text-lg font-bold text-blue-300 mb-4">Tipo de Comunicado</h2>
                 <div className="space-y-3">
-                  <div className="border border-gray-700 rounded p-3">
-                    <h3 className="text-xs font-semibold text-gray-400 mb-2 uppercase">Eventos</h3>
+                  <div className="border border-blue-500/20 rounded-lg p-3 bg-black/40 backdrop-blur">
+                    <h3 className="text-sm font-semibold text-blue-400 mb-2">Eventos</h3>
                     <div className="grid grid-cols-3 gap-2">
                       {['evento-inicio', 'evento-seguimiento', 'evento-fin'].map((t, i) => (
                         <button
                           key={t}
-                          className={`p-2 rounded text-xs ${tipo === t ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
+                          className={`p-2 rounded-lg text-xs font-medium transition-all transform hover:scale-105 ${tipo === t ? 'bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-lg shadow-blue-900/50' : 'bg-gray-800/60 text-blue-300 border border-blue-500/30 backdrop-blur hover:bg-gray-700/70'}`}
                           onClick={() => seleccionarTipo(t)}
                         >
-                          {i === 0 ? '🟡' : i === 1 ? '🔁' : '🟢'}<br/>{i === 0 ? 'Inicio' : i === 1 ? 'Seg.' : 'Fin'}
+                          {i === 0 ? '🟡' : i === 1 ? '🔁' : '🟢'}<br/>{i === 0 ? 'Inicio' : i === 1 ? 'Seg' : 'Fin'}
                         </button>
                       ))}
                     </div>
                   </div>
-                  <div className="border border-gray-700 rounded p-3">
-                    <h3 className="text-xs font-semibold text-gray-400 mb-2 uppercase">Mantenimientos</h3>
+                  <div className="border border-orange-500/20 rounded-lg p-3 bg-black/40 backdrop-blur">
+                    <h3 className="text-sm font-semibold text-orange-400 mb-2">Mantenimientos</h3>
                     <div className="grid grid-cols-2 gap-2">
                       {['mantenimiento-inicio', 'mantenimiento-fin'].map((t, i) => (
                         <button
                           key={t}
-                          className={`p-2 rounded text-xs ${tipo === t ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
+                          className={`p-2 rounded-lg text-xs font-medium transition-all transform hover:scale-105 ${tipo === t ? 'bg-gradient-to-br from-orange-600 to-orange-800 text-white shadow-lg shadow-orange-900/50' : 'bg-gray-800/60 text-orange-300 border border-orange-500/30 backdrop-blur hover:bg-gray-700/70'}`}
                           onClick={() => seleccionarTipo(t)}
                         >
                           {i === 0 ? '⚠️' : '✅'}<br/>{i === 0 ? 'Inicio' : 'Fin'}
@@ -982,13 +979,13 @@ export default function GeneradorComunicados() {
                       ))}
                     </div>
                   </div>
-                  <div className="border border-gray-700 rounded p-3">
-                    <h3 className="text-xs font-semibold text-gray-400 mb-2 uppercase">Incidentes</h3>
+                  <div className="border border-red-500/20 rounded-lg p-3 bg-black/40 backdrop-blur">
+                    <h3 className="text-sm font-semibold text-red-400 mb-2">Incidentes</h3>
                     <div className="grid grid-cols-3 gap-2">
                       {['incidente-inicio', 'incidente-avance', 'incidente-fin'].map((t, i) => (
                         <button
                           key={t}
-                          className={`p-2 rounded text-xs ${tipo === t ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'}`}
+                          className={`p-2 rounded-lg text-xs font-medium transition-all transform hover:scale-105 ${tipo === t ? 'bg-gradient-to-br from-red-600 to-red-800 text-white shadow-lg shadow-red-900/50' : 'bg-gray-800/60 text-red-300 border border-red-500/30 backdrop-blur hover:bg-gray-700/70'}`}
                           onClick={() => seleccionarTipo(t)}
                         >
                           {i === 0 ? '🟡' : i === 1 ? '🔁' : '🟢'}<br/>{i === 0 ? 'Inicio' : i === 1 ? 'Avance' : 'Fin'}
@@ -1001,26 +998,26 @@ export default function GeneradorComunicados() {
 
               <div className={card}>
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-sm font-bold text-white">Servicios Transaccionales</h2>
-                  <button onClick={() => setMostrarServicios(!mostrarServicios)} className="text-gray-400 hover:text-white">
+                  <h2 className="text-sm font-bold text-blue-300">Servicios Transaccionales</h2>
+                  <button onClick={() => setMostrarServicios(!mostrarServicios)} className="text-blue-400 hover:text-blue-300 transition-all">
                     {mostrarServicios ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
                   </button>
                 </div>
                 {mostrarServicios && (
-                  <div className="space-y-2 max-h-96 overflow-y-auto">
-                    <button onClick={limpiarImpactos} className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 rounded">
+                  <div className="space-y-2 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-800 scrollbar-track-black/40">
+                    <button onClick={limpiarImpactos} className="text-xs bg-red-900/40 hover:bg-red-800/60 border border-red-500/50 text-red-300 px-3 py-1 rounded-lg font-medium backdrop-blur transition-all">
                       <Trash2 className="w-3 h-3 inline mr-1" />Limpiar
                     </button>
                     
                     {['datafast', 'banred', 'internacional'].map(categoria => (
-                      <div key={categoria} className="border border-gray-700 rounded p-2">
-                        <h4 className="text-xs font-semibold text-gray-400 mb-1 uppercase">{categoria}</h4>
+                      <div key={categoria} className="border border-blue-500/20 rounded-lg p-2 bg-black/40 backdrop-blur">
+                        <h4 className="text-xs font-semibold text-blue-400 mb-1 uppercase">{categoria}</h4>
                         <div className="space-y-1">
                           {SERVICIOS_TRANSACCIONALES.filter(s => s.categoria === categoria).map(servicio => (
                             <button
                               key={servicio.id}
                               onClick={() => seleccionarServicio(servicio)}
-                              className="text-left w-full text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 p-1 rounded truncate"
+                              className="text-left w-full text-xs bg-gray-900/60 hover:bg-blue-900/40 border border-blue-500/20 hover:border-blue-400/50 text-blue-200 p-1.5 rounded backdrop-blur truncate transition-all"
                               title={servicio.descripcion}
                             >
                               {servicio.nombre}
@@ -1030,14 +1027,14 @@ export default function GeneradorComunicados() {
                       </div>
                     ))}
                     
-                    <div className="border border-gray-700 rounded p-2">
-                      <h4 className="text-xs font-semibold text-gray-400 mb-1 uppercase">OTROS SERVICIOS</h4>
+                    <div className="border border-blue-500/20 rounded-lg p-2 bg-black/40 backdrop-blur">
+                      <h4 className="text-xs font-semibold text-blue-400 mb-1">OTROS SERVICIOS</h4>
                       <div className="space-y-1">
                         {SERVICIOS_TRANSACCIONALES.filter(s => !['datafast', 'banred', 'internacional'].includes(s.categoria)).map(servicio => (
                           <button
                             key={servicio.id}
                             onClick={() => seleccionarServicio(servicio)}
-                            className="text-left w-full text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 p-1 rounded truncate"
+                            className="text-left w-full text-xs bg-gray-900/60 hover:bg-blue-900/40 border border-blue-500/20 hover:border-blue-400/50 text-blue-200 p-1.5 rounded backdrop-blur truncate transition-all"
                             title={servicio.descripcion}
                           >
                             {servicio.nombre}
@@ -1051,49 +1048,30 @@ export default function GeneradorComunicados() {
             </div>
           </div>
           
-          {/* Panel principal derecho - Parte 3 */}
+          {/* Panel principal derecho - Continuará en el siguiente mensaje */}
           <div className="lg:col-span-3 space-y-6">
             <div className={card}>
-              <h2 className="text-xl font-bold text-white mb-4">Detalles del Comunicado</h2>
+              <h2 className="text-xl font-bold text-blue-300 mb-4">Configuración del Mensaje</h2>
 
               {/* Panel de escalamiento BLU */}
               {modoBLU && tipo.startsWith('evento-') && (
-                <div className={`p-3 rounded mb-4 border ${
-                  tipoBLU === 'bian' ? 'bg-orange-900/20 border-orange-800' :
-                  tipoBLU === 'infraestructura' ? 'bg-purple-900/20 border-purple-800' :
-                  'bg-blue-900/20 border-blue-800'
+                <div className={`p-4 rounded-lg mb-4 border-2 backdrop-blur ${
+                  tipoBLU === 'bian' ? 'bg-orange-900/20 border-orange-500/50' :
+                  tipoBLU === 'infraestructura' ? 'bg-purple-900/20 border-purple-500/50' :
+                  'bg-blue-900/20 border-blue-500/50'
                 }`}>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-400 mb-1">Escalamiento BLU 2.0:</p>
-                      <p className="text-sm font-medium text-white">
-                        {tipoBLU === 'bian' 
-                          ? 'Miguel Angel López Garavito'
-                          : tipoBLU === 'infraestructura'
-                          ? 'Infraestructura Cloud'
-                          : 'Paul Chamorro / David Albuja'}
-                      </p>
-                      {tipoBLU === 'bian' && (
-                        <p className="text-xs text-gray-500 mt-1">📧 malopez@dinersclub.com.ec</p>
-                      )}
-                    </div>
-                    <div className={`text-2xl ${
-                      tipoBLU === 'bian' ? 'text-orange-400' :
-                      tipoBLU === 'infraestructura' ? 'text-purple-400' :
-                      'text-blue-400'
-                    }`}>
-                      {tipoBLU === 'bian' ? '⚠️' : tipoBLU === 'infraestructura' ? '🖥️' : '📱'}
-                    </div>
-                  </div>
-                  <div className="mt-3 pt-3 border-t border-gray-700">
-                    <p className="text-xs text-gray-400 mb-1">💡 Recordatorio de escalamiento:</p>
-                    <p className="text-xs text-gray-300">
+                  <div>
+                    <p className="text-xs font-semibold text-blue-300 mb-1">Escalamiento configurado a:</p>
+                    <p className="text-sm font-bold text-blue-100">
                       {tipoBLU === 'bian' 
-                        ? 'Escalar a Miguel Angel López Garavito por Teams o correo'
+                        ? 'Miguel Angel López Garavito'
                         : tipoBLU === 'infraestructura'
-                        ? 'Escalar al equipo de Infraestructura Cloud por Teams'
-                        : 'Escalar a Paul Chamorro o David Albuja por Teams'}
+                        ? 'Infraestructura Cloud'
+                        : 'Paul Chamorro / David Albuja'}
                     </p>
+                    {tipoBLU === 'bian' && (
+                      <p className="text-xs text-blue-400 mt-1">Email: malopez@dinersclub.com.ec</p>
+                    )}
                   </div>
                 </div>
               )}
@@ -1103,10 +1081,10 @@ export default function GeneradorComunicados() {
                 <div className="space-y-4">
                   <div>
                     <label className={label}>
-                      Descripción:
+                      Descripción
                       {modoBLU && (
-                        <span className="text-xs ml-2 text-blue-400">
-                          (Formato: Alertamiento [namespace/cluster])
+                        <span className="text-xs ml-2 text-blue-400/70 font-normal">
+                          (Formato: Alerta [namespace/cluster])
                         </span>
                       )}
                     </label>
@@ -1114,24 +1092,54 @@ export default function GeneradorComunicados() {
                       className={input}
                       type="text" 
                       name="descripcion"
-                      placeholder={modoBLU ? "Alertamiento CLUSTER_EKS_KB" : "Descripción del incidente"}
+                      placeholder={modoBLU ? "Alerta CLUSTER_EKS_KB" : "Descripción del incidente"}
                       value={formData.descripcion}
                       onChange={handleInputChange}
                     />
                   </div>
                   
-                  {!modoBLU && (
-                    <div>
-                      <label className={label}>Impacto:</label>
-                      <textarea 
-                        className={input + " h-24 resize-y"}
-                        name="impacto"
-                        placeholder="Impacto servicio / usuarios"
-                        value={formData.impacto}
-                        onChange={handleInputChange}
+                  <div>
+                    <label className={label}>Impacto</label>
+                    <textarea 
+                      className={input + " h-24 resize-y"}
+                      name="impacto"
+                      placeholder="Impacto servicio/usuarios"
+                      value={formData.impacto}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className={label}>Escalado a (opcional)</label>
+                    {ultimoEscalado && (
+                      <div className="text-xs text-amber-400 mb-2 border border-amber-500/50 bg-amber-900/20 p-2 rounded-lg backdrop-blur">
+                        ⚠️ Último escalamiento: {ultimoEscalado}
+                      </div>
+                    )}
+                    <input
+                      type="text"
+                      name="escaladoA"
+                      placeholder="Nombre de la persona o equipo al que se escaló..."
+                      value={formData.escaladoA}
+                      onChange={(e) => {
+                        const upperValue = e.target.value.toUpperCase();
+                        setFormData(prev => ({ ...prev, escaladoA: upperValue }));
+                      }}
+                      className={input}
+                    />
+                    <p className="text-xs text-blue-400/70 mt-1 italic">El texto se convertirá automáticamente a MAYÚSCULAS</p>
+                    <label className="flex items-center space-x-2 cursor-pointer mt-2">
+                      <input
+                        type="checkbox"
+                        checked={autoLimpiarEscalado}
+                        onChange={(e) => setAutoLimpiarEscalado(e.target.checked)}
+                        className="w-4 h-4 text-blue-600 bg-black/40 border-blue-500/50 rounded focus:ring-blue-500/50"
                       />
-                    </div>
-                  )}
+                      <span className="text-xs text-blue-400">
+                        Limpiar automáticamente después de generar
+                      </span>
+                    </label>
+                  </div>
                 </div>
               )}
               
@@ -1139,28 +1147,28 @@ export default function GeneradorComunicados() {
               {tipo.startsWith('mantenimiento-') && (
                 <div className="space-y-4">
                   <div>
-                    <label className={label}>Motivo:</label>
+                    <label className={label}>Motivo</label>
                     <input 
                       className={input}
                       type="text" 
                       name="motivo"
-                      placeholder="Descripción del Mantenimiento"
+                      placeholder="Descripción del mantenimiento"
                       value={formData.motivo}
                       onChange={handleInputChange}
                     />
                   </div>
                   <div>
-                    <label className={label}>Impacto:</label>
+                    <label className={label}>Impacto</label>
                     <textarea 
                       className={input + " h-24 resize-y"}
                       name="impactoMant"
-                      placeholder="Impacto servicio / usuarios / clientes"
+                      placeholder="Impacto servicio/usuarios/clientes"
                       value={formData.impactoMant}
                       onChange={handleInputChange}
                     />
                   </div>
                   <div>
-                    <label className={label}>Ejecutor:</label>
+                    <label className={label}>Ejecutor</label>
                     <input 
                       className={input}
                       type="text" 
@@ -1181,23 +1189,23 @@ export default function GeneradorComunicados() {
                       type="checkbox"
                       checked={multiplesEncolamientos}
                       onChange={(e) => setMultiplesEncolamientos(e.target.checked)}
-                      className="w-4 h-4 text-blue-600 bg-gray-900 border-gray-600 rounded focus:ring-blue-500"
+                      className="w-4 h-4 text-blue-600 bg-black/40 border-blue-500/50 rounded focus:ring-blue-500/50"
                     />
-                    <span className="text-sm text-gray-300">Múltiples encolamientos</span>
+                    <span className="text-sm font-medium text-blue-300">Encolamiento múltiple</span>
                   </label>
                   
                   {multiplesEncolamientos && (
                     <div className="mt-4 space-y-3">
                       <div className="flex justify-between">
-                        <h3 className="text-sm font-semibold text-gray-300">Servicios con Encolamiento</h3>
-                        <button onClick={agregarServicioEncolamiento} className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                        <h3 className="text-sm font-semibold text-blue-300">Servicios Encolados</h3>
+                        <button onClick={agregarServicioEncolamiento} className="text-sm bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white px-3 py-1 rounded-lg font-medium shadow-lg shadow-blue-900/50">
                           Agregar
                         </button>
                       </div>
                       {serviciosEncolamiento.map((servicio, index) => (
-                        <div key={index} className="bg-gray-900 rounded p-4 border border-gray-700">
+                        <div key={index} className="bg-black/40 backdrop-blur rounded-lg p-4 border border-blue-500/30">
                           <div className="flex justify-between mb-3">
-                            <span className="text-sm text-gray-300">Servicio {index + 1}</span>
+                            <span className="text-sm font-medium text-blue-300">Servicio {index + 1}</span>
                             {serviciosEncolamiento.length > 1 && (
                               <button onClick={() => eliminarServicioEncolamiento(index)} className="text-red-400 hover:text-red-300">
                                 <Minus className="w-4 h-4" />
@@ -1209,7 +1217,7 @@ export default function GeneradorComunicados() {
                               <select
                                 value={servicio.tipo}
                                 onChange={(e) => actualizarServicioEncolamiento(index, 'tipo', e.target.value)}
-                                className="w-full p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm"
+                                className="w-full p-2 bg-black/40 border border-blue-500/30 rounded-lg text-blue-100 text-sm backdrop-blur"
                               >
                                 {OPCIONES_ENCOLAMIENTO.map(opcion => (
                                   <option key={opcion} value={opcion}>{opcion}</option>
@@ -1222,7 +1230,7 @@ export default function GeneradorComunicados() {
                                   placeholder="Especifica el tipo de servicio"
                                   value={servicio.tipoCustom}
                                   onChange={(e) => actualizarServicioEncolamiento(index, 'tipoCustom', e.target.value)}
-                                  className="w-full mt-2 p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm"
+                                  className="w-full mt-2 p-2 bg-black/40 border border-blue-500/30 rounded-lg text-blue-100 text-sm backdrop-blur"
                                 />
                               )}
                             </div>
@@ -1231,7 +1239,7 @@ export default function GeneradorComunicados() {
                               placeholder="Cantidad"
                               value={servicio.encolados}
                               onChange={(e) => actualizarServicioEncolamiento(index, 'encolados', e.target.value)}
-                              className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm col-span-2"
+                              className="p-2 bg-black/40 border border-blue-500/30 rounded-lg text-blue-100 text-sm col-span-2 backdrop-blur"
                             />
                           </div>
                         </div>
@@ -1246,7 +1254,7 @@ export default function GeneradorComunicados() {
                 <div className="space-y-4 mt-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className={label}>Fecha:</label>
+                      <label className={label}>Fecha de Inicio</label>
                       <input 
                         className={input}
                         type="date" 
@@ -1256,7 +1264,7 @@ export default function GeneradorComunicados() {
                       />
                     </div>
                     <div>
-                      <label className={label}>Hora:</label>
+                      <label className={label}>Hora de Inicio</label>
                       <input 
                         className={input}
                         type="time" 
@@ -1273,7 +1281,7 @@ export default function GeneradorComunicados() {
               {/* Acciones para seguimiento */}
               {tipo === 'evento-seguimiento' && (
                 <div className="mt-4">
-                  <label className={label}>Acciones:</label>
+                  <label className={label}>Acciones</label>
                   <textarea 
                     className={input + " h-32 resize-y"}
                     placeholder="Acción %% Responsable (opcional)"
@@ -1288,7 +1296,7 @@ export default function GeneradorComunicados() {
               {tipo === 'incidente-avance' && (
                 <div className="space-y-4 mt-4">
                   <div>
-                    <label className={label}>Acciones en curso:</label>
+                    <label className={label}>Acciones en Curso</label>
                     <textarea 
                       className={input + " h-24 resize-y"}
                       placeholder="Acción %% Responsable"
@@ -1298,7 +1306,7 @@ export default function GeneradorComunicados() {
                     />
                   </div>
                   <div>
-                    <label className={label}>Acciones ejecutadas:</label>
+                    <label className={label}>Acciones Ejecutadas</label>
                     <textarea 
                       className={input + " h-24 resize-y"}
                       placeholder="Acción %% Responsable"
@@ -1318,9 +1326,9 @@ export default function GeneradorComunicados() {
                       type="checkbox"
                       checked={multiplesAlertamientos}
                       onChange={(e) => setMultiplesAlertamientos(e.target.checked)}
-                      className="w-4 h-4 text-blue-600 bg-gray-900 border-gray-600 rounded focus:ring-blue-500"
+                      className="w-4 h-4 text-blue-600 bg-black/40 border-blue-500/50 rounded focus:ring-blue-500/50"
                     />
-                    <span className="text-sm text-gray-300">Múltiples alertamientos temporales</span>
+                    <span className="text-sm font-medium text-blue-300">Períodos de alertamiento múltiples</span>
                   </label>
 
                   {tipo.startsWith('evento-') && (
@@ -1329,24 +1337,24 @@ export default function GeneradorComunicados() {
                         type="checkbox"
                         checked={multiplesEncolamientos}
                         onChange={(e) => setMultiplesEncolamientos(e.target.checked)}
-                        className="w-4 h-4 text-blue-600 bg-gray-900 border-gray-600 rounded focus:ring-blue-500"
+                        className="w-4 h-4 text-blue-600 bg-black/40 border-blue-500/50 rounded focus:ring-blue-500/50"
                       />
-                      <span className="text-sm text-gray-300">Múltiples encolamientos</span>
+                      <span className="text-sm font-medium text-blue-300">Encolamiento múltiple</span>
                     </label>
                   )}
 
                   {multiplesEncolamientos ? (
                     <div className="space-y-3">
                       <div className="flex justify-between">
-                        <h3 className="text-sm font-semibold text-gray-300">Servicios con Encolamiento</h3>
-                        <button onClick={agregarServicioEncolamiento} className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                        <h3 className="text-sm font-semibold text-blue-300">Servicios Encolados</h3>
+                        <button onClick={agregarServicioEncolamiento} className="text-sm bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white px-3 py-1 rounded-lg font-medium shadow-lg shadow-blue-900/50">
                           Agregar
                         </button>
                       </div>
                       {serviciosEncolamiento.map((servicio, index) => (
-                        <div key={index} className="bg-gray-900 rounded p-4 border border-gray-700">
+                        <div key={index} className="bg-black/40 backdrop-blur rounded-lg p-4 border border-blue-500/30">
                           <div className="flex justify-between mb-3">
-                            <span className="text-sm text-gray-300">Servicio {index + 1}</span>
+                            <span className="text-sm font-medium text-blue-300">Servicio {index + 1}</span>
                             {serviciosEncolamiento.length > 1 && (
                               <button onClick={() => eliminarServicioEncolamiento(index)} className="text-red-400 hover:text-red-300">
                                 <Minus className="w-4 h-4" />
@@ -1357,7 +1365,7 @@ export default function GeneradorComunicados() {
                             <select
                               value={servicio.tipo}
                               onChange={(e) => actualizarServicioEncolamiento(index, 'tipo', e.target.value)}
-                              className="col-span-2 p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm"
+                              className="col-span-2 p-2 bg-black/40 border border-blue-500/30 rounded-lg text-blue-100 text-sm backdrop-blur"
                             >
                               {OPCIONES_ENCOLAMIENTO.map(opcion => (
                                 <option key={opcion} value={opcion}>{opcion}</option>
@@ -1370,15 +1378,15 @@ export default function GeneradorComunicados() {
                                 placeholder="Especifica el tipo de servicio"
                                 value={servicio.tipoCustom}
                                 onChange={(e) => actualizarServicioEncolamiento(index, 'tipoCustom', e.target.value)}
-                                className="col-span-2 p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm"
+                                className="col-span-2 p-2 bg-black/40 border border-blue-500/30 rounded-lg text-blue-100 text-sm backdrop-blur"
                               />
                             )}
-                            <input type="date" value={servicio.fechaInicio} onChange={(e) => actualizarServicioEncolamiento(index, 'fechaInicio', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
-                            <input type="time" step="1" value={servicio.horaInicio} onChange={(e) => actualizarServicioEncolamiento(index, 'horaInicio', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
-                            <input type="date" value={servicio.fechaFin} onChange={(e) => actualizarServicioEncolamiento(index, 'fechaFin', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
-                            <input type="time" step="1" value={servicio.horaFin} onChange={(e) => actualizarServicioEncolamiento(index, 'horaFin', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
-                            <input type="number" placeholder="Cantidad" value={servicio.encolados} onChange={(e) => actualizarServicioEncolamiento(index, 'encolados', e.target.value)} className="col-span-2 p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
-                            <div className="col-span-2 text-center text-blue-400 text-sm">Duración: {servicio.duracion}</div>
+                            <input type="date" value={servicio.fechaInicio} onChange={(e) => actualizarServicioEncolamiento(index, 'fechaInicio', e.target.value)} className="p-2 bg-black/40 border border-blue-500/30 rounded-lg text-blue-100 text-sm backdrop-blur" />
+                            <input type="time" step="1" value={servicio.horaInicio} onChange={(e) => actualizarServicioEncolamiento(index, 'horaInicio', e.target.value)} className="p-2 bg-black/40 border border-blue-500/30 rounded-lg text-blue-100 text-sm backdrop-blur" />
+                            <input type="date" value={servicio.fechaFin} onChange={(e) => actualizarServicioEncolamiento(index, 'fechaFin', e.target.value)} className="p-2 bg-black/40 border border-blue-500/30 rounded-lg text-blue-100 text-sm backdrop-blur" />
+                            <input type="time" step="1" value={servicio.horaFin} onChange={(e) => actualizarServicioEncolamiento(index, 'horaFin', e.target.value)} className="p-2 bg-black/40 border border-blue-500/30 rounded-lg text-blue-100 text-sm backdrop-blur" />
+                            <input type="number" placeholder="Cantidad" value={servicio.encolados} onChange={(e) => actualizarServicioEncolamiento(index, 'encolados', e.target.value)} className="col-span-2 p-2 bg-black/40 border border-blue-500/30 rounded-lg text-blue-100 text-sm backdrop-blur" />
+                            <div className="col-span-2 text-center text-blue-200 text-sm font-medium bg-blue-900/30 p-2 rounded-lg border border-blue-500/30 backdrop-blur">Duración: {servicio.duracion}</div>
                           </div>
                         </div>
                       ))}
@@ -1388,15 +1396,15 @@ export default function GeneradorComunicados() {
                   {(multiplesAlertamientos && !multiplesEncolamientos) ? (
                     <div className="space-y-3">
                       <div className="flex justify-between">
-                        <h3 className="text-sm font-semibold text-gray-300">Períodos de Alertamiento</h3>
-                        <button onClick={agregarPeriodo} className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                        <h3 className="text-sm font-semibold text-blue-300">Períodos de Alertamiento</h3>
+                        <button onClick={agregarPeriodo} className="text-sm bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white px-3 py-1 rounded-lg font-medium shadow-lg shadow-blue-900/50">
                           Agregar
                         </button>
                       </div>
                       {periodosAlertamiento.map((periodo, index) => (
-                        <div key={index} className="bg-gray-900 rounded p-4 border border-gray-700">
+                        <div key={index} className="bg-black/40 backdrop-blur rounded-lg p-4 border border-blue-500/30">
                           <div className="flex justify-between mb-3">
-                            <span className="text-sm text-gray-300">Período {index + 1}</span>
+                            <span className="text-sm font-medium text-blue-300">Período {index + 1}</span>
                             {periodosAlertamiento.length > 1 && (
                               <button onClick={() => eliminarPeriodo(index)} className="text-red-400 hover:text-red-300">
                                 <Minus className="w-4 h-4" />
@@ -1404,11 +1412,11 @@ export default function GeneradorComunicados() {
                             )}
                           </div>
                           <div className="grid grid-cols-2 gap-3">
-                            <input type="date" value={periodo.fechaInicio} onChange={(e) => actualizarPeriodo(index, 'fechaInicio', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
-                            <input type="time" step="1" value={periodo.horaInicio} onChange={(e) => actualizarPeriodo(index, 'horaInicio', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
-                            <input type="date" value={periodo.fechaFin} onChange={(e) => actualizarPeriodo(index, 'fechaFin', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
-                            <input type="time" step="1" value={periodo.horaFin} onChange={(e) => actualizarPeriodo(index, 'horaFin', e.target.value)} className="p-2 bg-gray-800 border border-gray-700 rounded text-white text-sm" />
-                            <div className="col-span-2 text-center text-blue-400 text-sm">Duración: {periodo.duracion}</div>
+                            <input type="date" value={periodo.fechaInicio} onChange={(e) => actualizarPeriodo(index, 'fechaInicio', e.target.value)} className="p-2 bg-black/40 border border-blue-500/30 rounded-lg text-blue-100 text-sm backdrop-blur" />
+                            <input type="time" step="1" value={periodo.horaInicio} onChange={(e) => actualizarPeriodo(index, 'horaInicio', e.target.value)} className="p-2 bg-black/40 border border-blue-500/30 rounded-lg text-blue-100 text-sm backdrop-blur" />
+                            <input type="date" value={periodo.fechaFin} onChange={(e) => actualizarPeriodo(index, 'fechaFin', e.target.value)} className="p-2 bg-black/40 border border-blue-500/30 rounded-lg text-blue-100 text-sm backdrop-blur" />
+                            <input type="time" step="1" value={periodo.horaFin} onChange={(e) => actualizarPeriodo(index, 'horaFin', e.target.value)} className="p-2 bg-black/40 border border-blue-500/30 rounded-lg text-blue-100 text-sm backdrop-blur" />
+                            <div className="col-span-2 text-center text-blue-200 text-sm font-medium bg-blue-900/30 p-2 rounded-lg border border-blue-500/30 backdrop-blur">Duración: {periodo.duracion}</div>
                           </div>
                         </div>
                       ))}
@@ -1417,21 +1425,21 @@ export default function GeneradorComunicados() {
                     <div className="space-y-4">
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className={label}>Fecha inicio:</label>
+                          <label className={label}>Fecha de Inicio</label>
                           <input className={errorFechaFin ? input + " border-red-500" : input} type="date" name="fechaInicioFin" value={formData.fechaInicioFin} onChange={handleInputChange} />
                         </div>
                         <div>
-                          <label className={label}>Hora inicio:</label>
+                          <label className={label}>Hora de Inicio</label>
                           <input className={errorFechaFin ? input + " border-red-500" : input} type="time" step="1" name="horaInicioFin" value={formData.horaInicioFin} onChange={handleInputChange} />
                         </div>
                         <div>
-                          <label className={label}>Fecha fin:</label>
+                          <label className={label}>Fecha de Fin</label>
                           <input className={errorFechaFin ? input + " border-red-500" : input} type="date" name="fechaFin" value={formData.fechaFin} onChange={handleInputChange} />
                           {errorFechaFin && (
                             <div className="mt-2 space-y-2">
-                              <p className="text-red-400 text-xs">{errorFechaFin}</p>
+                              <p className="text-red-400 text-xs font-medium">{errorFechaFin}</p>
                               {sugerenciasFecha.map((sug, i) => (
-                                <button key={i} onClick={() => aplicarSugerenciaFecha(sug.fecha, sug.hora)} className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded">
+                                <button key={i} onClick={() => aplicarSugerenciaFecha(sug.fecha, sug.hora)} className="text-xs bg-blue-900/40 hover:bg-blue-800/60 border border-blue-500/50 text-blue-300 px-3 py-1 rounded-lg font-medium backdrop-blur">
                                   {sug.texto}
                                 </button>
                               ))}
@@ -1439,19 +1447,19 @@ export default function GeneradorComunicados() {
                           )}
                         </div>
                         <div>
-                          <label className={label}>Hora fin:</label>
+                          <label className={label}>Hora de Fin</label>
                           <input className={errorFechaFin ? input + " border-red-500" : input} type="time" step="1" name="horaFin" value={formData.horaFin} onChange={handleInputChange} />
                         </div>
                       </div>
-                      <div className="p-4 bg-gray-900 rounded text-center">
-                        <span className="text-2xl font-bold text-blue-400">{formData.duracionCalculada}</span>
+                      <div className="p-4 bg-gradient-to-br from-blue-900/30 to-blue-800/20 border border-blue-500/30 rounded-lg text-center backdrop-blur">
+                        <span className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">{formData.duracionCalculada}</span>
                       </div>
                     </div>
                   ))}
                   
                   {(tipo === 'evento-fin' || tipo === 'incidente-fin') && (
                     <div>
-                      <label className={label}>Acciones ejecutadas:</label>
+                      <label className={label}>Acciones Ejecutadas</label>
                       <textarea 
                         className={input + " h-32 resize-y"}
                         placeholder="Acción %% Responsable"
@@ -1465,7 +1473,16 @@ export default function GeneradorComunicados() {
               )}
               
               <div className="mt-4">
-                <label className={label}>Nota adicional (opcional):</label>
+                <label className={label}>Nota Adicional (opcional)</label>
+                {tipo === 'evento-fin' && (
+                  <div className="mb-3 p-3 bg-blue-900/20 border border-blue-500/30 rounded-lg backdrop-blur">
+                    <p className="text-xs text-blue-300 font-semibold mb-1">📝 Instrucciones para eventos:</p>
+                    <p className="text-xs text-blue-400/80">
+                      En esta sección debe indicarse siempre <span className="font-semibold text-blue-300">la acción que se realizó para que el servicio se recupere</span>. 
+                      Solo aplica para eventos; en caso de que se recupere automáticamente, también debe indicarse.
+                    </p>
+                  </div>
+                )}
                 <textarea 
                   className={input + " h-20 resize-y"}
                   placeholder="Observaciones adicionales"
@@ -1476,24 +1493,24 @@ export default function GeneradorComunicados() {
               </div>
               
               <button 
-                className={`w-full mt-6 ${errorFechaFin ? 'bg-gray-600 cursor-not-allowed' : btnPrimary}`}
+                className={`w-full mt-6 ${errorFechaFin ? 'bg-gray-700 cursor-not-allowed border-gray-600' : btnPrimary}`}
                 onClick={generarMensaje}
-                disabled={errorFechaFin && errorFechaFin.includes('ERROR')}
+                disabled={errorFechaFin && errorFechaFin.includes('Error')}
               >
                 <Zap className="w-5 h-5 inline mr-2" />
-                Generar Comunicado
+                Generar Mensaje
               </button>
             </div>
             
             <div className={card}>
-              <h2 className="text-xl font-bold text-white mb-4">Comunicado Generado</h2>
-              <div className="bg-gray-900 p-4 rounded font-mono text-sm min-h-[150px] border border-gray-700">
-                <pre className="whitespace-pre-wrap text-gray-100">{resultado || 'El comunicado aparecerá aquí...'}</pre>
+              <h2 className="text-xl font-bold text-blue-300 mb-4">Mensaje Generado</h2>
+              <div className="bg-black/60 backdrop-blur p-4 rounded-lg min-h-[150px] border border-blue-500/30">
+                <pre className="whitespace-pre-wrap text-blue-100 text-sm">{resultado || 'El mensaje generado aparecerá aquí...'}</pre>
               </div>
               
               {mostrarAlerta && (
-                <div className="mt-4 p-3 rounded bg-blue-900/30 border border-blue-800">
-                  <p className="text-blue-300 text-sm">{alertaMensaje}</p>
+                <div className="mt-4 p-3 rounded-lg bg-green-900/30 border border-green-500/50 backdrop-blur">
+                  <p className="text-green-300 text-sm font-medium">✓ {alertaMensaje}</p>
                 </div>
               )}
               
@@ -1513,35 +1530,35 @@ export default function GeneradorComunicados() {
         
         {/* Modales */}
         {mostrarActualizacion && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-            <div className="bg-gray-900 rounded-lg p-6 border border-gray-700 max-w-md mx-4">
-              <h3 className="text-lg font-bold text-white mb-2">Actualizar Fechas</h3>
-              <p className="text-gray-400 text-sm mb-4">
-                La página lleva abierta {calcularTiempoAbierto().horas}h {calcularTiempoAbierto().minutos}m
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-gray-900/95 backdrop-blur-xl border border-blue-500/30 rounded-xl p-6 max-w-md mx-4 shadow-2xl shadow-blue-900/50">
+              <h3 className="text-lg font-bold text-blue-300 mb-2">Sincronización Requerida</h3>
+              <p className="text-blue-400/80 text-sm mb-4">
+                Tiempo de sesión: {calcularTiempoAbierto().horas}h {calcularTiempoAbierto().minutos}m
               </p>
               <div className="flex gap-3">
-                <button onClick={actualizarFechasAhora} className={btnPrimary + " flex-1"}>Actualizar</button>
-                <button onClick={() => setMostrarActualizacion(false)} className={btnSecondary + " flex-1"}>Después</button>
+                <button onClick={actualizarFechasAhora} className={btnPrimary + " flex-1"}>Sincronizar</button>
+                <button onClick={() => setMostrarActualizacion(false)} className={btnSecondary + " flex-1"}>Más tarde</button>
               </div>
-              <button onClick={() => {setNoPreguntar(true); setMostrarActualizacion(false);}} className="w-full mt-2 text-xs text-gray-500 hover:text-gray-300">
-                No preguntar más
+              <button onClick={() => {setNoPreguntar(true); setMostrarActualizacion(false);}} className="w-full mt-2 text-xs text-blue-400/70 hover:text-blue-300">
+                No volver a preguntar
               </button>
             </div>
           </div>
         )}
 
         {mostrarConfirmacionDuracion && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-            <div className="bg-gray-900 rounded-lg p-6 border border-yellow-700 max-w-md mx-4">
-              <h3 className="text-xl font-bold text-yellow-400 mb-4">Confirmación de Duración</h3>
-              <div className="bg-yellow-900/20 border border-yellow-800 rounded p-4 mb-4">
-                <p className="text-gray-300 mb-2">
-                  Duración calculada: <span className="font-bold text-yellow-400 text-xl">
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-gray-900/95 backdrop-blur-xl border border-amber-500/50 rounded-xl p-6 max-w-md mx-4 shadow-2xl shadow-amber-900/50">
+              <h3 className="text-xl font-bold text-amber-400 mb-4">Verificación de Duración</h3>
+              <div className="bg-amber-900/20 border border-amber-500/30 rounded-lg p-4 mb-4 backdrop-blur">
+                <p className="text-blue-200 mb-2 font-medium">
+                  Duración calculada: <span className="font-bold text-amber-400 text-xl">
                     {multiplesAlertamientos && periodosAlertamiento.length > 0 ? calcularDuracionTotal() : formData.duracionCalculada}
                   </span>
                 </p>
-                <p className="text-gray-400 text-sm">
-                  ¿El incidente realmente duró tanto tiempo?
+                <p className="text-blue-300/80 text-sm">
+                  La duración excede el umbral de 4 horas. ¿Desea continuar?
                 </p>
               </div>
               <div className="flex gap-3">
@@ -1550,15 +1567,15 @@ export default function GeneradorComunicados() {
                     setMostrarConfirmacionDuracion(false);
                     generarMensajeInterno();
                   }} 
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium transition-colors"
+                  className={btnPrimary + " flex-1"}
                 >
-                  ✓ Sí, correcto
+                  Confirmar
                 </button>
                 <button 
                   onClick={() => setMostrarConfirmacionDuracion(false)} 
-                  className="flex-1 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded font-medium transition-colors"
+                  className={btnWarning + " flex-1"}
                 >
-                  Revisar fechas
+                  Revisar
                 </button>
               </div>
             </div>
@@ -1566,20 +1583,20 @@ export default function GeneradorComunicados() {
         )}
 
         {mostrarErrorFecha && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-            <div className="bg-gray-900 rounded-lg p-6 border border-red-800 max-w-lg mx-4">
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-gray-900/95 backdrop-blur-xl border border-red-500/50 rounded-xl p-6 max-w-lg mx-4 shadow-2xl shadow-red-900/50">
               <h3 className="text-xl font-bold text-red-400 mb-3">Error en Fechas</h3>
-              <div className="bg-red-900/30 border border-red-700 rounded p-3 mb-4">
-                <p className="text-red-300 text-sm whitespace-pre-line">{errorFechaFin}</p>
+              <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-3 mb-4 backdrop-blur">
+                <p className="text-red-300 text-sm">{errorFechaFin}</p>
               </div>
               {sugerenciasFecha.length > 0 && (
                 <div className="space-y-2 mb-4">
-                  <p className="text-sm text-gray-400">Sugerencias:</p>
+                  <p className="text-sm font-semibold text-blue-300">Corrección sugerida:</p>
                   {sugerenciasFecha.map((sug, i) => (
                     <button
                       key={i}
                       onClick={() => {aplicarSugerenciaFecha(sug.fecha, sug.hora); setMostrarErrorFecha(false);}}
-                      className="w-full text-left bg-gray-800 hover:bg-gray-700 text-gray-300 p-3 rounded text-sm"
+                      className="w-full text-left bg-blue-900/30 border border-blue-500/50 hover:border-blue-400/70 text-blue-200 p-3 rounded-lg text-sm font-medium backdrop-blur transition-all"
                     >
                       {sug.texto}
                     </button>
@@ -1593,9 +1610,11 @@ export default function GeneradorComunicados() {
           </div>
         )}
         
-        <footer className="text-center py-6 mt-8 text-gray-500 text-xs border-t border-gray-800">
-          <p>Desarrollado por Luis Alberto Herrera Lara</p>
-          <p>Generador de Comunicados v5.0 - BLU 2.0 Enhanced</p>
+        <footer className="text-center py-6 mt-8 text-blue-400/50 text-xs border-t border-blue-500/20">
+          <p className="font-medium text-blue-300/70">Centro de Comando - Diners Club del Ecuador</p>
+          <p className="mt-1 text-blue-400/60">Sistema de Gestión de Comunicados</p>
+          <p className="mt-2 text-blue-500/50">Versión 6.0 - Actualizado: 17 de Octubre de 2025</p>
+          <p className="mt-1 text-blue-500/40">Desarrollado por: Luis Alberto Herrera Lara</p>
         </footer>
       </div>
     </div>
